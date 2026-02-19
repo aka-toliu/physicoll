@@ -1,0 +1,18 @@
+.movie-result {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  cursor: pointer;
+
+  > img{
+    width: 50px;
+    height: 75px;
+    object-fit: cover;
+  }
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}
