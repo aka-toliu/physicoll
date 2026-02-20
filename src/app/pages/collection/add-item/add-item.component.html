@@ -1,7 +1,7 @@
 <h1>Adicionar item à coleção</h1>
 <input #searchBox type="search" name="search" id="search" placeholder="Pesquisar filme" (input)="searchMovies(searchBox.value)"/>
 
-@if (results$ | async; as results) {
+@if (results(); as results) {
     <p>{{ results.totalResults }} resultados encontrados</p>
   <ul >
     @for (movie of results.Search; track movie.imdbID) {

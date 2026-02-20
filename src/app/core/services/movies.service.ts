@@ -9,7 +9,7 @@ import { IMovieSearch } from '../../shared/models/IMovies';
 export class MoviesService {
 
   private http = inject(HttpClient);
-  private apiURL = 'http://www.omdbapi.com/?apikey=272d0164'
+  private apiURL = 'https://www.omdbapi.com/?apikey=272d0164'
   
 
   constructor() { }
