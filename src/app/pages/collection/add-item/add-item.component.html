@@ -1,15 +1,106 @@
-<h1>Adicionar item à coleção</h1>
-<input #searchBox type="search" name="search" id="search" placeholder="Pesquisar filme" (input)="searchMovies(searchBox.value)"/>
+<header>
+    <h1>Adicionar item à coleção</h1>
+</header>
 
-@if (results(); as results) {
-    <p>{{ results.totalResults }} resultados encontrados</p>
-  <ul >
-    @for (movie of results.Search; track movie.imdbID) {
-      <li class="movie-result">
-        <img [src]="movie.Poster !== 'N/A' ? movie.Poster : 'assets/default-poster.png'" alt="{{ movie.Title }}" #poster (error)="poster.src = 'assets/default-poster.png'" >
-        <h3>{{ movie.Title }}</h3>
-        <p>{{ movie.Year }}</p>
-      </li>
-    }
-  </ul>
-}
+<form>
+
+    <div class="search-movie">
+
+        <input class="search-movie__input" #searchBox type="search" name="search" placeholder="Pesquisar filme"
+            (input)="searchMovies(searchBox.value)" />
+
+        @if (results()?.Response) {
+
+        <ul class="search-movie__list">
+            @if (results()?.totalResults) {
+            <p>{{ results()?.totalResults }} resultados encontrados</p>
+            }
+            @for (movie of results()?.Search; track movie.imdbID) {
+            <li class="search-movie__results">
+                <img class="search-movie__poster"
+                    [src]="movie.Poster !== 'N/A' ? movie.Poster : 'assets/default-poster.png'" alt="{{ movie.Title }}"
+                    #poster (error)="poster.src = 'assets/default-poster.png'">
+                <h3 class="search-movie__title">{{ movie.Title }}</h3>
+                <p class="search-movie__year">{{ movie.Year }}</p>
+            </li>
+            }
+        </ul>
+        }
+
+    </div>
+
+    <div class="movie__details">
+        <h4>Detalhes do filme</h4>
+        <label for="title" class="movie__title">
+            Título:
+            <input type="text" name="title" placeholder="Ex: Jurassic Park">
+        </label>
+        <label for="director" class="movie__director">
+            Diretor:
+            <input type="text" name="director" placeholder="Ex: Steven Spielberg">
+        </label>
+        <label for="writer" class="movie__writer">
+            Roteirista:
+            <input type="text" name="writer" placeholder="Ex: John Doe">
+        </label>
+        <label for="year" class="movie__year">
+            Ano:
+            <input type="text" name="year" placeholder="Ex: 1993">
+        </label>
+        <label for="genre" class="movie__genre">
+            Gênero:
+            <input type="text" name="genre" placeholder="Ex: Ação, Aventura">
+        </label>
+        <label for="duration" class="movie__duration">
+            Duração:
+            <input type="text" name="duration" placeholder="Ex: 120 minutos">
+        </label>
+        <label for="actors" class="movie__actors">
+            Atores:
+            <input type="text" name="actors" placeholder="Ex: John Doe, Jane Doe">
+        </label>
+        <label for="language" class="movie__language">
+            Idioma original:
+            <input type="text" name="language" placeholder="Ex: Inglês">
+        </label>
+        <label for="country" class="movie__country">
+            País de origem:
+            <input type="text" name="country" placeholder="Ex: Estados Unidos">
+        </label>
+        <label for="plot" class="movie__plot">
+            Sinopse:
+            <textarea name="plot"
+                placeholder="Ex: Um parque temático com dinossauros geneticamente recriados..."></textarea>
+        </label>
+
+    </div>
+
+    <div class="item__details">
+        <h4>Detalhes do item</h4>
+        <label for="format" class="item__format">
+            Formato:
+            <select name="format" placeholder="Ex: DVD, Blu-ray, Digital">
+                <option value="dvd">DVD</option>
+                <option value="bluray">Blu-ray</option>
+                <option value="vhs">VHS</option>
+            </select>
+        </label>
+        <label for="condition" class="item__condition">
+            Condição:
+            <select name="condition" placeholder="Ex: Novo, Usado - Bom, Usado - Ruim">
+                <option value="new">Novo</option>
+                <option value="used-good">Usado - Bom</option>
+                <option value="used-poor">Usado - Ruim</option>
+            </select>
+        </label>
+        <label for="edition" class="item__edition">
+            Edição:
+            <input type="text" name="edition" placeholder="Ex: Versão extendida">
+        </label>
+        <label for="notes" class="item__notes">
+            Notas:
+            <textarea name="notes" placeholder="Ex: Edição de colecionador, com extras..."></textarea>
+        </label>
+    </div>
+
+</form>

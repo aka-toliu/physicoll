@@ -26,11 +26,11 @@ export class AddItemComponent {
       debounceTime(400),
       distinctUntilChanged(),
       switchMap(term => {
-        if (!term.trim()) return of({ Response: 'false', Search: [], totalResults: '0' });
+        if (!term.trim()) return of({ Response: false, Search: [], totalResults: null });
         return this.moviesService.searchMovies(term);
       })
     ),
-    { initialValue: { Response: 'false', Search: [], totalResults: '0' } }
+    { initialValue: null }
   );
 
   searchMovies(search: string) {

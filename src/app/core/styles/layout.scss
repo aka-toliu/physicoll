@@ -1,6 +1,24 @@
-input{
+input, select {
     height: 40px;
     padding: 0 10px;
     border-radius: 0.25rem;
     border: 1px solid var(--grey-20);
+    
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    flex: 2 1 300px;
+}
+
+textarea {
+    height: 100px;
+    padding: 10px;
+    border-radius: 0.25rem;
+    border: 1px solid var(--grey-20);
+    resize: vertical;
 }
