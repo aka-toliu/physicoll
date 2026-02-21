@@ -3,7 +3,11 @@ input, select {
     padding: 0 10px;
     border-radius: 0.25rem;
     border: 1px solid var(--grey-20);
-    
+}
+
+input[type="checkbox"] {
+    width: fit-content;
+    height: auto;
 }
 
 label {

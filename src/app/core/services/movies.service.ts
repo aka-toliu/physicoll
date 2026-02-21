@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IMovieSearch } from '../../shared/models/IMovies';
+import { IMovieDetail, IMovieSearch } from '../../shared/models/IMovies';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class MoviesService {
   }
 
   getMovie(id: string) {
-    return this.http.get(`${this.apiURL}&i=${id}`);
+    return this.http.get<IMovieDetail>(`${this.apiURL}&i=${id}`);
   }
 
 }

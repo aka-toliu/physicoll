@@ -1,25 +1,37 @@
-:host{
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
+:host {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+
+
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .search-movie {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   gap: 1rem;
   margin-top: 1rem;
   position: relative;
 
-  &__list{
-      position: absolute;
-      top: 40px;
-      max-height: 50vh;
-      overflow-y: auto;
-      border: 1px solid var(--grey-20);
-      padding: 1rem;
-      width: 100%;
-      background-color: var(--bg-color);
+  &__input{
+    flex-grow: 1;
+  }
+
+  &__list {
+    position: absolute;
+    top: 40px;
+    max-height: 50vh;
+    overflow-y: auto;
+    border: 1px solid var(--grey-20);
+    padding: 1rem;
+    width: 100%;
+    background-color: var(--bg-color);
   }
 
   &__results {
@@ -30,7 +42,7 @@
     border: 1px solid var(--grey-20);
     cursor: pointer;
 
-    > img {
+    >img {
       width: 50px;
       height: 75px;
       object-fit: cover;
@@ -42,32 +54,69 @@
   }
 }
 
-.movie{
-    &__details{
-      flex-wrap: wrap;
-      display: flex;
-      gap: 1rem;
-
-      > h4{
-        width: 100%;
-      }
+.movie {
+  &__details {
+    display: flex;
+    // flex-direction: column;
+    background-color: var(--grey-10);
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+  }
+  
+  &__poster{
+    // justify-content: center;
+    display: flex;
+  }
+  
+  
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    // flex-wrap: wrap;
+    p{
+      font-size: 0.9rem;
     }
 
-    &__plot{
+    >h4 {
       width: 100%;
-      flex: auto;
     }
-    
+  }
+
+  &__plot {
+    width: 100%;
+    flex: auto;
+  }
+
+  &__poster-image{
+    width: 150px;
+    height: 225px;
+    object-fit: cover;
+  }
+
 }
 
-.item{
-    &__details{
-      flex-wrap: wrap;
-      display: flex;
-      gap: 1rem;
+.item {
+  &__details {
+    flex-wrap: wrap;
+    display: flex;
+    gap: 1rem;
 
-      > h4{
-        width: 100%;
-      }
+    >h4 {
+      width: 100%;
     }
+  }
+
+  &__format,
+  &__condition,
+  &__favorite,
+  &__wishlist,
+  &__acquisition-value,
+  &__market-value,
+  &__acquisition-date,
+  &__number-discs,
+  &__edition {
+    max-width: 45%;
+  }
 }

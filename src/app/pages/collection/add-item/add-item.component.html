@@ -9,14 +9,22 @@
         <input class="search-movie__input" #searchBox type="search" name="search" placeholder="Pesquisar filme"
             (input)="searchMovies(searchBox.value)" />
 
+        <button [disabled]="!movieSelected()">Salvar</button>
+
+
         @if (results()?.Response) {
 
         <ul class="search-movie__list">
+
+            @if (isSearchLoading()) {
+            <p>Carregando...</p>
+            }
+
             @if (results()?.totalResults) {
             <p>{{ results()?.totalResults }} resultados encontrados</p>
             }
             @for (movie of results()?.Search; track movie.imdbID) {
-            <li class="search-movie__results">
+            <li class="search-movie__results" (click)="selectMovie(movie.imdbID)">
                 <img class="search-movie__poster"
                     [src]="movie.Poster !== 'N/A' ? movie.Poster : 'assets/default-poster.png'" alt="{{ movie.Title }}"
                     #poster (error)="poster.src = 'assets/default-poster.png'">
@@ -27,52 +35,65 @@
         </ul>
         }
 
+
     </div>
-
+    @if (movieSelected()) {
     <div class="movie__details">
-        <h4>Detalhes do filme</h4>
-        <label for="title" class="movie__title">
-            Título:
-            <input type="text" name="title" placeholder="Ex: Jurassic Park">
-        </label>
-        <label for="director" class="movie__director">
-            Diretor:
-            <input type="text" name="director" placeholder="Ex: Steven Spielberg">
-        </label>
-        <label for="writer" class="movie__writer">
-            Roteirista:
-            <input type="text" name="writer" placeholder="Ex: John Doe">
-        </label>
-        <label for="year" class="movie__year">
-            Ano:
-            <input type="text" name="year" placeholder="Ex: 1993">
-        </label>
-        <label for="genre" class="movie__genre">
-            Gênero:
-            <input type="text" name="genre" placeholder="Ex: Ação, Aventura">
-        </label>
-        <label for="duration" class="movie__duration">
-            Duração:
-            <input type="text" name="duration" placeholder="Ex: 120 minutos">
-        </label>
-        <label for="actors" class="movie__actors">
-            Atores:
-            <input type="text" name="actors" placeholder="Ex: John Doe, Jane Doe">
-        </label>
-        <label for="language" class="movie__language">
-            Idioma original:
-            <input type="text" name="language" placeholder="Ex: Inglês">
-        </label>
-        <label for="country" class="movie__country">
-            País de origem:
-            <input type="text" name="country" placeholder="Ex: Estados Unidos">
-        </label>
-        <label for="plot" class="movie__plot">
-            Sinopse:
-            <textarea name="plot"
-                placeholder="Ex: Um parque temático com dinossauros geneticamente recriados..."></textarea>
-        </label>
-
+        <div class="movie__poster">
+            <img [src]="movieSelected()?.Poster !== 'N/A' ? movieSelected()?.Poster : 'assets/default-poster.png'"
+                alt="{{ movieSelected()?.Title }}" class="movie__poster-image">
+        </div>
+        <div class="movie__info">
+            <h3>{{ movieSelected()?.Title }}</h3>
+            <p>{{ movieSelected()?.Year }}</p>
+            <p>Diretor:{{ movieSelected()?.Director }}</p>
+            <p>Roteirista: {{ movieSelected()?.Writer }}</p>
+            <p>Gênero: {{ movieSelected()?.Genre }}</p>
+        </div>
+        <!-- <div class="movie__info">
+            <h4>Detalhes do filme</h4>
+            <label for="title" class="movie__title">
+                Título:
+                <input type="text" name="title" placeholder="Ex: Jurassic Park">
+            </label>
+            <label for="director" class="movie__director">
+                Diretor:
+                <input type="text" name="director" placeholder="Ex: Steven Spielberg">
+            </label>
+            <label for="writer" class="movie__writer">
+                Roteirista:
+                <input type="text" name="writer" placeholder="Ex: John Doe">
+            </label>
+            <label for="year" class="movie__year">
+                Ano:
+                <input type="text" name="year" placeholder="Ex: 1993">
+            </label>
+            <label for="genre" class="movie__genre">
+                Gênero:
+                <input type="text" name="genre" placeholder="Ex: Ação, Aventura">
+            </label>
+            <label for="duration" class="movie__duration">
+                Duração:
+                <input type="text" name="duration" placeholder="Ex: 120 minutos">
+            </label>
+            <label for="actors" class="movie__actors">
+                Atores:
+                <input type="text" name="actors" placeholder="Ex: John Doe, Jane Doe">
+            </label>
+            <label for="language" class="movie__language">
+                Idioma original:
+                <input type="text" name="language" placeholder="Ex: Inglês">
+            </label>
+            <label for="country" class="movie__country">
+                País de origem:
+                <input type="text" name="country" placeholder="Ex: Estados Unidos">
+            </label>
+            <label for="plot" class="movie__plot">
+                Sinopse:
+                <textarea name="plot"
+                    placeholder="Ex: Um parque temático com dinossauros geneticamente recriados..."></textarea>
+            </label>
+        </div> -->
     </div>
 
     <div class="item__details">
@@ -97,10 +118,55 @@
             Edição:
             <input type="text" name="edition" placeholder="Ex: Versão extendida">
         </label>
-        <label for="notes" class="item__notes">
-            Notas:
-            <textarea name="notes" placeholder="Ex: Edição de colecionador, com extras..."></textarea>
+        <label for="numero-discos" class="item__number-discs">
+            Número de discos:
+            <input type="number" name="numero-discos" placeholder="Ex: 1" min="1">
+        </label>
+        <label for="idiomas-audio" class="item__audio-languages">
+            Idiomas de áudio:
+            <input type="text" name="idiomas-audio" placeholder="Ex: Inglês, Português">
+        </label>
+        <label for="idiomas-legenda" class="item__subtitle-languages">
+            Idiomas de legenda:
+            <input type="text" name="idiomas-legenda" placeholder="Ex: Inglês, Português">
+        </label>
+        <label for="local-armazenamento" class="item__storage-location">
+            Local de armazenamento:
+            <input type="text" name="local-armazenamento" placeholder="Ex: Estante 3, Prateleira 2">
+        </label>
+        <label for="data-aquisicao" class="item__acquisition-date">
+            Data de aquisição:
+            <input type="date" name="data-aquisicao">
+        </label>
+        <label for="valor-aquisicao" class="item__acquisition-value">
+            Valor de aquisição:
+            <input type="number" name="valor-aquisicao" placeholder="Ex: 59.99" min="0" step="0.01">
+        </label>
+        <label for="valor-mercado" class="item__market-value">
+            Valor de mercado:
+            <input type="number" name="valor-mercado" placeholder="Ex: 79.99" min="0" step="0.01">
+        </label>
+        <label for="favorito" class="item__favorite">
+            Favorito:
+            <input type="checkbox" name="favorito">
+        </label>
+        <label for="wishlist" class="item__wishlist">
+            Lista de desejos:
+            <input type="checkbox" name="wishlist">
+        </label>
+        <label for="nota-pessoal" class="item__personal-rating">
+            Nota pessoal:
+            <input type="number" name="nota-pessoal" placeholder="Ex: 8" min="0" max="10" step="0.1">
+        </label>
+        <label for="data-ultima-visualizacao" class="item__last-viewed-date">
+            Data da última visualização:
+            <input type="date" name="data-ultima-visualizacao">
+        </label>
+        <label for="observacoes" class="item__notes">
+            Observações:
+            <textarea name="observacoes" placeholder="Ex: Edição de colecionador, com extras..."></textarea>
         </label>
     </div>
+    }
 
 </form>
