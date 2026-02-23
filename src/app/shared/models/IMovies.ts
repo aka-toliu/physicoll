@@ -23,7 +23,7 @@ export interface IMovieDetail {
     Writer: string;
     Actors: string;
     Plot: string;
-    Lenguage: string;
+    Language: string;
     Country: string;
     Awards: string;
     Poster: string;

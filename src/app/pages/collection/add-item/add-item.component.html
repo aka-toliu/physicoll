@@ -1,5 +1,5 @@
 <header>
-    <h1>Adicionar item à coleção</h1>
+    <h2>Adicionar item à coleção</h2>
 </header>
 
 <form>
@@ -46,9 +46,12 @@
         <div class="movie__info">
             <h3>{{ movieSelected()?.Title }}</h3>
             <p>{{ movieSelected()?.Year }}</p>
-            <p>Diretor:{{ movieSelected()?.Director }}</p>
+            <p>Diretor: {{ movieSelected()?.Director }}</p>
+            <p>Atores: {{ movieSelected()?.Actors }}</p>
             <p>Roteirista: {{ movieSelected()?.Writer }}</p>
             <p>Gênero: {{ movieSelected()?.Genre }}</p>
+            <p>País: {{ movieSelected()?.Country }}</p>
+            <p>Língua: {{ movieSelected()?.Language }}</p>
         </div>
         <!-- <div class="movie__info">
             <h4>Detalhes do filme</h4>
@@ -137,6 +140,10 @@
         <label for="data-aquisicao" class="item__acquisition-date">
             Data de aquisição:
             <input type="date" name="data-aquisicao">
+        </label>
+        <label for="fornecedor" class="item__supplier">
+            Fornecedor:
+            <input type="text" name="fornecedor" placeholder="Ex: Bazar do Antônio, Amazon">
         </label>
         <label for="valor-aquisicao" class="item__acquisition-value">
             Valor de aquisição:
