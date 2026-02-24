@@ -1,8 +1,16 @@
-input, select {
-    height: 40px;
+input,
+select {
+    height: 44px;
     padding: 0 10px;
-    border-radius: 0.25rem;
-    border: 1px solid var(--grey-20);
+    border-radius: 0.5rem;
+    border: 1px solid var(--black);
+    font-weight: 600;
+    outline-color: var(--primary-color);
+    margin-top: 0.5rem;
+
+    &::placeholder{
+        font-weight: 300;
+    }
 }
 
 input[type="checkbox"] {
@@ -17,6 +25,16 @@ label {
     font-size: 0.9rem;
     color: var(--text-color);
     flex: 2 1 300px;
+    position: relative;
+
+
+    > p {
+        position: absolute;
+        top: -4px;
+        left: 10px;
+        background-color: var(--white);
+        padding-inline: 6px;
+    }
 }
 
 textarea {
