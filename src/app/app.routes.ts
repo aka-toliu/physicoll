@@ -1,18 +1,22 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
-import { LoginComponent } from './pages/login/login.component';
-import { NotFoundComponent } from './pages/not-found/not-found.component';
-import { CollectionComponent } from './pages/collection/collection.component';
-import { CollListComponent } from './pages/collection/coll-list/coll-list.component';
-import { CollDetailsComponent } from './pages/collection/coll-details/coll-details.component';
-import { AddItemComponent } from './pages/collection/add-item/add-item.component';
-import { AddCollComponent } from './pages/collection/add-coll/add-coll.component';
-import { ItemDetailsComponent } from './pages/collection/item-details/item-details.component';
+import { ItemDetailsComponent } from './features/collection/item-details/item-details.component';
+import { AddCollComponent } from './features/collection/add-coll/add-coll.component';
+import { AddItemComponent } from './features/collection/add-item/add-item.component';
+import { CollDetailsComponent } from './features/collection/coll-details/coll-details.component';
+import { CollListComponent } from './features/collection/coll-list/coll-list.component';
+import { CollectionComponent } from './features/collection/collection.component';
+import { LoginComponent } from './features/login/login.component';
+import { NotFoundComponent } from './features/not-found/not-found.component';
+import { SearchComponent } from './features/search/search.component';
+import { MovieDetailsComponent } from './features/search/movie-details/movie-details.component';
+
 
 export const routes: Routes = [
 
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'login', title: 'Login', component: LoginComponent},
+    { path: 'search', title: "Search", component: SearchComponent},
+    { path: 'movie/:id', title: 'Movie Details', component: MovieDetailsComponent},
     { path: 'coll', title: 'Collections', component: CollectionComponent, children: [ 
         { path: '', component: CollListComponent },
         { path: 'add-coll', component: AddCollComponent },

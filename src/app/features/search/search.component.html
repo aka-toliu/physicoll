@@ -1,0 +1,38 @@
+<header class="search-movie__header">
+    <h2>Procurar</h2>
+        <input class="search-movie__input" #searchBox type="search" name="search" placeholder="Pesquisar filme"
+            (input)="searchMovies(searchBox.value)" />
+</header>
+
+<!-- <div class="search__trends">
+    <p>Mais procurados</p>
+    <p>Mais adicionados à coleção</p>
+</div> -->
+
+<main class="search-movie__result">
+
+    
+        @if (results()?.Response) {
+
+        <ul class="search-movie__list">
+
+            @if (isSearchLoading()) {
+            <p>Carregando...</p>
+            }
+
+            @if (results()?.totalResults) {
+            <p>{{ results()?.totalResults }} resultados encontrados</p>
+            }
+            @for (movie of results()?.Search; track movie.imdbID) {
+            <li class="search-movie__item" (click)="selectMovie(movie.imdbID)">
+                <img class="search-movie__poster"
+                    [src]="movie.Poster !== 'N/A' ? movie.Poster : 'assets/default-poster.png'" alt="{{ movie.Title }}"
+                    #poster (error)="poster.src = 'assets/default-poster.png'">
+                <h3 class="search-movie__title">{{ movie.Title }}</h3>
+                <p class="search-movie__year">{{ movie.Year }}</p>
+            </li>
+            }
+        </ul>
+        }
+
+</main>

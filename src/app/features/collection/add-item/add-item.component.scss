@@ -62,6 +62,8 @@ form {
     gap: 0.5rem;
     padding: 0.5rem;
     border-radius: 0.5rem;
+    border: 1px solid var(--black);
+    box-shadow: 3px 3px 0 0 var(--black);
   }
   
   &__poster{

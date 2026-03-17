@@ -1,0 +1,11 @@
+<header class="movie__header">
+    <div class="movie__poster">
+        <img [src]="movie()?.Poster !== 'N/A' ? movie()?.Poster : 'assets/default-poster.png'"
+            alt="{{ movie()?.Title }}" class="movie__poster-image">
+    </div>
+</header>
+<main class="movie__info">
+    <h1 class="movie__title">{{ movie()?.Title }}</h1>
+    <h4>{{ movie()?.Year }}</h4>
+    <p>{{ movie()?.Plot }}</p>
+</main>
