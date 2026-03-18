@@ -1,5 +1,14 @@
-.movie{
-    &__header{
+:host {
+    position: relative;
+    height: 100vh;
+    display: block;
+    overflow: hidden;
+}
+
+
+.movie {
+
+    &__header {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -7,31 +16,129 @@
         background-color: var(--grey-20);
         height: 20vh;
         position: relative;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-blend-mode: soft-light;
     }
 
-
     &__poster {
-        aspect-ratio: 9/16;
+
         height: 240px;
         display: flex;
         object-fit: cover;
         bottom: -120px;
         position: absolute;
+        border-radius: 0.5rem;
+        box-shadow: 0px 8px 7px -4px #00000059;
+        border: 1px solid var(--grey-10);
+        overflow: hidden;
     }
 
     &__title {
-        font-size: 1.4rem;
-        margin-top: 1rem;
+        text-align: center;
+
+        >h1 {
+            font-size: 1.2rem;
+            margin-top: 1rem;
+        }
     }
 
-    &__info{
+    &__plot{
+        color: var(--grey-50);
+    }
+
+    &__info {
         padding: 7rem 1rem 1rem 1rem;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        gap: 1rem;
+        background-color: var(--white);
+        height: 100%;
 
-        h4{
-            font-weight: 400;
+        h4 {
+            font-weight: 500;
         }
     }
+}
+
+.modal__item-details {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.432);
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+
+    @keyframes movingUp {
+        from {
+            transform: translateY(100%);
+        }
+
+        to {
+            transform: translateY(0);
+        }
+    }
+
+
+
+    .item {
+
+        &__format,
+        &__condition,
+        &__favorite,
+        &__watched,
+        &__wishlist,
+        &__acquisition-value,
+        &__market-value,
+        &__acquisition-date,
+        &__number-discs,
+        &__edition,
+        &__case-type {
+            max-width: 45%;
+        }
+
+        &__personal-rating {
+            display: flex;
+            width: 100%;
+            padding: 0.5rem;
+
+            .rating-star {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        &__form {
+            width: 100%;
+            height: 70vh;
+            padding: 1.5rem 0.5rem 1.5rem 1rem;
+            position: absolute;
+            bottom: 0;
+            display: flex;
+            border-radius: 2rem 2rem 0 0;
+            border: none;
+            animation: movingUp 0.3s ease-out;
+            background-color: var(--white);
+            flex-direction: column;
+
+            form {
+                display: flex;
+                overflow-y: auto;
+                flex-wrap: wrap;
+                gap: 1rem;
+                padding-inline: 0.5rem;
+
+                >h4 {
+                    width: 100%;
+                }
+            }
+        }
+    }
+
 }

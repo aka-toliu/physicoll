@@ -1,11 +1,165 @@
-<header class="movie__header">
+<header class="movie__header"
+    [ngStyle]="{'background-image': movie()?.Poster !== 'N/A' ? 'url(' + movie()?.Poster + ')' : 'url(assets/default-poster.png)'}">
     <div class="movie__poster">
         <img [src]="movie()?.Poster !== 'N/A' ? movie()?.Poster : 'assets/default-poster.png'"
             alt="{{ movie()?.Title }}" class="movie__poster-image">
     </div>
 </header>
 <main class="movie__info">
-    <h1 class="movie__title">{{ movie()?.Title }}</h1>
-    <h4>{{ movie()?.Year }}</h4>
-    <p>{{ movie()?.Plot }}</p>
+    <div class="movie__title">
+        <h1>{{ movie()?.Title }}</h1>
+        <h4>{{ movie()?.Year }}</h4>
+    </div>
+    <p class="movie__plot">{{ movie()?.Plot }}</p>
+    <h4>{{ movie()?.Genre }}</h4>
+    <h4>{{ movie()?.Director }}</h4>
+    <h4>{{ movie()?.Actors }}</h4>
+    <h4>{{ movie()?.Language }}</h4>
+    <h4>{{ movie()?.Country }}</h4>
+
+    <button (click)="modalItemDetailsOpen.set(true)">Adicionar à coleção</button>
 </main>
+
+@if (modalItemDetailsOpen()) {
+<dialog class="modal__item-details">
+
+    <div class="item__form">
+        <form [formGroup]="formItem">
+            <h4>Detalhes do item</h4>
+            <!-- ----------------------------------------------------------------------- -->
+            <label for="format" class="item__format">
+                <p>Formato:</p>
+                <select formControlName="format" name="format" placeholder="Ex: DVD, Blu-ray, Digital">
+                    @for (format of formatOptions; track $index) {
+                    <option [value]="format">{{ format }}</option>
+                    }
+                </select>
+            </label>
+            <label for="edition" class="item__edition">
+                <p>Edição:</p>
+                <input type="text" formControlName="edition" name="edition" placeholder="Ex: Versão extendida">
+            </label>
+            <label for="idiomas-audio" class="item__audio-languages">
+                <p>Idiomas de áudio:</p>
+                <input type="text" formControlName="audioLanguage" name="idiomas-audio"
+                    placeholder="Ex: Inglês, Português">
+            </label>
+            <label for="idiomas-legenda" class="item__subtitle-languages">
+                <p>Idiomas de legenda:</p>
+                <input type="text" formControlName="subtitleLanguage" name="idiomas-legenda"
+                    placeholder="Ex: Inglês, Português">
+            </label>
+            @if(formItem.get('format')?.value === EFormat.DVD || formItem.get('format')?.value === EFormat.BLURAY) {
+            <label for="numero-discos" class="item__number-discs">
+                <p>Número de discos:</p>
+                <input type="number" formControlName="numberDiscs" name="numero-discos" placeholder="Ex: 1" min="1">
+            </label>
+            }
+            <label for="tipo-capa" class="item__case-type">
+                <p>Tipo de capa:</p>
+                <select formControlName="caseType" name="tipo-capa" placeholder="Ex: Plástico, Digipack, Steelbook">
+                    <option value="" disabled selected>Selecione</option>
+                    @if(formItem.get('format')?.value === EFormat.DVD || formItem.get('format')?.value ===
+                    EFormat.BLURAY) {
+                    @for (caseType of caseDiscOptions; track $index) {
+                    <option [value]="caseType">{{ caseType }}</option>
+                    }
+                    }
+                    @if(formItem.get('format')?.value === EFormat.VHS) {
+                    @for (caseType of caseVHSOptions; track $index) {
+                    <option [value]="caseType">{{ caseType }}</option>
+                    }
+                    }
+
+                </select>
+            </label>
+
+            <h4>Condição</h4>
+            <!-- ----------------------------------------------------------------------- -->
+            <label for="case-condition" class="item__condition">
+                <p>Estado da capa:</p>
+                <select name="case-condition" placeholder="Ex: Novo, Usado - Bom, Usado - Ruim"
+                    formControlName="stateCase">
+                    @for (state of caseStateOptions; track $index) {
+                    <option [value]="state">{{ state }}</option>
+                    }
+                </select>
+            </label>
+            @if(formItem.get('format')?.value === EFormat.DVD || formItem.get('format')?.value === EFormat.BLURAY) {
+            <label for="disc-condition" class="item__condition">
+                <p>Estado do disco:</p>
+                <select name="disc-condition" placeholder="Ex: Novo, Usado - Bom, Usado - Ruim"
+                    formControlName="stateDisc">
+                    @for (state of discStateOptions; track $index) {
+                    <option [value]="state">{{ state }}</option>
+                    }
+                </select>
+            </label>
+            }
+            @if(formItem.get('format')?.value === EFormat.VHS) {
+            <label for="vhs-condition" class="item__condition">
+                <p>Estado da fita:</p>
+                <select name="vhs-condition" placeholder="Ex: Novo, Usado - Bom, Usado - Ruim"
+                    formControlName="stateTape">
+                    @for (state of tapeStateOptions; track $index) {
+                    <option [value]="state">{{ state }}</option>
+                    }
+                </select>
+            </label>
+            }
+            <label for="local-armazenamento" class="item__storage-location">
+                <p>Local de armazenamento:</p>
+                <input type="text" formControlName="storageLocation" name="local-armazenamento"
+                    placeholder="Ex: Estante 3, Prateleira 2">
+            </label>
+
+            <h4>Aquisição</h4>
+            <!-- ----------------------------------------------------------------------- -->
+            <label for="data-aquisicao" class="item__acquisition-date">
+                <p>Data de aquisição:</p>
+                <input type="date" formControlName="acquisitionDate" name="data-aquisicao">
+            </label>
+            <label for="valor-aquisicao" class="item__acquisition-value">
+                <p>Valor de aquisição:</p>
+                <input type="text" formControlName="acquisitionPrice" mask="separator.2" thousandSeparator="."
+                    decimalMarker="," prefix="R$ " placeholder="R$ 0,00">
+            </label>
+            <label for="fornecedor" class="item__supplier">
+                <p>Fornecedor:</p>
+                <input type="text" formControlName="supplier" name="fornecedor"
+                    placeholder="Ex: Bazar do Antônio, Amazon">
+            </label>
+
+            <h4>Notas</h4>
+            <!-- ----------------------------------------------------------------------- -->
+            <label for="favorito" class="item__favorite">
+                <p>Favorito:</p>
+                <input type="checkbox" formControlName="isFavorite" name="favorito">
+            </label>
+            <label for="assisti" class="item__watched">
+                <p>Já assisti</p>
+                <input type="checkbox" formControlName="watched" name="assisti">
+            </label>
+
+            <fieldset class="item__personal-rating">
+                <p>Avaliação pessoal:</p>
+                @for (star of [1, 2, 3, 4, 5]; track star) {
+
+                <label [for]="'star' + star" class="rating-star">
+                    <input type="radio" [id]="'star' + star" [value]="star" formControlName="personalRating">
+                    {{ star }}
+                </label>
+                }
+            </fieldset>
+            <label for="observacoes" class="item__notes">
+                <p>Observações:</p>
+                <textarea formControlName="observations" name="observacoes" placeholder="Escreva aqui..."></textarea>
+            </label>
+
+            <button (click)="onSubmit($event)">Finalizar</button>
+            <button (click)="onCancel($event)">Cancelar</button>
+
+        </form>
+    </div>
+</dialog>
+}

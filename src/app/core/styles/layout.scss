@@ -8,7 +8,7 @@ select {
     outline-color: var(--primary-color);
     margin-top: 0.5rem;
 
-    &::placeholder{
+    &::placeholder {
         font-weight: 300;
     }
 }
@@ -28,7 +28,7 @@ label {
     position: relative;
 
 
-    > p {
+    >p {
         position: absolute;
         top: -4px;
         left: 10px;
@@ -39,8 +39,41 @@ label {
 
 textarea {
     height: 100px;
-    padding: 10px;
+    padding: 1rem;
     border-radius: 0.25rem;
-    border: 1px solid var(--grey-20);
+    border: 1px solid var(--black);
     resize: vertical;
+}
+
+button {
+    height: 60px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    background-color: var(--primary-color);
+    padding-inline: 1.5rem;
+
+    &:hover{
+        opacity: 0.8;
+    }
+}
+
+fieldset{
+    position: relative;
+    justify-content: space-evenly;
+
+    >p {
+        position: absolute;
+        top: -16px;
+        left: 10px;
+        background-color: var(--white);
+        padding-inline: 6px;
+    }
+
+    input[type="radio"] {
+        width: 24px;
+        height: 24px;
+    }   
+
 }
