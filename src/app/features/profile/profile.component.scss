@@ -1,0 +1,74 @@
+.profile {
+    &__header {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+        width: 100%;
+        padding: 2rem;
+        background-color: var(--grey-10);
+        box-shadow: 0px 4px 22px -17px black;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        justify-content: center;
+    }
+
+    &__picture {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 5px solid var(--grey-20);
+        box-shadow: 0px 8px 15px -11px #000000d6;
+    }
+
+    &__name {
+        font-size: 1.3rem;
+    }
+
+    &__username {
+        color: var(--grey-50);
+
+        &::before {
+            content: '@';
+        }
+    }
+
+    &__social {
+        display: flex;
+        flex-direction: column;
+
+        >button {
+            height: 36px;
+            background-color: var(--grey-20);
+            border-radius: 0.25rem;
+            font-size: 0.9rem;
+        }
+    }
+
+    &__social-info {
+        padding-block: 0.5rem;
+        display: flex;
+        gap: 1rem;
+    }
+
+    &__followers,
+    &__following {
+        display: flex;
+        gap: 0.5rem;
+        cursor: pointer;
+
+        >h2 {
+            font-size: 1rem;
+        }
+
+        >p {
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+}
