@@ -1,0 +1,5 @@
+@for (item of menu(); track $index) {
+<div class="navbar__item" routerLinkActive="navbar__item--active" [routerLink]="item.path">
+    <app-icon [icon]="item.icon" color="black"/>
+</div>
+}

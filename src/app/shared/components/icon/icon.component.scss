@@ -1,0 +1,8 @@
+i[icon] {
+    height: var(--size-icon);
+    width: var(--size-icon);
+    display: flex;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    -webkit-mask-size: contain;
+}

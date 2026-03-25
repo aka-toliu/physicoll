@@ -10,6 +10,7 @@ import { NotFoundComponent } from './features/not-found/not-found.component';
 import { SearchComponent } from './features/search/search.component';
 import { MovieDetailsComponent } from './features/search/movie-details/movie-details.component';
 import { ProfileComponent } from './features/profile/profile.component';
+import { WishlistComponent } from './features/wishlist/wishlist.component';
 
 
 export const routes: Routes = [
@@ -17,9 +18,10 @@ export const routes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'login', title: 'Login', component: LoginComponent},
     { path: 'search', title: "Search", component: SearchComponent},
+    { path: 'movie/:id', title: 'Movie Details', component: MovieDetailsComponent},
     { path: 'profile', title: "Profile", component: ProfileComponent},
     { path: 'profile/:userId', title: "Profile", component: ProfileComponent},
-    { path: 'movie/:id', title: 'Movie Details', component: MovieDetailsComponent},
+    { path: 'wishlist', title: "Wishlist", component: WishlistComponent},
     { path: 'coll', title: 'Collections', component: CollectionComponent, children: [ 
         { path: '', component: CollListComponent },
         { path: 'add-coll', component: AddCollComponent },
