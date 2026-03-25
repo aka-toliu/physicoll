@@ -40,13 +40,6 @@
     &__social {
         display: flex;
         flex-direction: column;
-
-        >button {
-            height: 36px;
-            background-color: var(--grey-20);
-            border-radius: 0.25rem;
-            font-size: 0.9rem;
-        }
     }
 
     &__social-info {
@@ -70,5 +63,9 @@
                 text-decoration: underline;
             }
         }
+    }
+
+    &__container{
+        padding: 1rem;
     }
 }

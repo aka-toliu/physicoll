@@ -54,12 +54,19 @@ button {
     background-color: var(--primary-color);
     padding-inline: 1.5rem;
 
-    &:hover{
+    &:hover {
         opacity: 0.8;
+    }
+
+    &[type="smooth"] {
+        height: 36px;
+        background-color: var(--grey-20);
+        border-radius: 0.25rem;
+        font-size: 0.9rem;
     }
 }
 
-fieldset{
+fieldset {
     position: relative;
     justify-content: space-evenly;
 
@@ -74,6 +81,6 @@ fieldset{
     input[type="radio"] {
         width: 24px;
         height: 24px;
-    }   
+    }
 
 }

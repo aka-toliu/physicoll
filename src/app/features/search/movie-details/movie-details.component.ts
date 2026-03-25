@@ -4,9 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IItem, IMovieDetail } from '../../../shared/models/IMovies';
 import { CommonModule, NgStyle } from '@angular/common';
 import { Form, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { state } from '@angular/animations';
 import { ECaseState, EDiscCase, EDiscState, EFormat, EResolution, ETapeState, EVHSCase } from '../../../shared/models/EItem';
 import { NgxMaskDirective } from 'ngx-mask';
+
 
 
 @Component({

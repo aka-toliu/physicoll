@@ -2,7 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { Auth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut, user, User, UserCredential } from '@angular/fire/auth';
 import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { from, Observable } from 'rxjs';
+import { from, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -63,11 +63,13 @@ export class AuthService {
     return from(promise);
   }
 
-  logout() {
-    return from(signOut(this.firebaseAuth)).subscribe(() => {
+logout(): Observable<void> {
+  return from(signOut(this.firebaseAuth)).pipe(
+    tap(() => {
       this.router.navigate(['/login']);
-    });
-  }
+    })
+  );
+}
 
 
 

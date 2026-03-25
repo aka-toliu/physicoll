@@ -31,5 +31,11 @@ export class ProfileComponent implements OnInit {
     });
   }
 
+  onLogout(){
+    this.authService.logout().subscribe({
+      next: (value) => { }
+    })
+  }
+
 
 }
