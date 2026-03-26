@@ -1,21 +1,23 @@
 <header class="profile__header">
-    @if(currentUserData) {
-    <img [src]="currentUserData.photoURL" alt="Profile Picture" width="150" height="150" class="profile__picture">
+    @if(userData()) {
+    <img [src]="userData().photoURL" alt="Profile Picture" width="150" height="150" class="profile__picture">
     <div class="profile__info">
-        <h1 class="profile__name">{{ currentUserData.displayName }}</h1>
-        <p class="profile__username">{{ currentUserData.username }}</p>
+        <h1 class="profile__name">{{ userData().displayName }}</h1>
+        <p class="profile__username">{{ userData().username }}</p>
         <div class="profile__social">
             <div class="profile__social-info">
                 <div class="profile__followers">
-                    <h2>{{ currentUserData?.followers.length || 0 }}</h2>
+                    <h2>{{ userData().followers?.length || 0 }}</h2>
                     <p>Seguidores</p>
                 </div>
                 <div class="profile__following">
-                    <h2>{{ currentUserData?.following.length || 0 }}</h2>
+                    <h2>{{ userData().following?.length || 0 }}</h2>
                     <p>Seguindo</p>
                 </div>
             </div>
-            <button type="smooth">Seguir</button>
+            @if (!isMyself()) {
+                <button type="smooth">Seguir</button>
+            }
         </div>
     </div>
     }@else {
@@ -25,4 +27,5 @@
 <main class="profile__container">
     
     <button type="smooth" (click)="onLogout()">Sair</button>
+
 </main>

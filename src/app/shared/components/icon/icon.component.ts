@@ -12,9 +12,5 @@ export class IconComponent {
 
   icon = input.required<string>();
   color = input<string>('primary-color');
-
-  ngOnInit(): void {
-    console.log(this.icon());
-  }
-
+  
 }

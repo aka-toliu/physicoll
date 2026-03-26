@@ -1,6 +1,9 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { ProfileService } from '../../core/services/profile.service';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -12,29 +15,76 @@ import { CommonModule } from '@angular/common';
 export class ProfileComponent implements OnInit {
 
   private authService = inject(AuthService);
+  private profileService = inject(ProfileService);
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
 
-  public currentUserProfile = this.authService.userProfile();
-  public currentUserData = this.authService.userData();
+
+  public userData = signal<any | null | undefined>(undefined);
+  private uid = signal(localStorage.getItem('UID'));
+
+  protected isMyself = signal(false);
+  private routeSubscription!: Subscription;
 
   ngOnInit(): void {
-    console.log(this.authService.userProfile());
-    console.log(this.authService.userData());
+    this.onCheckProfile();
   }
   
   constructor() {
-    effect(() => {
-      this.currentUserProfile = this.authService.userProfile();
-    });
+  }
 
-    effect(() => {
-      this.currentUserData = this.authService.userData();
-    });
+  onCheckProfile(): void {
+    this.routeSubscription = this.activatedRoute.params.subscribe({
+      next: (params) => {
+        const uid = params['userId'];
+        if(uid) {
+          this.onGetProfileByUsername(uid);
+        }else{   
+          this.onGetProfile(this.uid() || '');
+        }
+      }
+    })
+
+  }
+
+  onGetProfile(uid: string): void {
+    this.profileService.getProfile(uid).subscribe({
+      next: (profile) => {
+        this.userData.set(profile);
+        console.log('profile', profile);
+        this.isMyself.set(true);
+      },
+      error: (err) => {
+        console.error(err);
+        this.router.navigate(['/not-found']);
+      }
+    })
+  }
+
+  onGetProfileByUsername(username: string): void {
+    this.profileService.getProfileByUsername(username).subscribe({
+      next: (profile) => {         
+        this.userData.set(profile);
+        console.log('profile', profile);
+        this.checkIsMyself(this.authService.userData().uid, profile.uid);
+      },
+      error: (err) => {
+        console.error(err);
+        this.router.navigate(['/not-found']);
+      }
+    })
+  }
+
+  checkIsMyself(uid1: string, uid2: string) {
+    if(uid1 === uid2) {
+      this.isMyself.set(true);
+    }else{
+      this.isMyself.set(false);
+    }
   }
 
   onLogout(){
-    this.authService.logout().subscribe({
-      next: (value) => { }
-    })
+    this.authService.logout().subscribe();
   }
 
 

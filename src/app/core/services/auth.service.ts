@@ -13,24 +13,14 @@ export class AuthService {
   private firestore: Firestore = inject(Firestore);
   private router = inject(Router);
 
-  private _userProfile = signal<User | null | undefined>(undefined);
-  public userProfile = this._userProfile.asReadonly();
-
-  public isAuthenticated = computed(() => !!this._userProfile());
+  public isAuthenticated = computed(() => !!this.userData());
 
   private _userData = signal<any | null | undefined>(undefined);
   public userData = this._userData.asReadonly();
 
   constructor() {
     user(this.firebaseAuth).subscribe(async (firebaseUser) => {
-      this._userProfile.set(firebaseUser);
-
-      if (firebaseUser) {
-        const profileData = await this.checkOrCreateProfile(firebaseUser);
-        this._userData.set(profileData);
-      } else {
-        this._userData.set(null);
-      }
+      this._userData.set(firebaseUser);
     });
   }
 
@@ -50,12 +40,9 @@ export class AuthService {
       (promise) => {
 
         this.checkOrCreateProfile(promise.user).then(profileData => {
-          this._userData.set(profileData);
+          this.router.navigate(['/profile']);
         });
-
-        this._userProfile.set(promise.user);
-        this.router.navigate(['/profile']);
-
+        
         return promise
       },
       (error) => { throw error }
@@ -79,7 +66,10 @@ logout(): Observable<void> {
     const userSnap = await getDoc(userDocRef);
 
     if (userSnap.exists()) {
-      return userSnap.data();
+      const profileData = userSnap.data();
+      this._userData.set(profileData);
+      localStorage.setItem('UID', user.uid);
+      return profileData;
     } else {
       const newUserProfile = {
         displayName: user.displayName || `User${user.uid.substring(0, 5)}`,
