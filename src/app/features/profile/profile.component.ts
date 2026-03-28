@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ProfileService } from '../../core/services/profile.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IProfile } from '../../shared/models/IProfile';
 
 @Component({
   selector: 'app-profile',
@@ -20,7 +21,7 @@ export class ProfileComponent implements OnInit {
   private router = inject(Router);
 
 
-  public userData = signal<any | null | undefined>(undefined);
+  public userData = signal<IProfile | null | undefined>(undefined);
   private uid = signal(localStorage.getItem('UID'));
 
   protected isMyself = signal(false);

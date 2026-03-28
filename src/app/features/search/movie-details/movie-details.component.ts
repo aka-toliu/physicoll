@@ -7,6 +7,7 @@ import { Form, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/form
 import { ECaseState, EDiscCase, EDiscState, EFormat, EResolution, ETapeState, EVHSCase } from '../../../shared/models/EItem';
 import { NgxMaskDirective } from 'ngx-mask';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
+import { CollectionService } from '../../../core/services/collection.service';
 
 
 
@@ -23,6 +24,8 @@ export class MovieDetailsComponent implements OnInit {
   private router = inject(Router);
   private moviesService = inject(MoviesService);
   private formBuilder = inject(FormBuilder);
+  private collectionService = inject(CollectionService);
+  private uid = signal(localStorage.getItem('UID'));
 
   protected loading = false;
   protected movie = signal<IMovieDetail | null>(null);
@@ -63,7 +66,11 @@ export class MovieDetailsComponent implements OnInit {
       isFavorite: [false],
       watched: [false],
       personalRating: [0],
-      observations: [null]
+      observations: [null],
+      title: [null],
+      year: [null],
+      poster: [null],
+      director: [null],
     });
   }
 
@@ -76,6 +83,10 @@ export class MovieDetailsComponent implements OnInit {
             this.movie.set(movie);
             this.formItem.patchValue({
               imdbID: movie.imdbID,
+              title: movie.Title,
+              year: movie.Year,
+              poster: movie.Poster,
+              director: movie.Director
             });
             this.loading = false;
           },
@@ -95,6 +106,14 @@ export class MovieDetailsComponent implements OnInit {
   onSubmit(event: Event){
     event.preventDefault();
     console.log(this.formItem.value);
+    this.collectionService.addToCollection(this.uid(), this.formItem.value).subscribe({
+      next: () => {
+        console.log('Item adicionado à coleção com sucesso!');
+        this.modalItemDetailsOpen.set(false);
+      },
+      error: () => console.error('Erro ao adicionar item à coleção')
+    })
+    
     
   }
 
