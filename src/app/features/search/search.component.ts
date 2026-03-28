@@ -4,11 +4,12 @@ import { debounceTime, distinctUntilChanged, switchMap, of, catchError, finalize
 import { MoviesService } from '../../core/services/movies.service';
 import { IMovieDetail } from '../../shared/models/IMovies';
 import { Router } from '@angular/router';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-search',
   standalone: true,
-  imports: [],
+  imports: [IconComponent],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss'
 })
@@ -53,5 +54,6 @@ export class SearchComponent {
   selectMovie(id: string) {
     this.router.navigate(['/movie', id]);
   }
+  
 
 }

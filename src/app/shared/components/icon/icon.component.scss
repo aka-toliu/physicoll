@@ -5,4 +5,6 @@ i[icon] {
     mask-repeat: no-repeat;
     mask-size: contain;
     -webkit-mask-size: contain;
+    color: var(--black);
+    background-color: currentColor;
 }

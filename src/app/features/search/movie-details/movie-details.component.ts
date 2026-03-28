@@ -6,13 +6,14 @@ import { CommonModule, NgStyle } from '@angular/common';
 import { Form, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ECaseState, EDiscCase, EDiscState, EFormat, EResolution, ETapeState, EVHSCase } from '../../../shared/models/EItem';
 import { NgxMaskDirective } from 'ngx-mask';
+import { IconComponent } from '../../../shared/components/icon/icon.component';
 
 
 
 @Component({
   selector: 'app-movie-details',
   standalone: true,
-  imports: [NgStyle, CommonModule, ReactiveFormsModule, NgxMaskDirective],
+  imports: [NgStyle, CommonModule, ReactiveFormsModule, NgxMaskDirective, IconComponent],
   templateUrl: './movie-details.component.html',
   styleUrl: './movie-details.component.scss'
 })
@@ -98,7 +99,7 @@ export class MovieDetailsComponent implements OnInit {
   }
 
   onBack() {
-    this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+    this.router.navigate(['/search']);
   }
 
 

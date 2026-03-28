@@ -1,5 +1,10 @@
 <header class="movie__header"
     [ngStyle]="{'background-image': movie()?.Poster !== 'N/A' ? 'url(' + movie()?.Poster + ')' : 'url(assets/default-poster.png)'}">
+    
+    <button class="btn-back" (click)="onBack()">
+        <app-icon icon="arrow-left" />
+    </button>
+
     <div class="movie__poster">
         <img [src]="movie()?.Poster !== 'N/A' ? movie()?.Poster : 'assets/default-poster.png'"
             alt="{{ movie()?.Title }}" class="movie__poster-image">
@@ -8,16 +13,52 @@
 <main class="movie__info">
     <div class="movie__title">
         <h1>{{ movie()?.Title }}</h1>
-        <h4>{{ movie()?.Year }}</h4>
+        <h4 class="info-year">{{ movie()?.Year }}</h4>
+    </div>
+    <div class="btn-container">
+        <button class="btn-add" (click)="modalItemDetailsOpen.set(true)">
+            <p>Adicionar à coleção</p>
+            <app-icon icon="add" />
+        </button>
+        <button class="btn-add-wishlist">
+            <app-icon icon="add-wishlist" />
+        </button>
+
     </div>
     <p class="movie__plot">{{ movie()?.Plot }}</p>
-    <h4>{{ movie()?.Genre }}</h4>
-    <h4>{{ movie()?.Director }}</h4>
-    <h4>{{ movie()?.Actors }}</h4>
-    <h4>{{ movie()?.Language }}</h4>
-    <h4>{{ movie()?.Country }}</h4>
+    <h4 class="info-category">
+        <app-icon icon="actors" />
+        {{ movie()?.Actors }}
+    </h4>
+    <h4 class="info-category">
+        <app-icon icon="genre" />
+        {{ movie()?.Genre }}
+    </h4>
+    <h4 class="info-category">
+        <app-icon icon="director" />
+        {{ movie()?.Director }}
+    </h4>
+        <h4 class="info-category">
+        <app-icon icon="writer" />
+        {{ movie()?.Writer }}
+    </h4>
+    <h4 class="info-category">
+        <app-icon icon="language" />
+        {{ movie()?.Language }}
+    </h4>
+    <h4 class="info-category">
+        <app-icon icon="country" />
+        {{ movie()?.Country }}
+    </h4>
+    <h4 class="info-category">
+        <app-icon icon="runtime" />
+        {{ movie()?.Runtime }}
+    </h4>
+        <h4 class="info-category">
+        <app-icon icon="trophy" />
+        {{ movie()?.Awards }}
+    </h4>
 
-    <button (click)="modalItemDetailsOpen.set(true)">Adicionar à coleção</button>
 </main>
 
 @if (modalItemDetailsOpen()) {
