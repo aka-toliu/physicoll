@@ -1,1 +1,13 @@
-<h1>Minhas coleções</h1>
+<header class="coll__header">
+    <h1>Minhas coleções</h1>
+</header>
+<div class="coll__list">
+    <p>Itens na coleção: {{ collection()?.length }}</p>
+    @if(collection()){
+@for (item of collection(); track $index) {
+<app-card-coll [item]="item"></app-card-coll>
+}
+} @else {
+<p>Você ainda não adicionou nenhum item à coleção.</p>
+}
+</div>

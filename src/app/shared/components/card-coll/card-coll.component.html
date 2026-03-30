@@ -1,0 +1,18 @@
+<div class="card-coll__poster">
+    <img [src]="item()?.poster" alt="{{ item()?.title }} poster">
+</div>
+
+<span class="card-coll__format" [ngClass]="item()?.format">
+    @if(item()?.format === 'DVD') {
+    <app-icon icon="dvd"/>
+    } @else if(item()?.format === 'BluRay') {
+    <app-icon icon="bluray"/>
+    } @else if(item()?.format === 'VHS') {
+    <app-icon icon="vhs"/>
+    }
+</span>
+<div class="card-coll__info">
+    <h3>{{ item()?.title}}</h3>
+    <p>{{ item()?.year }}</p>
+    <p>{{ item()?.edition }}</p>
+</div>

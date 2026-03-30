@@ -1,17 +1,17 @@
 <header class="profile__header">
     @if(userData()) {
-    <img [src]="userData().photoURL" alt="Profile Picture" width="150" height="150" class="profile__picture">
+    <img [src]="userData()?.photoURL" alt="Profile Picture" width="150" height="150" class="profile__picture">
     <div class="profile__info">
-        <h1 class="profile__name">{{ userData().displayName }}</h1>
-        <p class="profile__username">{{ userData().username }}</p>
+        <h1 class="profile__name">{{ userData()?.displayName }}</h1>
+        <p class="profile__username">{{ userData()?.username }}</p>
         <div class="profile__social">
             <div class="profile__social-info">
                 <div class="profile__followers">
-                    <h2>{{ userData().followers?.length || 0 }}</h2>
+                    <h2>{{ userData()?.followers?.length || 0 }}</h2>
                     <p>Seguidores</p>
                 </div>
                 <div class="profile__following">
-                    <h2>{{ userData().following?.length || 0 }}</h2>
+                    <h2>{{ userData()?.following?.length || 0 }}</h2>
                     <p>Seguindo</p>
                 </div>
             </div>

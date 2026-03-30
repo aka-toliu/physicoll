@@ -1,0 +1,19 @@
+.coll{
+    &__header{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem;
+        background-color: var(--white);
+
+        > h1{
+            font-size: 1.5rem;
+        }
+    }
+    &__list{
+        display: flex;
+        gap: 1rem;
+        padding: 2rem 1rem;
+        flex-direction: column;
+    }
+}
