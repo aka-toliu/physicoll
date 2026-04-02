@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, Firestore, getDocs } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, getDoc, getDocs } from '@angular/fire/firestore';
 import { ICollectionItem } from '../../shared/models/ICollection';
 import { from, Observable } from 'rxjs';
 
@@ -28,6 +28,18 @@ export class CollectionService {
         items.push({ id: doc.id, ...doc.data() } as ICollectionItem);
       });
       return items;
+    });
+    return from(promise);
+  }
+
+  getCollectionItem(uid: string | null, itemId: string): Observable<ICollectionItem | null> {
+    const docRef = doc(this.firestore, `users/${uid}/collection/${itemId}`);
+    const promise = getDoc(docRef).then(docSnap => {
+      if (docSnap.exists()) {
+        return { id: docSnap.id, ...docSnap.data() } as ICollectionItem;
+      } else {
+        return null;
+      }
     });
     return from(promise);
   }

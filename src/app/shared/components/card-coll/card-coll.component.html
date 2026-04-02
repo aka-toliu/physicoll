@@ -1,18 +1,66 @@
 <div class="card-coll__poster">
-    <img [src]="item()?.poster" alt="{{ item()?.title }} poster">
+    <img [src]="item()?.poster ?? 'assets/default-poster.jpg'" alt="{{ item()?.title }} poster">
+
+
+    <!-- <div class="card-coll__rating">
+            <app-icon icon="star" />
+            {{ item()?.personalRating }}
+        </div> -->
+
 </div>
 
 <span class="card-coll__format" [ngClass]="item()?.format">
     @if(item()?.format === 'DVD') {
-    <app-icon icon="dvd"/>
+    <app-icon icon="dvd" />
     } @else if(item()?.format === 'BluRay') {
-    <app-icon icon="bluray"/>
+    <app-icon icon="bluray" />
     } @else if(item()?.format === 'VHS') {
-    <app-icon icon="vhs"/>
+    <app-icon icon="vhs" />
     }
 </span>
 <div class="card-coll__info">
     <h3>{{ item()?.title}}</h3>
-    <p>{{ item()?.year }}</p>
-    <p>{{ item()?.edition }}</p>
+    <p class="card-coll__year">{{ item()?.year }}</p>
+    <p class="card-coll__director">{{ item()?.director }}</p>
+
+    <div class="item-info-container">
+
+
+
+        @if(item()?.stateCase){
+        <div class="card-coll__case"
+            [style.color]="item()?.stateCase === 'Novo' ? 'forestgreen' : item()?.stateCase === 'Bom' ? 'chocolate' : 'brown'">
+            <app-icon icon="case" />
+
+        </div>
+        }
+
+        @if(item()?.stateDisc){
+        <div class="card-coll__disc"
+            [style.color]="item()?.stateDisc === 'Novo' ? 'forestgreen' : item()?.stateDisc === 'Bom' ? 'chocolate' : 'brown'">
+            <app-icon icon="disc" />
+
+        </div>
+        }
+
+        @if(item()?.stateTape){
+        <div class="card-coll__tape"
+            [style.color]="item()?.stateTape === 'Novo' ? 'forestgreen' : item()?.stateTape === 'Bom' ? 'chocolate' : 'brown'">
+            <app-icon icon="vhs" />
+
+        </div>
+        }
+
+        @if(item()?.edition){
+        <div class="card-coll__edition">
+            <app-icon icon="edition" />
+            <p>{{ item()?.edition }}</p>
+        </div>
+        }
+
+
+    </div>
+
+
+
 </div>

@@ -1,32 +1,65 @@
-:host{
+:host {
     display: flex;
     padding: 1rem;
     background-color: var(--white);
     width: 100%;
     border-radius: 0.5rem;
-    gap: 1rem;
+    gap: 1.5rem;
     align-items: center;
     position: relative;
     box-shadow: var(--shadow-card);
 
-    &:has(.DVD){ background-color: color-mix(in srgb, var(--dvd-color) 15%, var(--white) 70%); }
-    &:has(.BluRay){ background-color: color-mix(in srgb, var(--blueray-color) 15%, var(--white) 70%); }
-    &:has(.VHS){ background-color: color-mix(in srgb, var(--vhs-color) 15%, var(--white) 70%); }
+    &:has(.DVD) {
+        background-color: color-mix(in srgb, var(--dvd-color) 10%, var(--white) 70%);
+
+        .card-coll__poster {
+            >img {
+                box-shadow: 2px 0px 0 0 #ffffff, 6px 0px 0 0 #cfcfcf;
+                border: 2px solid white;
+                border-radius: 0.35rem;
+            }
+        }
+    }
+
+    &:has(.BluRay) {
+        background-color: color-mix(in srgb, var(--blueray-color) 10%, var(--white) 70%);
+
+        .card-coll__poster {
+            >img {
+                box-shadow: 0px -7px 0px 0px var(--blueray-color), 0px -10px 0 0px #3aa6ef;
+                border: 2px solid #71c6ff;
+                border-radius: 0.35rem 0.35rem 0.5rem 0.5rem;
+            }
+        }
+    }
+
+    &:has(.VHS) {
+        background-color: color-mix(in srgb, var(--vhs-color) 5%, var(--white) 70%);
+
+        .card-coll__poster {
+            >img {
+                box-shadow: 7px 3px 0px 4px black, 4px 1px 0px 2px black;
+                border-radius: 0.05rem;
+            }
+        }
+    }
 }
 
-.card-coll{
-    &__poster{
+.card-coll {
+    &__poster {
         display: flex;
         align-items: center;
-        box-shadow: var(--shadow-card);
+        flex-direction: column;
+        gap: 1rem;
+        filter: drop-shadow(4px 8px 7px rgb(0 0 0 / 37%));
 
-        > img {
+        >img {
             height: 120px;
             border-radius: 0.25rem;
         }
     }
 
-    &__info{
+    &__info {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -34,18 +67,21 @@
         height: 100%;
         flex: 1;
         position: relative;
+        gap: 0.25rem;
 
-        p{
-            color: var(--grey-50);
+        >h3 {
+            font-size: 1rem;
+            font-weight: 600;
         }
 
-        > h3{
-            font-size: 1.25rem;
-            font-weight: 600;
+        .item-info-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
     }
 
-    &__format{
+    &__format {
         position: absolute;
         top: 0;
         right: -0;
@@ -53,14 +89,91 @@
         background-color: var(--grey-10);
         border-radius: 0 0.5rem 0 1.5rem;
 
-        ::ng-deep{
-            i[icon]{
-                --size-icon: 28px;
+        ::ng-deep {
+            i[icon] {
+                --size-icon: 25px;
             }
         }
     }
+
+    &__rating {
+        ::ng-deep {
+            i[icon] {
+                color: var(--primary-color);
+            }
+        }
+    }
+
+    &__edition {
+        color: indigo;
+        background-color: color-mix(in srgb, currentColor 10%, var(--white) 80%);
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+
+        ::ng-deep {
+            i[icon] {
+                color: currentColor;
+            }
+        }
+    }
+
+    &__rating,
+    &__edition,
+    &__case,
+    &__disc,
+    &__tape {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        ::ng-deep {
+            i[icon] {
+                --size-icon: 18px;
+            }
+        }
+    }
+
+    &__director,
+    &__rating,
+    &__edition,
+    &__case,
+    &__disc,
+    &__tape {
+        font-size: 0.9rem;
+    }
+
+    &__year {
+        color: var(--grey-50);
+    }
+
+    &__case,
+    &__disc,
+    &__tape {
+        background-color: color-mix(in srgb, currentColor 20%, var(--white) 80%);
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.7rem;
+
+        ::ng-deep {
+            i[icon] {
+                color: currentColor;
+            }
+        }
+    }
+
+
+
+
 }
 
-.DVD{ background-color: var(--dvd-color);}
-.BluRay{ background-color: var(--blueray-color);}
-.VHS{ background-color: var(--vhs-color);}
+.DVD {
+    background-color: var(--dvd-color);
+}
+
+.BluRay {
+    background-color: var(--blueray-color);
+}
+
+.VHS {
+    background-color: var(--vhs-color);
+}

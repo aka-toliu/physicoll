@@ -1,1 +1,75 @@
-<p>item-details works!</p>
+<header class="item-details__header" [ngClass]="">
+    <span class="item-details__format" [ngClass]="item()?.format">
+        @if(item()?.format === 'DVD') {
+        <app-icon icon="dvd" />
+        {{ item()?.format }}
+        } @else if(item()?.format === 'BluRay') {
+        <app-icon icon="bluray" />
+        {{ item()?.format }}
+        } @else if(item()?.format === 'VHS') {
+        <app-icon icon="vhs" />
+        {{ item()?.format }}
+        }
+    </span>
+    <div class="item-details__poster">
+        <img [src]="item()?.poster ?? 'assets/default-poster.png'" alt="">
+    </div>
+</header>
+<div class="item-details__movie">
+    <h2>{{ item()?.title }}</h2>
+    <p>{{ item()?.year }}</p>
+    <p>{{ item()?.director }}</p>
+
+    <button type="smooth">Sobre a obra</button>
+</div>
+<div class="item-details__info">
+
+    <h3>Sobre o item</h3>
+
+    @if (item()?.numberDiscs) {
+    <p><span>Número de discos:</span> {{ item()?.numberDiscs }}</p>
+    }
+
+    <p><span>Linguagens da legenda:</span> {{ item()?.subtitleLanguages }}</p>
+    <p><span>Linguagem de áudio:</span> {{ item()?.audioLanguages }}</p>
+
+
+
+    @if (item()?.stateCase || item()?.stateDisc || item()?.stateTape) {
+    <div class="info-state">
+        <span>Condição:</span>
+        @if(item()?.stateCase){
+        <div class="info-state__case"
+            [style.color]="item()?.stateCase === 'Novo' ? 'forestgreen' : item()?.stateCase === 'Bom' ? 'chocolate' : 'brown'">
+            <app-icon icon="case" />
+            Capa: <b>{{ item()?.stateCase }}</b>
+        </div>
+        }
+
+        @if(item()?.stateDisc){
+        <div class="info-state__disc"
+            [style.color]="item()?.stateDisc === 'Novo' ? 'forestgreen' : item()?.stateDisc === 'Bom' ? 'chocolate' : 'brown'">
+            <app-icon icon="disc" />
+            Disco: <b>{{ item()?.stateDisc }}</b>
+        </div>
+        }
+
+        @if(item()?.stateTape){
+        <div class="info-state__tape"
+            [style.color]="item()?.stateTape === 'Novo' ? 'forestgreen' : item()?.stateTape === 'Bom' ? 'chocolate' : 'brown'">
+            <app-icon icon="vhs" />
+            Fita: <b>{{ item()?.stateTape }}</b>
+
+        </div>
+        }
+    </div>
+    }
+
+    <p><span>Tipo de capa:</span> {{ item()?.caseType }}</p>
+    <p><span>Data de aquisição:</span> {{ item()?.acquisitionDate | date:'longDate' }}</p>
+    <p><span>Valor da aquisição:</span> {{ item()?.acquisitionPrice | currency:'BRL' }}</p>
+    <p><span>Fornecedor:</span> {{ item()?.supplier }}</p>
+
+
+
+</div>

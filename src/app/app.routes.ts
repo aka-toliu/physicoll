@@ -24,10 +24,7 @@ export const routes: Routes = [
     { path: 'wishlist', title: "Wishlist", component: WishlistComponent},
     { path: 'coll', title: 'Collections', component: CollectionComponent, children: [ 
         { path: '', component: CollListComponent },
-        { path: 'add-coll', component: AddCollComponent },
-        { path: ':coll-id', component: CollDetailsComponent},
-        { path: ':coll-id/add-item', component: AddItemComponent},
-        { path: ':coll-id/:item-id', component: ItemDetailsComponent }
+        { path: ':itemID', component: ItemDetailsComponent },
     ]},
     { path: 'not-found', title: 'Not Found', component: NotFoundComponent},
     { path: '**', redirectTo: 'not-found' },

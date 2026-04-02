@@ -22,4 +22,6 @@ export interface ICollectionItem {
     storageLocation: string;
     supplier: string;
     watched: boolean;
+    director: string;
+    
 }
