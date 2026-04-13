@@ -15,7 +15,7 @@ export interface IMovieResult {
 }
 
 export interface IMovieDetail {
-    
+
     imdbID: string;
     Title: string;
     Year: string;
@@ -44,14 +44,16 @@ export interface IMovieDetail {
 }
 
 export interface IItem {
-    uid: string;
-    owner: string;
+    id: string;
     imdbID: string;
+    genre: string[];
+    director: string[];
+    actors: string[];
+    writer: string[];
+    country: string[];
+    originalLanguage: string[];
     format: EFormat;
-    edition: string;
-    resolution: EResolution;
-    audioLanguage: string;
-    subtitleLanguage: string;
+    hasMoreThanOneDisc: boolean;
     numberDiscs: number;
     caseType: EDiscCase | EVHSCase;
     stateCase: ECaseState;
@@ -61,8 +63,18 @@ export interface IItem {
     acquisitionDate: Date;
     acquisitionPrice: number;
     supplier: string;
+    aviableToExchange: boolean;
+    avaliableToSell: boolean;
+    isLoaned: boolean;
+    isSpecialEdition: boolean;
+    edition: string;
+    resolution: EResolution;
+    audioLanguage: string;
+    subtitleLanguage: string;
     isFavorite: boolean;
     watched: boolean;
+    lastWatchedDate: Date | null;
     personalRating: number;
     observations: string;
+    addedAt: Date;
 }

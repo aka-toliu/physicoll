@@ -8,13 +8,14 @@ import { ECaseState, EDiscCase, EDiscState, EFormat, EResolution, ETapeState, EV
 import { NgxMaskDirective } from 'ngx-mask';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CollectionService } from '../../../core/services/collection.service';
+import { CollFormComponent } from '../../../shared/components/coll-form/coll-form.component';
 
 
 
 @Component({
   selector: 'app-movie-details',
   standalone: true,
-  imports: [NgStyle, CommonModule, ReactiveFormsModule, NgxMaskDirective, IconComponent],
+  imports: [NgStyle, CommonModule, ReactiveFormsModule, NgxMaskDirective, IconComponent, CollFormComponent],
   templateUrl: './movie-details.component.html',
   styleUrl: './movie-details.component.scss'
 })
@@ -23,56 +24,17 @@ export class MovieDetailsComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private moviesService = inject(MoviesService);
-  private formBuilder = inject(FormBuilder);
-  private collectionService = inject(CollectionService);
-  private uid = signal(localStorage.getItem('UID'));
+ 
 
   protected loading = false;
   protected movie = signal<IMovieDetail | null>(null);
 
-  formItem!: FormGroup;
-
-  public modalItemDetailsOpen = signal(false);
-  public caseDiscOptions = Object.values(EDiscCase);
-  public caseVHSOptions = Object.values(EVHSCase);
-  public formatOptions = Object.values(EFormat);
-  public caseStateOptions = Object.values(ECaseState);
-  public discStateOptions = Object.values(EDiscState);
-  public tapeStateOptions = Object.values(ETapeState);
-  public resolutionOptions = Object.values(EResolution);
-  public EFormat = EFormat;
+  public modalAddToCollection = signal(false);
   
   ngOnInit(): void {
     this.onGetMovieDetails();
-    this.onBuildForm();
   }
 
-  onBuildForm() {
-    this.formItem = this.formBuilder.group({
-      imdbID: [null],
-      format: [EFormat.DVD],
-      edition: [null],
-      audioLanguage: [null],
-      subtitleLanguage: [null],
-      numberDiscs: [1],
-      caseType: [''],
-      stateCase: [null],
-      stateDisc: [null],
-      stateTape: [null],
-      storageLocation: [null],
-      acquisitionDate: [null],
-      acquisitionPrice: [0],
-      supplier: [null],
-      isFavorite: [false],
-      watched: [false],
-      personalRating: [0],
-      observations: [null],
-      title: [null],
-      year: [null],
-      poster: [null],
-      director: [null],
-    });
-  }
 
   onGetMovieDetails() {
       this.activatedRoute.params.subscribe(params => {
@@ -81,13 +43,6 @@ export class MovieDetailsComponent implements OnInit {
         this.moviesService.getMovie(movieId).subscribe({
           next: (movie) => {
             this.movie.set(movie);
-            this.formItem.patchValue({
-              imdbID: movie.imdbID,
-              title: movie.Title,
-              year: movie.Year,
-              poster: movie.Poster,
-              director: movie.Director
-            });
             this.loading = false;
           },
           error: (err) => {
@@ -96,25 +51,6 @@ export class MovieDetailsComponent implements OnInit {
         });
       }
     });
-  }
-
-  onCancel(event: Event) {
-    event.preventDefault();
-    this.modalItemDetailsOpen.set(false);
-  }
-
-  onSubmit(event: Event){
-    event.preventDefault();
-    console.log(this.formItem.value);
-    this.collectionService.addToCollection(this.uid(), this.formItem.value).subscribe({
-      next: () => {
-        console.log('Item adicionado à coleção com sucesso!');
-        this.modalItemDetailsOpen.set(false);
-      },
-      error: () => console.error('Erro ao adicionar item à coleção')
-    })
-    
-    
   }
 
   onBack() {

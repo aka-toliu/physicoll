@@ -1,0 +1,214 @@
+.modal-bg {
+    position: fixed;
+    top: 0;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 0;
+}
+
+.modal-add-item {
+    position: fixed;
+    bottom: 70px;
+    left: 0;
+    width: 100%;
+    height: 70vh;
+    display: flex;
+    background-color: var(--white);
+    gap: 1rem;
+    border-radius: 2rem 2rem 0 0;
+    z-index: 2;
+    overflow: hidden;
+    padding: 1.1rem;
+
+    form.item__form {
+        overflow-y: auto;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+
+        h4 {
+            position: sticky;
+            top: -4px;
+            background-color: var(--white);
+            padding: 0.5rem 0;
+            z-index: 2;
+            width: 100%;
+        }
+    }
+}
+
+.item {
+    &__format {
+
+        display: flex;
+        gap: 0.5rem;
+
+        input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+
+            &:checked~.checkmark {
+                background-color: color-mix(in srgb, currentColor 20%, transparent);
+                border: 2px solid currentColor;
+
+                >p {
+                    color: color-mix(in srgb, currentColor 100%, #000 20%);
+                }
+
+                ::ng-deep {
+                    i[icon] {
+                        color: color-mix(in srgb, currentColor 100%, #000 30%);
+                    }
+                }
+            }
+        }
+
+        .checkmark {
+            background-color: var(--grey-10);
+            border: 2px solid var(--grey-20);
+            padding: 1rem;
+            width: 100%;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+
+            >p {
+                color: var(--grey-20);
+            }
+
+
+            ::ng-deep {
+                i[icon] {
+                    color: var(--grey-20);
+                }
+            }
+        }
+    }
+
+    &__condition {
+        display: flex;
+        gap: 0.25rem;
+        padding: 0.75rem;
+
+        input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+
+            &:checked~.checkmark {
+                background-color: color-mix(in srgb, currentColor 20%, transparent);
+                border: 2px solid currentColor;
+
+                >p {
+                    color: color-mix(in srgb, currentColor 100%, #000 20%);
+                }
+
+                ::ng-deep {
+                    i[icon] {
+                        color: color-mix(in srgb, currentColor 100%, #000 20%);
+                    }
+                }
+            }
+        }
+
+        .checkmark {
+            background-color: var(--grey-10);
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            width: 62px;
+            border: 2px solid var(--grey-20);
+            font-size: 0.7rem;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+
+            >p {
+                color: var(--grey-30);
+            }
+        }
+
+    }
+
+    &__personal-rating {
+        display: flex;
+        gap: 0.25rem;
+        padding: 0.75rem;
+
+
+            ::ng-deep {
+                i[icon] {
+                    color: currentColor;
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                }
+            }
+        
+    }
+
+    &__discs {
+        width: 20%;
+    }
+}
+
+// .item {
+//         &__form {
+//             width: 100%;
+//             height: 70vh;
+//             padding: 1.5rem 0.5rem 1.5rem 1rem;
+//             position: absolute;
+//             bottom: 80px;
+//             display: flex;
+//             border-radius: 2rem 2rem 0 0;
+//             border: none;
+//             animation: movingUp 0.3s ease-out;
+//             background-color: var(--white);
+//             flex-direction: column;
+
+
+//             form {
+//                 display: flex;
+//                 overflow-y: auto;
+//                 flex-wrap: wrap;
+//                 gap: 1rem;
+//                 padding-inline: 0.5rem;
+
+//                 >h4 {
+//                     width: 100%;
+//                 }
+//             }
+//         }
+
+
+//         &__condition,
+//         &__favorite,
+//         &__watched,
+//         &__wishlist,
+//         &__acquisition-value,
+//         &__market-value,
+//         &__acquisition-date,
+//         &__number-discs,
+//         &__edition,
+//         &__case-type {
+//             max-width: 45%;
+//         }
+
+//         &__personal-rating {
+//             display: flex;
+//             width: 100%;
+//             padding: 0.5rem;
+
+//             .rating-star {
+//                 display: flex;
+//                 flex-direction: column;
+//                 height: 100%;
+//                 align-items: center;
+//                 text-align: center;
+//             }
+//         }
+
+//     }
