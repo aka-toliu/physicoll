@@ -54,6 +54,7 @@ logout(): Observable<void> {
   return from(signOut(this.firebaseAuth)).pipe(
     tap(() => {
       this.router.navigate(['/login']);
+      localStorage.removeItem('UID');
     })
   );
 }

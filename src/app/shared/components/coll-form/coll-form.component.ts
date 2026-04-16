@@ -1,4 +1,4 @@
-import { Component, inject, input, model, output, signal } from '@angular/core';
+import { AfterContentInit, Component, inject, input, model, OnChanges, output, signal, SimpleChanges } from '@angular/core';
 import { NgxMaskDirective } from 'ngx-mask';
 import { IconComponent } from '../icon/icon.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -39,7 +39,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
   ]
 })
 
-export class CollFormComponent {
+export class CollFormComponent implements OnChanges {
 
   public modalControl = model<boolean>();
   public modalClose = output<boolean>();
@@ -67,19 +67,23 @@ export class CollFormComponent {
   public EDiscState = EDiscState;
   public ETapeState = ETapeState;
 
-  public starRating = signal<number[]>([0,0,0,0,0]);
+  public starRating = signal<number[]>([0, 0, 0, 0, 0]);
 
 
   ngOnInit(): void {
     this.onBuildForm();
-    this.onPatchForm();
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['movieDetails'] && this.movieDetails()) {
+      this.onPatchForm();
+    }
+  }
+
 
   rating(star: number) {
     this.starRating.set(Array(star).fill(1).concat(Array(5 - star).fill(0)));
     this.formItem.controls['personalRating'].setValue(star);
-    console.log(this.starRating());
-    
   }
 
   onBuildForm() {
@@ -118,12 +122,12 @@ export class CollFormComponent {
       lastWatchedDate: [null],
       personalRating: [0],
       observations: [null],
-      n: [new Date()]
+      addedAt: [new Date()]
     });
   }
 
   onPatchForm() {
-    if (this.movieDetails) {
+    if (this.movieDetails()) {
       this.formItem.patchValue({
         imdbID: this.movieDetails()?.imdbID,
         title: this.movieDetails()?.Title,
@@ -169,8 +173,6 @@ export class CollFormComponent {
       numberDiscsControl?.setValue(1);
     }
   }
-
-
 
   onSubmit(event: Event) {
     event.preventDefault();

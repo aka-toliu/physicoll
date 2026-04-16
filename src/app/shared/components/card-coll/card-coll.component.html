@@ -2,11 +2,12 @@
     <img [src]="item()?.poster ?? 'assets/default-poster.jpg'" alt="{{ item()?.title }} poster">
 
 
-    <!-- <div class="card-coll__rating">
-            <app-icon icon="star" />
-            {{ item()?.personalRating }}
-        </div> -->
-
+    @if(item()?.personalRating){
+    <div class="card-coll__rating">
+        <app-icon icon="star" />
+        {{ item()?.personalRating }}
+    </div>
+    }
 </div>
 
 <span class="card-coll__format" [ngClass]="item()?.format">
@@ -15,7 +16,7 @@
     } @else if(item()?.format === 'BluRay') {
     <app-icon icon="bluray" />
     } @else if(item()?.format === 'VHS') {
-    <app-icon icon="vhs" />
+    <app-icon icon="tape" />
     }
 </span>
 <div class="card-coll__info">
@@ -46,7 +47,7 @@
         @if(item()?.stateTape){
         <div class="card-coll__tape"
             [style.color]="item()?.stateTape === 'Novo' ? 'forestgreen' : item()?.stateTape === 'Bom' ? 'chocolate' : 'brown'">
-            <app-icon icon="vhs" />
+            <app-icon icon="tape" />
 
         </div>
         }

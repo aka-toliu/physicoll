@@ -1,48 +1,12 @@
 :host {
     display: flex;
-    padding: 1rem;
+    padding: 0.5rem;
     background-color: var(--white);
     width: 100%;
-    border-radius: 0.5rem;
+    border-radius: 1rem;
     gap: 1.5rem;
     align-items: center;
     position: relative;
-    box-shadow: var(--shadow-card);
-
-    &:has(.DVD) {
-        // background-color: color-mix(in srgb, var(--dvd-color) 10%, var(--white) 70%);
-
-        .card-coll__poster {
-            >img {
-                // box-shadow: 2px 0px 0 0 #ffffff, 6px 0px 0 0 #cfcfcf;
-                // border: 2px solid white;
-                // border-radius: 0.35rem;
-            }
-        }
-    }
-
-    &:has(.BluRay) {
-        // background-color: color-mix(in srgb, var(--bluray-color) 10%, var(--white) 70%);
-
-        .card-coll__poster {
-            >img {
-                // box-shadow: 0px -7px 0px 0px var(--bluray-color), 0px -10px 0 0px #3aa6ef;
-                // border: 2px solid #71c6ff;
-                // border-radius: 0.35rem 0.35rem 0.5rem 0.5rem;
-            }
-        }
-    }
-
-    &:has(.VHS) {
-        // background-color: color-mix(in srgb, var(--vhs-color) 5%, var(--white) 70%);
-
-        .card-coll__poster {
-            >img {
-                // box-shadow: 7px 3px 0px 4px black, 4px 1px 0px 2px black;
-                // border-radius: 0.05rem;
-            }
-        }
-    }
 }
 
 .card-coll {
@@ -71,7 +35,7 @@
         gap: 0.25rem;
 
         >h3 {
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
             width: 82%;
         }
@@ -85,25 +49,38 @@
 
     &__format {
         position: absolute;
-        top: 0;
-        right: -0;
-        padding: 0.7rem;
+        top: .5rem;
+        right: 0.5rem;
+        padding: 0.7rem 0.4rem;
         background-color: var(--grey-10);
-        border-radius: 0 0.5rem 0 1.5rem;
+        border-radius: 0.5rem;
+        background-color: color-mix(in srgb, currentColor 50%, transparent);
 
         ::ng-deep {
             i[icon] {
-                --size-icon: 24px;
+                --size-icon: 22px;
                 color: currentColor;
-                filter: saturate(4) brightness(0.4);
+                filter: saturate(4) brightness(0.35);
             }
         }
     }
 
     &__rating {
+
+        font-size: 0.8rem;
+        position: absolute;
+        bottom: 4px;
+        border-radius: 0.25rem;
+        padding: 0.15rem 0.25rem;
+        background-color: #00000050;
+        color: var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
         ::ng-deep {
             i[icon] {
-                color: var(--primary-color);
+                color: var(--yellow);
             }
         }
     }
@@ -117,8 +94,8 @@
     }
 
     &__edition {
-        color: indigo;
-        background-color: color-mix(in srgb, currentColor 10%, var(--white) 80%);
+        color: goldenrod;
+        background-color: color-mix(in srgb, currentColor 10%, transparent);
         padding: 0.25rem 0.5rem;
         border-radius: 0.25rem;
         display: flex;
@@ -131,7 +108,7 @@
             -webkit-line-clamp: 1;
             text-overflow: ellipsis;
             overflow: hidden;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
 
         ::ng-deep {
@@ -157,23 +134,20 @@
         }
     }
 
-    &__director,
-    &__rating,
-    &__edition,
-    &__case,
-    &__disc,
-    &__tape {
-        font-size: 0.9rem;
-    }
 
     &__year {
         color: var(--grey-50);
+        font-size: 0.9rem;
+    }
+
+    &__director {
+        font-size: 0.8rem;
     }
 
     &__case,
     &__disc,
     &__tape {
-        background-color: color-mix(in srgb, currentColor 20%, var(--white) 80%);
+        background-color: color-mix(in srgb, currentColor 10%, transparent);
         padding: 0.25rem 0.5rem;
         border-radius: 0.25rem;
         font-size: 0.7rem;
@@ -191,34 +165,13 @@
 }
 
 .DVD {
-    background-color: var(--dvd-color);
     color: var(--dvd-color);
-
-    ::ng-deep {
-        i[icon] {
-            filter: saturate(4) brightness(0.35);
-        }
-    }
 }
 
 .BluRay {
-    background-color: var(--bluray-color);
     color: var(--bluray-color);
-
-    ::ng-deep {
-        i[icon] {
-            filter: saturate(4) brightness(0.2);
-        }
-    }
 }
 
 .VHS {
-    background-color: var(--vhs-color);
     color: var(--vhs-color);
-
-    ::ng-deep {
-        i[icon] {
-            filter: saturate(4) brightness(0.35);
-        }
-    }
 }
