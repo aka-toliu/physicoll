@@ -5,22 +5,22 @@ export enum EFormat {
 }
 
 export enum EDiscCase {
-    AMARAY = 'Amaray',
-    SLIMCASE = 'Slimcase',
-    ECO_CASE = 'Eco-case',
-    KEEP_CASE = 'Keep-case',
-    STEELBOOK = 'Steelbook',
-    DIGIPACK = 'Digipack',
-    DIGIBOOK = 'Digibook',
-    METALBOOK = 'Metalbook',
+    AMARAY = 'Plástico (Amaray)',
+    AMARAY_BLUE = 'Plástico (Amaray Blue)',
+    SLIMCASE = 'Plástico (Slim Case)',
+    SLEEVE = 'Papelão Simples (Envelope/Sleeve)',
+    STEELBOOK = 'Metal / Alumínio (Steelbook)',
+    DIGIPACK = 'Papelão/Plástico (Digipak)',
+    DIGIBOOK = 'Papelão Rígido (Digibook)',
+    CRITERIOM = "Plástico Translúcido (Criterion Case)",
     CUSTOM = 'Personalizada'
 }
 
 export enum EVHSCase {
-  CLAMSHELL = 'Clamshell (Plástico Macio)',
-  SLIPCOVER = 'Capa de Cartão/Papelão',
-  LIBRARY_CASE = 'Estojo Rígido',
-  BIG_BOX = 'Big Box / Especial'
+  CLAMSHELL = 'Plástico Flexível (Clamshell)',
+  LIBRARY_CASE = 'Plástico Rígido (Library Case)',
+  SLIPCOVER = 'Papel Cartão (Slipcase)',
+  GATEFOLD = 'Papelão com Aba (Gatefold)'
 }
 
 export enum ECaseState {

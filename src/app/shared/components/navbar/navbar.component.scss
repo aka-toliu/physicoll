@@ -6,7 +6,7 @@
     background-color: var(--white);
     width: 100%;
     display: flex;
-    padding-inline: 2rem;
+    padding-inline: 1.5rem;
     align-items: center;
     justify-content: space-between;
     box-shadow: 0px -4px 22px -17px rgba(0, 0, 0, 0.404);
@@ -21,10 +21,16 @@
     align-items: center;
     opacity: 0.5;
     transition: transform 0.3s ease, opacity 0.3s ease;
+    flex-direction: column;
+    gap: 0.25rem;
 
     &--active{
         opacity: 1;
         transform: translateY(-4px);
         transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    > p{
+        font-size: 0.7rem;
     }
 }

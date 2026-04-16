@@ -55,17 +55,19 @@ export class CollFormComponent implements OnChanges {
   private collectionService = inject(CollectionService);
 
   // ENUMS
-  public caseDiscOptions = Object.values(EDiscCase);
-  public caseVHSOptions = Object.values(EVHSCase);
-  public formatOptions = Object.values(EFormat);
-  public caseStateOptions = Object.values(ECaseState);
-  public discStateOptions = Object.values(EDiscState);
-  public tapeStateOptions = Object.values(ETapeState);
-  public resolutionOptions = Object.values(EResolution);
+  public caseDiscOptions = Object.keys(EDiscCase) as Array<keyof typeof EDiscCase>;
+  public caseVHSOptions = Object.keys(EVHSCase) as Array<keyof typeof EVHSCase>;
+  public formatOptions = Object.keys(EFormat) as Array<keyof typeof EFormat>;
+  public caseStateOptions = Object.keys(ECaseState) as Array<keyof typeof ECaseState>;
+  public discStateOptions = Object.keys(EDiscState) as Array<keyof typeof EDiscState>;
+  public tapeStateOptions = Object.keys(ETapeState) as Array<keyof typeof ETapeState>;
+  public resolutionOptions = Object.keys(EResolution) as Array<keyof typeof EResolution>;
   public EFormat = EFormat;
   public ECaseState = ECaseState;
   public EDiscState = EDiscState;
   public ETapeState = ETapeState;
+  public EDiscCase = EDiscCase;
+  public EVHSCase = EVHSCase;
 
   public starRating = signal<number[]>([0, 0, 0, 0, 0]);
 
@@ -177,13 +179,13 @@ export class CollFormComponent implements OnChanges {
   onSubmit(event: Event) {
     event.preventDefault();
     console.log(this.formItem.value);
-    // this.collectionService.addToCollection(this.uid(), this.formItem.value).subscribe({
-    //   next: () => {
-    //     console.log('Item adicionado à coleção com sucesso!');
-    //     this.modalClose.emit(false);
-    //   },
-    //   error: () => console.error('Erro ao adicionar item à coleção')
-    // })
+    this.collectionService.addToCollection(this.uid(), this.formItem.value).subscribe({
+      next: () => {
+        console.log('Item adicionado à coleção com sucesso!');
+        this.modalClose.emit(false);
+      },
+      error: () => console.error('Erro ao adicionar item à coleção')
+    })
   }
 
   onCancel(event: Event) {

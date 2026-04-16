@@ -14,10 +14,10 @@ export class NavbarComponent {
   private router = inject(Router);
 
   protected menu = signal([
-    {title: 'Search', icon: 'search', path: '/search'},
-    {title: 'Collections', icon: 'collections', path: '/coll'},
-    {title: 'Wishlist', icon: 'wishlist', path: '/wishlist'},
-    {title: 'Profile', icon: 'profile', path: '/profile'},
+    {title: 'Buscar', icon: 'search', path: '/search'},
+    {title: 'Coleção', icon: 'collections', path: '/coll'},
+    {title: 'Salvos', icon: 'wishlist', path: '/wishlist'},
+    {title: 'Perfil', icon: 'profile', path: '/profile'},
   ])
 
 }

@@ -7,14 +7,14 @@
 
         <fieldset class="item__format">
             <p>Formato:</p>
-            @for (format of formatOptions; track $index) {
-            <label [for]="'format' + format" class="format-option">
-                <input type="radio" [id]="'format' + format" [value]="format" formControlName="format">
+            @for (key of formatOptions; track $index) {
+            <label [for]="'format' + key" class="format-option">
+                <input type="radio" [id]="'format' + key" [value]="key" formControlName="format">
                 <span class="checkmark"
-                    [ngStyle]="{'color': format === EFormat.DVD ? 'var(--dvd-color)' : format === EFormat.BLURAY ? 'var(--bluray-color)' : 'var(--vhs-color)'}">
+                    [ngStyle]="{'color': key === EFormat.DVD ? 'var(--dvd-color)' : EFormat[key] === EFormat.BLURAY ? 'var(--bluray-color)' : 'var(--vhs-color)'}">
                     <app-icon
-                        [icon]="format === EFormat.DVD ? 'disc' : format === EFormat.BLURAY ? 'disc' : 'vhs'"></app-icon>
-                    <p>{{ format }}</p>
+                        [icon]="key === EFormat.DVD ? 'disc' : EFormat[key] === EFormat.BLURAY ? 'disc' : 'tape'"></app-icon>
+                    <p>{{ EFormat[key] }}</p>
                 </span>
 
             </label>
@@ -29,13 +29,13 @@
                 <option value="" selected>Selecione</option>
                 @if(formItem.get('format')?.value === EFormat.DVD || formItem.get('format')?.value ===
                 EFormat.BLURAY) {
-                @for (caseType of caseDiscOptions; track $index) {
-                <option [value]="caseType">{{ caseType }}</option>
+                @for (key of caseDiscOptions; track $index) {
+                <option [value]="key">{{ EDiscCase[key] }}</option>
                 }
                 }
                 @if(formItem.get('format')?.value === EFormat.VHS) {
-                @for (caseType of caseVHSOptions; track $index) {
-                <option [value]="caseType">{{ caseType }}</option>
+                @for (key of caseVHSOptions; track $index) {
+                <option [value]="key">{{ EVHSCase[key] }}</option>
                 }
                 }
             </select>
@@ -60,15 +60,19 @@
 
         <fieldset class="item__condition">
             <p>Estado da capa</p>
-            @for (condition of caseStateOptions; track $index) {
-            <label [for]="'case-condition' + condition" class="condition-option">
-                <input type="radio" [id]="'case-condition' + condition" [value]="condition" formControlName="stateCase">
+            @for (key of caseStateOptions; track $index) {
+            <label [for]="'case-condition' + key" class="condition-option">
+                <input type="radio" 
+                [id]="'case-condition' + key" 
+                [value]="key" 
+                formControlName="stateCase">
+
                 <span class="checkmark" [ngStyle]="{'color': 
-                condition === ECaseState.CASE_GREAT ? 'var(--great-color)' : 
-                condition === ECaseState.CASE_GOOD ? 'var(--good-color)' :
-                condition === ECaseState.CASE_REGULAR ? 'var(--regular-color)' :
-                condition === ECaseState.CASE_POOR ? 'var(--poor-color)' : 'var(--terrible-color)'}">
-                    <p>{{ condition }}</p>
+                ECaseState[key] === ECaseState.CASE_GREAT ? 'var(--great-color)' : 
+                ECaseState[key] === ECaseState.CASE_GOOD ? 'var(--good-color)' :
+                ECaseState[key] === ECaseState.CASE_REGULAR ? 'var(--regular-color)' :
+                ECaseState[key] === ECaseState.CASE_POOR ? 'var(--poor-color)' : 'var(--terrible-color)'}">
+                    <p>{{ ECaseState[key] }}</p>
                 </span>
 
             </label>
@@ -78,15 +82,15 @@
         @if(formItem.get('format')?.value === EFormat.DVD || formItem.get('format')?.value === EFormat.BLURAY) {
         <fieldset class="item__condition">
             <p>Estado do disco:</p>
-            @for (condition of discStateOptions; track $index) {
-            <label [for]="'disc-condition' + condition" class="condition-option">
-                <input type="radio" [id]="'disc-condition' + condition" [value]="condition" formControlName="stateDisc">
+            @for (key of discStateOptions; track $index) {
+            <label [for]="'disc-condition' + key" class="condition-option">
+                <input type="radio" [id]="'disc-condition' + key" [value]="key" formControlName="stateDisc">
                 <span class="checkmark" [ngStyle]="{'color': 
-                condition === EDiscState.DISC_GREAT ? 'var(--great-color)' : 
-                condition === EDiscState.DISC_GOOD ? 'var(--good-color)' :
-                condition === EDiscState.DISC_REGULAR ? 'var(--regular-color)' :
-                condition === EDiscState.DISC_POOR ? 'var(--poor-color)' : 'var(--terrible-color)'}">
-                    <p>{{ condition }}</p>
+                EDiscState[key] === EDiscState.DISC_GREAT ? 'var(--great-color)' : 
+                EDiscState[key] === EDiscState.DISC_GOOD ? 'var(--good-color)' :
+                EDiscState[key] === EDiscState.DISC_REGULAR ? 'var(--regular-color)' :
+                EDiscState[key] === EDiscState.DISC_POOR ? 'var(--poor-color)' : 'var(--terrible-color)'}">
+                    <p>{{ EDiscState[key] }}</p>
                 </span>
             </label>
             }
@@ -96,15 +100,15 @@
         @if(formItem.get('format')?.value === EFormat.VHS) {
         <fieldset class="item__condition">
             <p>Estado da fita:</p>
-            @for (condition of tapeStateOptions; track $index) {
-            <label [for]="'tape-condition' + condition" class="condition-option">
-                <input type="radio" [id]="'tape-condition' + condition" [value]="condition" formControlName="stateTape">
+            @for (key of tapeStateOptions; track $index) {
+            <label [for]="'tape-condition' + key" class="condition-option">
+                <input type="radio" [id]="'tape-condition' + key" [value]="key" formControlName="stateTape">
                 <span class="checkmark" [ngStyle]="{'color': 
-                condition === ETapeState.TAPE_GREAT ? 'var(--great-color)' : 
-                condition === ETapeState.TAPE_GOOD ? 'var(--good-color)' :
-                condition === ETapeState.TAPE_REGULAR ? 'var(--regular-color)' :
-                condition === ETapeState.TAPE_POOR ? 'var(--poor-color)' : 'var(--terrible-color)'}">
-                    <p>{{ condition }}</p>
+                ETapeState[key] === ETapeState.TAPE_GREAT ? 'var(--great-color)' : 
+                ETapeState[key] === ETapeState.TAPE_GOOD ? 'var(--good-color)' :
+                ETapeState[key] === ETapeState.TAPE_REGULAR ? 'var(--regular-color)' :
+                ETapeState[key] === ETapeState.TAPE_POOR ? 'var(--poor-color)' : 'var(--terrible-color)'}">
+                    <p>{{ ETapeState[key] }}</p>
                 </span>
             </label>
             }
@@ -191,8 +195,8 @@
             <textarea formControlName="observations" name="observacoes" placeholder="Escreva aqui..."></textarea>
         </label>
 
-        <button (click)="onSubmit($event)">Finalizar</button>
-        <button (click)="onCancel($event)">Cancelar</button>
+        <button class="btn__save" (click)="onSubmit($event)">Salvar</button>
+        <button class="btn__cancel" (click)="onCancel($event)">Cancelar</button>
 
     </form>
 </div>

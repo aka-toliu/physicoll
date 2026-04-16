@@ -1,6 +1,14 @@
+import { ECaseState } from "./EItem";
+
 export interface ICollectionItem {
     id: string;
     imdbID: string;
+    director: string[];
+    actors: string[];
+    writer: string[];
+    country: string[];
+    originalLanguage: string[];
+    genre: string[];
     title: string;
     year: string;
     poster: string;
@@ -9,10 +17,11 @@ export interface ICollectionItem {
     resolution: string;
     acquisitionDate: Date;
     acquisitionPrice: number;
-    audioLanguages: string;
-    subtitleLanguages: string;
+    audioLanguages: string[];
+    subtitleLanguages: string[];
     edition: string;
     isFavorite: boolean;
+    hasMoreThanOneDisc: boolean;
     numberDiscs: number;
     observations: string;
     personalRating: number;
@@ -22,6 +31,10 @@ export interface ICollectionItem {
     storageLocation: string;
     supplier: string;
     watched: boolean;
-    director: string;
-    
+    addedAt: Date;
+    lastWatchedDate: Date;
+    availableForExchange: boolean;
+    availableForSell: boolean;
+    isLoaned: boolean;
+    isSpecialEdition: boolean;
 }

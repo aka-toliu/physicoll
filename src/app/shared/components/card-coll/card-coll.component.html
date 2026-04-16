@@ -13,7 +13,7 @@
 <span class="card-coll__format" [ngClass]="item()?.format">
     @if(item()?.format === 'DVD') {
     <app-icon icon="dvd" />
-    } @else if(item()?.format === 'BluRay') {
+    } @else if(item()?.format === 'BLURAY') {
     <app-icon icon="bluray" />
     } @else if(item()?.format === 'VHS') {
     <app-icon icon="tape" />
@@ -22,15 +22,21 @@
 <div class="card-coll__info">
     <h3 class="card-coll__title">{{ item()?.title}}</h3>
     <p class="card-coll__year">{{ item()?.year }}</p>
-    <p class="card-coll__director">{{ item()?.director }}</p>
+
+        <!-- @if(item()?.director){
+        <div class="card-coll__director">
+            @for(director of item()?.director; track $index) {
+            <p>{{ director }}</p>
+            }
+        </div>
+        } -->
+        <p class="card-coll__director">{{ item()?.director?.join(', ') }}</p>
 
     <div class="item-info-container">
 
-
-
         @if(item()?.stateCase){
         <div class="card-coll__case"
-            [style.color]="item()?.stateCase === 'Novo' ? 'forestgreen' : item()?.stateCase === 'Bom' ? 'chocolate' : 'brown'">
+            [style.color]="item()?.stateCase === 'CASE_GREAT' ? 'var(--great-color)' : item()?.stateCase === 'CASE_GOOD' ? 'var(--good-color)' : item()?.stateCase === 'CASE_REGULAR' ? 'var(--regular-color)' : item()?.stateCase === 'CASE_POOR' ? 'var(--poor-color)' : 'var(--default-color)'">
             <app-icon icon="case" />
 
         </div>
@@ -38,7 +44,7 @@
 
         @if(item()?.stateDisc){
         <div class="card-coll__disc"
-            [style.color]="item()?.stateDisc === 'Novo' ? 'forestgreen' : item()?.stateDisc === 'Bom' ? 'chocolate' : 'brown'">
+            [style.color]="item()?.stateDisc === 'DISC_GREAT' ? 'var(--great-color)' : item()?.stateDisc === 'DISC_GOOD' ? 'var(--good-color)' : item()?.stateDisc === 'DISC_REGULAR' ? 'var(--regular-color)' : item()?.stateDisc === 'DISC_POOR' ? 'var(--poor-color)' : 'var(--default-color)'">
             <app-icon icon="disc" />
 
         </div>
@@ -46,7 +52,7 @@
 
         @if(item()?.stateTape){
         <div class="card-coll__tape"
-            [style.color]="item()?.stateTape === 'Novo' ? 'forestgreen' : item()?.stateTape === 'Bom' ? 'chocolate' : 'brown'">
+            [style.color]="item()?.stateTape === 'TAPE_GREAT' ? 'var(--great-color)' : item()?.stateTape === 'TAPE_GOOD' ? 'var(--good-color)' : item()?.stateTape === 'TAPE_REGULAR' ? 'var(--regular-color)' : item()?.stateTape === 'TAPE_POOR' ? 'var(--poor-color)' : 'var(--default-color)'">
             <app-icon icon="tape" />
 
         </div>
@@ -58,10 +64,6 @@
             <p>{{ item()?.edition }}</p>
         </div>
         }
-
-
     </div>
-
-
 
 </div>
