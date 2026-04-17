@@ -4,14 +4,18 @@ export enum EFormat {
     VHS = 'VHS'
 }
 
-export enum EDiscCase {
+export enum EDVDCase {
     AMARAY = 'Plástico (Amaray)',
-    AMARAY_BLUE = 'Plástico (Amaray Blue)',
     SLIMCASE = 'Plástico (Slim Case)',
     SLEEVE = 'Papelão Simples (Envelope/Sleeve)',
     STEELBOOK = 'Metal / Alumínio (Steelbook)',
     DIGIPACK = 'Papelão/Plástico (Digipak)',
     DIGIBOOK = 'Papelão Rígido (Digibook)',
+    CUSTOM = 'Personalizada'
+}
+
+export enum EBluRayCase {
+    AMARAY_BLUE = 'Plástico (Amaray Blue)',
     CRITERIOM = "Plástico Translúcido (Criterion Case)",
     CUSTOM = 'Personalizada'
 }

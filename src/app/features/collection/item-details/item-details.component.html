@@ -48,7 +48,7 @@
     }
 
 
-    
+
     <p>Estado de conservação:</p>
     @if (item()?.stateCase || item()?.stateDisc || item()?.stateTape) {
     <div class="info-state">
@@ -60,28 +60,34 @@
             Capa: <b>{{ getLabel(item()?.stateCase, ECaseState) }}</b>
         </div>
         }
-        
-            @if(item()?.stateDisc){
-                <div class="info-state__disc"
-                [style.color]="item()?.stateDisc === 'DISC_GREAT' ? 'var(--great-color)' : item()?.stateDisc === 'DISC_GOOD' ? 'var(--good-color)' : item()?.stateDisc === 'DISC_REGULAR' ? 'var(--regular-color)' : item()?.stateDisc === 'DISC_POOR' ? 'var(--poor-color)' : 'var(--default-color)'">
-                <app-icon icon="disc" />
-                Disco: <b>{{ getLabel(item()?.stateDisc, EDiscState) }}</b>
-            </div>
-            }
-            
-            @if(item()?.stateTape){
-                <div class="info-state__tape"
-                [style.color]="item()?.stateTape === 'TAPE_GREAT' ? 'var(--great-color)' : item()?.stateTape === 'TAPE_GOOD' ? 'var(--good-color)' : item()?.stateTape === 'TAPE_REGULAR' ? 'var(--regular-color)' : item()?.stateTape === 'TAPE_POOR' ? 'var(--poor-color)' : 'var(--default-color)'">
-                <app-icon icon="vhs" />
-                Fita: <b>{{ getLabel(item()?.stateTape, ETapeState) }}</b>
-            </div>
-            }
+
+        @if(item()?.stateDisc){
+        <div class="info-state__disc"
+            [style.color]="item()?.stateDisc === 'DISC_GREAT' ? 'var(--great-color)' : item()?.stateDisc === 'DISC_GOOD' ? 'var(--good-color)' : item()?.stateDisc === 'DISC_REGULAR' ? 'var(--regular-color)' : item()?.stateDisc === 'DISC_POOR' ? 'var(--poor-color)' : 'var(--default-color)'">
+            <app-icon icon="disc" />
+            Disco: <b>{{ getLabel(item()?.stateDisc, EDiscState) }}</b>
         </div>
         }
 
-    <p><span>Tipo de capa:</span> {{ getLabel(item()?.caseType, EDiscCase) }}</p>
+        @if(item()?.stateTape){
+        <div class="info-state__tape"
+            [style.color]="item()?.stateTape === 'TAPE_GREAT' ? 'var(--great-color)' : item()?.stateTape === 'TAPE_GOOD' ? 'var(--good-color)' : item()?.stateTape === 'TAPE_REGULAR' ? 'var(--regular-color)' : item()?.stateTape === 'TAPE_POOR' ? 'var(--poor-color)' : 'var(--default-color)'">
+            <app-icon icon="vhs" />
+            Fita: <b>{{ getLabel(item()?.stateTape, ETapeState) }}</b>
+        </div>
+        }
+    </div>
+    }
+
+    @if(item()?.caseType){
+            <p><span>Tipo de capa:</span>
+        @if(item()?.format === 'DVD') { {{ getLabel(item()?.caseType, EDVDCase) }}
+        }@else if (item()?.format === 'BLURAY') { {{ getLabel(item()?.caseType, EBluRayCase) }}
+        }@else if (item()?.format === 'VHS') { {{ getLabel(item()?.caseType, EVHSCase) }} }
+    </p>
+    }
     <p><span>Data de aquisição:</span> {{ item()?.acquisitionDate | date:'longDate' }}</p>
-    <p><span>Valor da aquisição:</span> {{ item()?.acquisitionPrice | currency:'BRL' }}</p>
-    <p><span>Fornecedor:</span> {{ item()?.supplier }}</p>
+    <p><span>Valor da aquisição:</span> {{ item()?.acquisitionPrice  ?? 'N/A'| currency:'BRL'  }}</p>
+    <p><span>Fornecedor:</span> {{ item()?.supplier  ?? 'N/A' }}</p>
 
 </div>

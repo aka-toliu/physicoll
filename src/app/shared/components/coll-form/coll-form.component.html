@@ -22,18 +22,24 @@
 
         </fieldset>
 
-
         <label for="tipo-capa" class="item__case-type">
             <p>Tipo de capa:</p>
             <select formControlName="caseType" name="tipo-capa" placeholder="Ex: Plástico, Digipack, Steelbook">
                 <option value="" selected>Selecione</option>
-                @if(formItem.get('format')?.value === EFormat.DVD || formItem.get('format')?.value ===
-                EFormat.BLURAY) {
-                @for (key of caseDiscOptions; track $index) {
-                <option [value]="key">{{ EDiscCase[key] }}</option>
+                
+                @if(formItem.get('format')?.value === 'DVD') {
+                @for (key of caseDVDOptions; track $index) {
+                <option [value]="key">{{ EDVDCase[key] }}</option>
                 }
                 }
-                @if(formItem.get('format')?.value === EFormat.VHS) {
+
+                @if(formItem.get('format')?.value === 'BLURAY') {
+                @for (key of caseBluRayOptions; track $index) {
+                <option [value]="key">{{ EBluRayCase[key] }}</option>
+                }
+                }
+
+                @if(formItem.get('format')?.value === 'VHS') {
                 @for (key of caseVHSOptions; track $index) {
                 <option [value]="key">{{ EVHSCase[key] }}</option>
                 }
@@ -62,10 +68,7 @@
             <p>Estado da capa</p>
             @for (key of caseStateOptions; track $index) {
             <label [for]="'case-condition' + key" class="condition-option">
-                <input type="radio" 
-                [id]="'case-condition' + key" 
-                [value]="key" 
-                formControlName="stateCase">
+                <input type="radio" [id]="'case-condition' + key" [value]="key" formControlName="stateCase">
 
                 <span class="checkmark" [ngStyle]="{'color': 
                 ECaseState[key] === ECaseState.CASE_GREAT ? 'var(--great-color)' : 
@@ -79,7 +82,7 @@
             }
         </fieldset>
 
-        @if(formItem.get('format')?.value === EFormat.DVD || formItem.get('format')?.value === EFormat.BLURAY) {
+        @if(formItem.get('format')?.value === 'DVD' || formItem.get('format')?.value === 'BLURAY') {
         <fieldset class="item__condition">
             <p>Estado do disco:</p>
             @for (key of discStateOptions; track $index) {

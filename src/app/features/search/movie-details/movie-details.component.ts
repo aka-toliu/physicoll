@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IItem, IMovieDetail } from '../../../shared/models/IMovies';
 import { CommonModule, NgStyle } from '@angular/common';
 import { Form, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ECaseState, EDiscCase, EDiscState, EFormat, EResolution, ETapeState, EVHSCase } from '../../../shared/models/EItem';
+import { ECaseState, EDiscState, EFormat, EResolution, ETapeState, EVHSCase } from '../../../shared/models/EItem';
 import { NgxMaskDirective } from 'ngx-mask';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CollectionService } from '../../../core/services/collection.service';

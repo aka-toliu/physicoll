@@ -4,7 +4,7 @@ import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CollectionService } from '../../../core/services/collection.service';
 import { ICollectionItem } from '../../../shared/models/ICollection';
-import { EFormat, ECaseState, EDiscState, ETapeState, EDiscCase, EVHSCase } from '../../../shared/models/EItem';
+import { EFormat, ECaseState, EDiscState, ETapeState, EVHSCase, EBluRayCase, EDVDCase } from '../../../shared/models/EItem';
 
 
 @Component({
@@ -29,7 +29,8 @@ export class ItemDetailsComponent {
   public EFormat = EFormat;
   public EDiscState = EDiscState;
   public ETapeState = ETapeState;
-  public EDiscCase = EDiscCase;
+  public EDVDCase = EDVDCase;
+  public EBluRayCase = EBluRayCase;
   public EVHSCase = EVHSCase;
 
   protected item = signal<ICollectionItem | null>(null);

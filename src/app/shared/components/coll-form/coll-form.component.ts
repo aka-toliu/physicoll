@@ -3,7 +3,7 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { IconComponent } from '../icon/icon.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgStyle, CommonModule } from '@angular/common';
-import { ECaseState, EDiscCase, EDiscState, EFormat, EResolution, ETapeState, EVHSCase } from '../../models/EItem';
+import { EBluRayCase, ECaseState, EDiscState, EDVDCase, EFormat, EResolution, ETapeState, EVHSCase } from '../../models/EItem';
 import { CollectionService } from '../../../core/services/collection.service';
 import { IMovieDetail } from '../../models/IMovies';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -55,7 +55,8 @@ export class CollFormComponent implements OnChanges {
   private collectionService = inject(CollectionService);
 
   // ENUMS
-  public caseDiscOptions = Object.keys(EDiscCase) as Array<keyof typeof EDiscCase>;
+  public caseDVDOptions = Object.keys(EDVDCase) as Array<keyof typeof EDVDCase>;
+  public caseBluRayOptions = Object.keys(EBluRayCase) as Array<keyof typeof EBluRayCase>;
   public caseVHSOptions = Object.keys(EVHSCase) as Array<keyof typeof EVHSCase>;
   public formatOptions = Object.keys(EFormat) as Array<keyof typeof EFormat>;
   public caseStateOptions = Object.keys(ECaseState) as Array<keyof typeof ECaseState>;
@@ -66,7 +67,8 @@ export class CollFormComponent implements OnChanges {
   public ECaseState = ECaseState;
   public EDiscState = EDiscState;
   public ETapeState = ETapeState;
-  public EDiscCase = EDiscCase;
+  public EDVDCase = EDVDCase;
+  public EBluRayCase = EBluRayCase;
   public EVHSCase = EVHSCase;
 
   public starRating = signal<number[]>([0, 0, 0, 0, 0]);

@@ -1,4 +1,4 @@
-import { ECaseState, EDiscCase, EDiscState, EFormat, EResolution, ETapeState, EVHSCase } from "./EItem";
+import { EBluRayCase, ECaseState, EDiscState, EDVDCase, EFormat, EResolution, ETapeState, EVHSCase } from "./EItem";
 
 export interface IMovieSearch {
     Response: boolean;
@@ -55,7 +55,7 @@ export interface IItem {
     format: EFormat;
     hasMoreThanOneDisc: boolean;
     numberDiscs: number;
-    caseType: EDiscCase | EVHSCase;
+    caseType: EDVDCase | EBluRayCase | EVHSCase;
     stateCase: ECaseState;
     stateDisc: EDiscState;
     stateTape: ETapeState;

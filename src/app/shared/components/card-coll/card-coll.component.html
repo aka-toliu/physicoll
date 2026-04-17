@@ -22,21 +22,13 @@
 <div class="card-coll__info">
     <h3 class="card-coll__title">{{ item()?.title}}</h3>
     <p class="card-coll__year">{{ item()?.year }}</p>
-
-        <!-- @if(item()?.director){
-        <div class="card-coll__director">
-            @for(director of item()?.director; track $index) {
-            <p>{{ director }}</p>
-            }
-        </div>
-        } -->
-        <p class="card-coll__director">{{ item()?.director?.join(', ') }}</p>
+    <p class="card-coll__director">{{ item()?.director?.join(', ') }}</p>
 
     <div class="item-info-container">
 
         @if(item()?.stateCase){
         <div class="card-coll__case"
-            [style.color]="item()?.stateCase === 'CASE_GREAT' ? 'var(--great-color)' : item()?.stateCase === 'CASE_GOOD' ? 'var(--good-color)' : item()?.stateCase === 'CASE_REGULAR' ? 'var(--regular-color)' : item()?.stateCase === 'CASE_POOR' ? 'var(--poor-color)' : 'var(--default-color)'">
+            [style.color]="item()?.stateCase === 'CASE_GREAT' ? 'var(--great-color)' : item()?.stateCase === 'CASE_GOOD' ? 'var(--good-color)' : item()?.stateCase === 'CASE_REGULAR' ? 'var(--regular-color)' : item()?.stateCase === 'CASE_POOR' ? 'var(--poor-color)' : 'var(--terrible-color)'">
             <app-icon icon="case" />
 
         </div>
@@ -44,7 +36,7 @@
 
         @if(item()?.stateDisc){
         <div class="card-coll__disc"
-            [style.color]="item()?.stateDisc === 'DISC_GREAT' ? 'var(--great-color)' : item()?.stateDisc === 'DISC_GOOD' ? 'var(--good-color)' : item()?.stateDisc === 'DISC_REGULAR' ? 'var(--regular-color)' : item()?.stateDisc === 'DISC_POOR' ? 'var(--poor-color)' : 'var(--default-color)'">
+            [style.color]="item()?.stateDisc === 'DISC_GREAT' ? 'var(--great-color)' : item()?.stateDisc === 'DISC_GOOD' ? 'var(--good-color)' : item()?.stateDisc === 'DISC_REGULAR' ? 'var(--regular-color)' : item()?.stateDisc === 'DISC_POOR' ? 'var(--poor-color)' : 'var(--terrible-color)'">
             <app-icon icon="disc" />
 
         </div>
@@ -52,7 +44,7 @@
 
         @if(item()?.stateTape){
         <div class="card-coll__tape"
-            [style.color]="item()?.stateTape === 'TAPE_GREAT' ? 'var(--great-color)' : item()?.stateTape === 'TAPE_GOOD' ? 'var(--good-color)' : item()?.stateTape === 'TAPE_REGULAR' ? 'var(--regular-color)' : item()?.stateTape === 'TAPE_POOR' ? 'var(--poor-color)' : 'var(--default-color)'">
+            [style.color]="item()?.stateTape === 'TAPE_GREAT' ? 'var(--great-color)' : item()?.stateTape === 'TAPE_GOOD' ? 'var(--good-color)' : item()?.stateTape === 'TAPE_REGULAR' ? 'var(--regular-color)' : item()?.stateTape === 'TAPE_POOR' ? 'var(--poor-color)' : 'var(--terrible-color)'">
             <app-icon icon="tape" />
 
         </div>
