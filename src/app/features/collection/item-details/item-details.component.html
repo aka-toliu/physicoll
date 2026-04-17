@@ -2,13 +2,13 @@
     <span class="item-details__format" [ngClass]="item()?.format">
         @if(item()?.format === 'DVD') {
         <app-icon icon="dvd" />
-        {{ item()?.format }}
-        } @else if(item()?.format === 'BluRay') {
+        {{ EFormat.DVD }}
+        } @else if(item()?.format === 'BLURAY') {
         <app-icon icon="bluray" />
-        {{ item()?.format }}
+        {{ EFormat.BLURAY }}
         } @else if(item()?.format === 'VHS') {
-        <app-icon icon="vhs" />
-        {{ item()?.format }}
+        <app-icon icon="tape" />
+        {{ EFormat.VHS }}
         }
     </span>
     <div class="item-details__poster">
@@ -29,7 +29,6 @@
     </div>
     }
 
-
     <button type="smooth">Sobre a obra</button>
 </div>
 <div class="item-details__info">
@@ -46,8 +45,6 @@
     @if(item()?.audioLanguages) {
     <p><span>Linguagem de áudio:</span> {{ item()?.audioLanguages }}</p>
     }
-
-
 
     <p>Estado de conservação:</p>
     @if (item()?.stateCase || item()?.stateDisc || item()?.stateTape) {
@@ -72,7 +69,7 @@
         @if(item()?.stateTape){
         <div class="info-state__tape"
             [style.color]="item()?.stateTape === 'TAPE_GREAT' ? 'var(--great-color)' : item()?.stateTape === 'TAPE_GOOD' ? 'var(--good-color)' : item()?.stateTape === 'TAPE_REGULAR' ? 'var(--regular-color)' : item()?.stateTape === 'TAPE_POOR' ? 'var(--poor-color)' : 'var(--default-color)'">
-            <app-icon icon="vhs" />
+            <app-icon icon="tape" />
             Fita: <b>{{ getLabel(item()?.stateTape, ETapeState) }}</b>
         </div>
         }
@@ -80,14 +77,14 @@
     }
 
     @if(item()?.caseType){
-            <p><span>Tipo de capa:</span>
+    <p><span>Tipo de capa:</span>
         @if(item()?.format === 'DVD') { {{ getLabel(item()?.caseType, EDVDCase) }}
         }@else if (item()?.format === 'BLURAY') { {{ getLabel(item()?.caseType, EBluRayCase) }}
         }@else if (item()?.format === 'VHS') { {{ getLabel(item()?.caseType, EVHSCase) }} }
     </p>
     }
     <p><span>Data de aquisição:</span> {{ item()?.acquisitionDate | date:'longDate' }}</p>
-    <p><span>Valor da aquisição:</span> {{ item()?.acquisitionPrice  ?? 'N/A'| currency:'BRL'  }}</p>
-    <p><span>Fornecedor:</span> {{ item()?.supplier  ?? 'N/A' }}</p>
+    <p><span>Valor da aquisição:</span> {{ item()?.acquisitionPrice ?? 'N/A'| currency:'BRL' }}</p>
+    <p><span>Fornecedor:</span> {{ item()?.supplier ?? 'N/A' }}</p>
 
 </div>

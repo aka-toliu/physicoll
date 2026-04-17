@@ -3,6 +3,8 @@
     flex-direction: column;
     gap: 0.25rem;
     position: relative;
+
+  
 }
 
 .item-details {
@@ -13,6 +15,15 @@
         display: flex;
         justify-content: center;
 
+        &:has(.DVD){
+            background-color: color-mix(in srgb, var(--dvd-color) 20%, transparent);
+        }
+        &:has(.BLURAY){
+            background-color: color-mix(in srgb, var(--bluray-color) 20%, transparent);
+        }
+        &:has(.VHS){
+            background-color: color-mix(in srgb, var(--vhs-color) 20%, transparent);
+        }
     }
 
     &__poster {
@@ -88,7 +99,7 @@
 
         padding: 1rem;
         background-color: var(--white);
-        gap: 0.5rem;
+        gap: 1rem;
         display: flex;
         flex-direction: column;
 
