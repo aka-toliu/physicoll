@@ -181,13 +181,13 @@ export class CollFormComponent implements OnChanges {
   onSubmit(event: Event) {
     event.preventDefault();
     console.log(this.formItem.value);
-    this.collectionService.addToCollection(this.uid(), this.formItem.value).subscribe({
-      next: () => {
-        console.log('Item adicionado à coleção com sucesso!');
-        this.modalClose.emit(false);
-      },
-      error: () => console.error('Erro ao adicionar item à coleção')
-    })
+    // this.collectionService.addToCollection(this.uid(), this.formItem.value).subscribe({
+    //   next: () => {
+    //     console.log('Item adicionado à coleção com sucesso!');
+    //     this.modalClose.emit(false);
+    //   },
+    //   error: () => console.error('Erro ao adicionar item à coleção')
+    // })
   }
 
   onCancel(event: Event) {

@@ -48,14 +48,14 @@
         </label>
 
 
-        @if(formItem.get('format')?.value === EFormat.DVD || formItem.get('format')?.value === EFormat.BLURAY) {
+        @if(formItem.get('format')?.value === 'DVD'|| formItem.get('format')?.value === 'BLURAY') {
         <label for="more-then-one-disc" class="item__more-then-one-disc">
             <input type="checkbox" formControlName="hasMoreThanOneDisc" name="more-then-one-disc">
             <p>Tem mais de 1 disco</p>
         </label>
 
         <label for="numero-discos" class="item__number-discs">
-            <p>Número de discos:</p>
+            <p>Número de discos: {{ formItem.get('numberDiscs')?.value }} </p>
             <input type="number" formControlName="numberDiscs" name="numero-discos" placeholder="Ex: 1" min="1">
         </label>
         }
