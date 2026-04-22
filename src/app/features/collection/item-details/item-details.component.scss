@@ -18,21 +18,19 @@
 .item-details {
 
     &__header {
-        background-color: var(--grey-20);
+        background: radial-gradient(circle, var(--white) 0%, currentColor 100%);
         padding: 2rem 1rem;
         display: flex;
         justify-content: center;
+        position: relative;
+    }
 
-        &:has(.DVD) {
-            background-color: color-mix(in srgb, var(--dvd-color) 20%, transparent);
-        }
+    &__movie {
+        position: relative;
 
-        &:has(.BLURAY) {
-            background-color: color-mix(in srgb, var(--bluray-color) 20%, transparent);
-        }
-
-        &:has(.VHS) {
-            background-color: color-mix(in srgb, var(--vhs-color) 20%, transparent);
+        >h2 {
+            width: 80%;
+            font-size: 1.2rem;
         }
     }
 
@@ -41,6 +39,11 @@
         width: 170px;
         transform: translateY(-0.75rem);
         object-fit: cover;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
 
         >img {
             height: 100%;
@@ -51,17 +54,20 @@
 
     &__format {
         position: absolute;
-        top: 0;
-        right: -0;
-        padding: 0.75rem 1rem;
-        background-color: var(--grey-10);
-        border-radius: 0 0 0 1.5rem;
+        top: 1rem;
+        right: 1rem;
+        padding: 1rem 0.75rem;
+        border-radius: 0.5rem;
+        flex-direction: column;
+        align-items: center;
         display: flex;
-        gap: 0.5rem;
+        background-color: color-mix(in srgb, currentColor 50%, transparent);
 
         ::ng-deep {
             i[icon] {
-                --size-icon: 25px;
+                --size-icon: 24px;
+                color: currentColor;
+                filter: saturate(3) brightness(0.35);
             }
         }
     }
@@ -136,37 +142,64 @@
 
 }
 
-.DVD {
-    background-color: var(--dvd-color);
-}
+.btn-back, .btn-options {
 
-.BLURAY {
-    background-color: var(--bluray-color);
-}
-
-.VHS {
-    background-color: var(--vhs-color);
-}
-
-.btn-back {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
     background-color: var(--white);
     border: none;
-    border-radius: 40px;
-    width: 60px;
-    height: 60px;
+    border-radius: 60px;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
 }
 
+.btn-back {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+}
+
+.btn-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    align-items: flex-end;
+    height: 100%;
+    // justify-content: space-between;
+    // padding-bottom: 3.7rem;
+}
+
+.btn-like {
+    background-color: var(--white);
+    border: none;
+    border-radius: 10rem;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    min-width: 80px;
+    gap: 0.25rem;
+    padding: 0.75rem;
+
+    ::ng-deep {
+        i[icon] {
+            --size-icon: 24px;
+        }
+    }
+}
+
 .btn-more-info {
     background-color: var(--white);
     border: 1px solid var(--grey-20);
 }
+
+
 
 section {
     padding: 1rem;

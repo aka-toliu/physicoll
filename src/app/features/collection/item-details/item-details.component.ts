@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass, NgStyle } from '@angular/common';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CollectionService } from '../../../core/services/collection.service';
 import { ICollectionItem } from '../../../shared/models/ICollection';
@@ -10,7 +10,7 @@ import { EFormat, ECaseState, EDiscState, ETapeState, EVHSCase, EBluRayCase, EDV
 @Component({
   selector: 'app-item-details',
   standalone: true,
-  imports: [NgClass, IconComponent, DatePipe, CurrencyPipe],
+  imports: [NgClass, IconComponent, DatePipe, CurrencyPipe, NgStyle],
   templateUrl: './item-details.component.html',
   styleUrl: './item-details.component.scss'
 })

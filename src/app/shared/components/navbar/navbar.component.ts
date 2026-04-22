@@ -16,7 +16,7 @@ export class NavbarComponent {
   protected menu = signal([
     {title: 'Buscar', icon: 'search', path: '/search'},
     {title: 'Coleção', icon: 'collections', path: '/coll'},
-    {title: 'Salvos', icon: 'wishlist', path: '/wishlist'},
+    {title: 'Salvos', icon: 'bookmark-on', path: '/wishlist'},
     {title: 'Perfil', icon: 'profile', path: '/profile'},
   ])
 

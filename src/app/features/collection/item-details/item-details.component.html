@@ -1,19 +1,17 @@
-<header class="item-details__header" [ngClass]="">
+<header class="item-details__header" [ngStyle]="{color: item()?.format ? 'var(--' + item()?.format?.toLowerCase() + '-color)' : 'var(--grey-30)'}">
     <button class="btn-back">
         <app-icon icon="arrow-left" />
     </button>
-    <span class="item-details__format" [ngClass]="item()?.format">
-        @if(item()?.format === 'DVD') {
-        <app-icon icon="dvd" />
-        {{ EFormat.DVD }}
-        } @else if(item()?.format === 'BLURAY') {
-        <app-icon icon="bluray" />
-        {{ EFormat.BLURAY }}
-        } @else if(item()?.format === 'VHS') {
-        <app-icon icon="tape" />
-        {{ EFormat.VHS }}
-        }
-    </span>
+
+    <div class="btn-container">
+        <button class="btn-options">
+            <app-icon icon="options" />
+        </button>
+        <button class="btn-like">
+            <app-icon icon="like-off" />
+            <p>0</p>
+        </button>
+    </div>
     <div class="item-details__poster">
         <img [src]="item()?.poster ?? 'assets/default-poster.png'" alt="">
     </div>
@@ -22,10 +20,19 @@
 <div class="info-container">
 
     <section class="item-details__movie">
+        <span class="item-details__format" [ngStyle]="{color: 'var(--' + item()?.format?.toLowerCase() + '-color)'}">
+            @if(item()?.format === 'DVD') {
+            <app-icon icon="dvd" />
+            } @else if(item()?.format === 'BLURAY') {
+            <app-icon icon="bluray" />
+            } @else if(item()?.format === 'VHS') {
+            <app-icon icon="tape" />
+            }
+        </span>
+
         <h2>{{ item()?.title }}</h2>
         <p>{{ item()?.year }}</p>
         <p>{{ item()?.director?.join(', ') }}</p>
-
 
         @if(item()?.genre){
         <div class="item-details__genre">
@@ -41,6 +48,16 @@
     <section class="item-details__info">
 
         <h4>Sobre o item</h4>
+
+        <p><span>Formato:</span> 
+        @if(item()?.format === 'DVD') {
+        {{ EFormat.DVD }}
+        } @else if(item()?.format === 'BLURAY') {
+        {{ EFormat.BLURAY }}
+        } @else if(item()?.format === 'VHS') {
+        {{ EFormat.VHS }}
+        }
+        </p>
 
         @if (item()?.numberDiscs) {
         <p><span>Número de discos:</span> {{ item()?.numberDiscs }}</p>
