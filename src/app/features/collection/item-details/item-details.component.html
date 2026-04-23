@@ -73,8 +73,7 @@
 
         <p><span>Legendas disponíveis:</span> {{ item()?.subtitleLanguages ? item()?.subtitleLanguages?.join(', ') :
             'Não informado' }}</p>
-        <p><span>Áudios disponíveis:</span> {{ item()?.audioLanguages ? item()?.audioLanguages?.join(', ') : 'Não
-            informado' }}</p>
+        <p><span>Áudios disponíveis:</span> {{ item()?.audioLanguages ? item()?.audioLanguages?.join(', ') : 'Não informado' }}</p>
     </section>
 
     <section>
@@ -123,15 +122,32 @@
         <p><span>Data de aquisição:</span> {{ item()?.acquisitionDate | date:'longDate' }}</p>
         <p><span>Valor da aquisição:</span> {{ item()?.acquisitionPrice| currency:'BRL' }}</p>
         <p><span>Fornecedor:</span> {{ item()?.supplier }}</p>
-        <p><span>Está emprestado:</span> {{ item()?.isLoaned ? 'Sim' : 'Não' }}</p>
-        <p><span>Disponível para venda:</span> {{ item()?.availableForSell ? 'Sim' : 'Não' }}</p>
-        <p><span>Disponível para troca:</span> {{ item()?.availableForExchange? 'Sim' : 'Não' }}</p>
+        <div class="tags-container">
+            @if(item()?.isLoaned){ <p class="is-loaned tag">Está emprestado <app-icon icon="loan" /></p> }
+            @if(item()?.availableForSell){ <p class="available-sell tag">Disponível para venda <app-icon icon="sell" /></p> }
+            @if(item()?.availableForExchange){ <p class="available-exchange tag">Disponível para troca <app-icon icon="exchange" /></p> }
+        </div>
     </section>
 
     <section class="item-details__review">
-        <h4>Sua avaliação</h4>
-        <p><span>Já assistiu:</span> {{ item()?.watched ? 'Sim' : 'Não' }}</p>
-        <p><span>Nota:</span> {{ item()?.personalRating }}</p>
-        <p><span>Observações:</span> {{ item()?.observations }}</p>
+        <h4>Avaliação pessoal:</h4>
+
+        <div class="stars-container">
+            <p class="watched tag" 
+            [ngStyle]="{color: item()?.watched ? 'var(--great-color)' : 'var(--grey-50)'}">
+            {{ item()?.watched ? 'Já' : 'Não' }} assisti
+            @if(item()?.watched) {
+                <app-icon icon="watch" />
+            }
+            </p> 
+            @for(star of stars; track $index) {
+            <app-icon [icon]="star === 1 ? 'star-filled' : 'star-line'" />
+            }
+            <p><b>{{ item()?.personalRating }} </b> <span>/ 5</span></p>
+        </div>
+       @if (item()?.observations) {
+
+         <p class="review-observation"><span>Observações:</span>{{ item()?.observations }}</p>
+       }
     </section>
 </div>

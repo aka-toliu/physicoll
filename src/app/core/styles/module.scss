@@ -5,3 +5,16 @@
     padding: 1rem;
     background-color: var(--white);
 }
+
+.tag {
+    background-color: color-mix(in srgb, currentColor 5%, transparent);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+    border: 1px solid color-mix(in srgb, currentColor 70%, transparent);
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    width: fit-content;
+    --size-icon: 16px;
+}

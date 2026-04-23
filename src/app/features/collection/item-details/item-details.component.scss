@@ -119,14 +119,15 @@
         .state__disc,
         .state__tape {
             background-color: color-mix(in srgb, currentColor 10%, var(--white) 80%);
-            padding: 0.75rem 1rem;
+            padding: 0.5rem 0.75rem;
             border-radius: 0.5rem;
             display: flex;
             align-items: center;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             gap: 0.5rem;
             flex: 1;
             width: 100%;
+            // border: 1px solid color-mix(in srgb, currentColor 70%, var(--white) 80%);
 
             ::ng-deep {
                 i[icon] {
@@ -142,7 +143,8 @@
 
 }
 
-.btn-back, .btn-options {
+.btn-back,
+.btn-options {
 
     background-color: var(--white);
     border: none;
@@ -212,4 +214,66 @@ section {
     p>span {
         color: var(--grey-50);
     }
+}
+
+.stars-container {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    justify-content: space-around;
+    border: 1px solid var(--grey-20);
+
+    ::ng-deep {
+        i[icon="star-filled"] {
+            color: var(--yellow);
+        }
+
+        i[icon="star-line"] {
+            color: var(--grey-20);
+        }
+    }
+}
+
+.review-observation {
+    padding: 1rem;
+    display: flex;
+    flex: 1;
+    background-color: var(--grey-10);
+    border-radius: 0.5rem;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    >span {
+        font-size: 0.8rem;
+    }
+}
+
+.watched,
+.available-sell,
+.available-exchange,
+.is-loaned {
+    ::ng-deep {
+        i[icon] {
+            color: currentColor;
+        }
+    }
+}
+
+.available-sell {
+    color: var(--good-color);
+}
+
+.available-exchange {
+    color: var(--great-color);
+}
+.is-loaned {
+    color: var(--regular-color);
+}
+
+.tags-container{
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 }

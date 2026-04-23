@@ -19,12 +19,6 @@ export class ItemDetailsComponent {
   private activatedRoute = inject(ActivatedRoute);
   private collectionService = inject(CollectionService);
 
-
-  public valorDaApi: keyof typeof ECaseState = "CASE_GOOD";
-
-
-
-
   public ECaseState = ECaseState;
   public EFormat = EFormat;
   public EDiscState = EDiscState;
@@ -34,6 +28,7 @@ export class ItemDetailsComponent {
   public EVHSCase = EVHSCase;
 
   protected item = signal<ICollectionItem | null>(null);
+  protected stars!: number[];
 
   ngOnInit(): void {
     this.getItem();
@@ -45,7 +40,7 @@ export class ItemDetailsComponent {
 
     this.collectionService.getCollectionItem(uid, itemId).subscribe({
       next: (item) => {
-        
+        this.stars = Array(item?.personalRating || 0).fill(1).concat(Array(5 - (item?.personalRating || 0)).fill(0));
         this.item.set(item);
         console.log(item);
 
