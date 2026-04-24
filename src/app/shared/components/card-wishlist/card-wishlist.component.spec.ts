@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CollDetailsComponent } from './coll-details.component';
+import { CardWishlistComponent } from './card-wishlist.component';
 
-describe('CollDetailsComponent', () => {
-  let component: CollDetailsComponent;
-  let fixture: ComponentFixture<CollDetailsComponent>;
+describe('CardWishlistComponent', () => {
+  let component: CardWishlistComponent;
+  let fixture: ComponentFixture<CardWishlistComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CollDetailsComponent]
+      imports: [CardWishlistComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CollDetailsComponent);
+    fixture = TestBed.createComponent(CardWishlistComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

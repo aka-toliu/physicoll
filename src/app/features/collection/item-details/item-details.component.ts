@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CurrencyPipe, DatePipe, NgClass, NgStyle } from '@angular/common';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CollectionService } from '../../../core/services/collection.service';
@@ -17,6 +17,7 @@ import { EFormat, ECaseState, EDiscState, ETapeState, EVHSCase, EBluRayCase, EDV
 export class ItemDetailsComponent {
 
   private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
   private collectionService = inject(CollectionService);
 
   public ECaseState = ECaseState;
@@ -54,6 +55,10 @@ export class ItemDetailsComponent {
 
   getLabel(value: any, enumObj: any): string {
   return enumObj[value] || value;
+  }
+
+  navigateTo(route: string) {
+    this.router.navigate([route]);
   }
 
 }

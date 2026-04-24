@@ -20,8 +20,8 @@
             <p>Adicionar à coleção</p>
             <app-icon icon="add" />
         </button>
-        <button class="btn-add-wishlist">
-            <app-icon icon="bookmark-off" />
+        <button class="btn-add-wishlist"  [ngClass]="{'in-wishlist': inWishlist}" (click)="toggleWishlist()">
+            <app-icon [icon]="inWishlist ? 'bookmark-on' : 'bookmark-off'" />
         </button>
 
     </div>

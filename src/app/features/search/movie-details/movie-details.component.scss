@@ -100,7 +100,7 @@
                 justify-content: center;
                 flex: 1;
 
-                > p{
+                >p {
                     flex: 1;
                 }
             }
@@ -113,9 +113,19 @@
                 width: 60px;
                 padding: 0;
 
-                ::ng-deep{
+                ::ng-deep {
                     i[icon] {
                         --size-icon: 30px;
+                    }
+                }
+
+                &.in-wishlist {
+                    background-color: color-mix(in srgb, var(--wishlist-color) 10%, var(--grey-10) 50%);
+
+                    ::ng-deep {
+                        i[icon] {
+                            color: var(--wishlist-color);
+                        }
                     }
                 }
             }

@@ -1,0 +1,16 @@
+.wishlist{
+
+    &__header{
+        padding: 1rem;
+        background-color: var(--white);
+        box-shadow: var(--shadow-bottom);
+        justify-content: center;
+        display: flex;
+    }
+    &__container{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 1rem;
+    }
+}

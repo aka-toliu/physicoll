@@ -53,8 +53,19 @@
         @if(item()?.edition){
         <div class="card-coll__edition">
             <app-icon icon="edition" />
-            <p>{{ item()?.edition }}</p>
         </div>
+        }
+
+        @if(item()?.availableForSell){
+        <div class="card-coll__sell tag available-sell">
+            <app-icon icon="sell" />
+        </div>
+        }
+
+        @if(item()?.availableForExchange){
+         <div class="card-coll__exchange tag available-exchange">
+            <app-icon icon="exchange" />
+         </div>
         }
     </div>
 

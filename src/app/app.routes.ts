@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { ItemDetailsComponent } from './features/collection/item-details/item-details.component';
 import { AddCollComponent } from './features/collection/add-coll/add-coll.component';
 import { AddItemComponent } from './features/collection/add-item/add-item.component';
-import { CollDetailsComponent } from './features/collection/coll-details/coll-details.component';
 import { CollListComponent } from './features/collection/coll-list/coll-list.component';
 import { CollectionComponent } from './features/collection/collection.component';
 import { LoginComponent } from './features/login/login.component';

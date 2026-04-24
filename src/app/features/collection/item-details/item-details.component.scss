@@ -72,26 +72,6 @@
         }
     }
 
-    &__edition {
-        color: indigo;
-        background-color: color-mix(in srgb, currentColor 10%, var(--white) 80%);
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.25rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        width: fit-content;
-
-
-
-        ::ng-deep {
-            i[icon] {
-                color: currentColor;
-                --size-icon: 24px
-            }
-        }
-    }
-
     &__genre {
         font-size: 0.8rem;
         display: flex;
@@ -118,7 +98,7 @@
         .state__case,
         .state__disc,
         .state__tape {
-            background-color: color-mix(in srgb, currentColor 10%, var(--white) 80%);
+            background-color: color-mix(in srgb, currentColor 5%, var(--white) 80%);
             padding: 0.5rem 0.75rem;
             border-radius: 0.5rem;
             display: flex;
@@ -138,9 +118,33 @@
         }
     }
 
+    &__edition {
+        color: darkgoldenrod;
+        background-color: color-mix(in srgb, currentColor 5%, transparent);
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        width: fit-content;
+        border: 1px solid color-mix(in srgb, currentColor 70%, transparent);
 
+        >p {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
 
-
+        ::ng-deep {
+            i[icon] {
+                color: currentColor;
+                --size-icon: 24px;
+            }
+        }
+    }
 }
 
 .btn-back,

@@ -94,8 +94,9 @@
     }
 
     &__edition {
-        color: var(--grey-50);
+        color: darkgoldenrod;
         background-color: color-mix(in srgb, currentColor 5%, transparent);
+        border: 1px solid color-mix(in srgb, currentColor 70%, transparent);
         padding: 0.25rem 0.5rem;
         border-radius: 0.25rem;
         display: flex;
@@ -146,12 +147,30 @@
     }
 
 
+    &__sell, &__exchange{
+
+        ::ng-deep {
+            i[icon] {
+                color: currentColor;
+            }
+        }
+    }
+
+    &__sell{
+        color: var(--good-color);
+    }
+
+    &__exchange{
+        color: var(--great-color);
+    }
+
+
 
 
     &__case,
     &__disc,
     &__tape {
-        background-color: color-mix(in srgb, currentColor 10%, transparent);
+        background-color: color-mix(in srgb, currentColor 5%, transparent);
         padding: 0.25rem 0.5rem;
         border-radius: 0.25rem;
         font-size: 0.7rem;

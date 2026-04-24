@@ -17,8 +17,8 @@ export interface ICollectionItem {
     resolution: string;
     acquisitionDate: Date;
     acquisitionPrice: number;
-    audioLanguages: string[];
-    subtitleLanguages: string[];
+    audioLanguage: string[];
+    subtitleLanguage: string[];
     edition: string;
     isFavorite: boolean;
     hasMoreThanOneDisc: boolean;

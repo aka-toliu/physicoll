@@ -1,5 +1,5 @@
 <header class="item-details__header" [ngStyle]="{color: item()?.format ? 'var(--' + item()?.format?.toLowerCase() + '-color)' : 'var(--grey-30)'}">
-    <button class="btn-back">
+    <button class="btn-back" (click)="navigateTo('/coll')">
         <app-icon icon="arrow-left" />
     </button>
 
@@ -42,7 +42,7 @@
         </div>
         }
 
-        <button type="smooth" class="btn-more-info">Ver mais informações</button>
+        <button type="smooth" class="btn-more-info" (click)="navigateTo('movie/' + item()?.imdbID)">Ver mais informações</button>
     </section>
 
     <section class="item-details__info">
@@ -71,9 +71,16 @@
         </p>
         }
 
-        <p><span>Legendas disponíveis:</span> {{ item()?.subtitleLanguages ? item()?.subtitleLanguages?.join(', ') :
-            'Não informado' }}</p>
-        <p><span>Áudios disponíveis:</span> {{ item()?.audioLanguages ? item()?.audioLanguages?.join(', ') : 'Não informado' }}</p>
+        <!-- <p><span>Legendas disponíveis:</span> {{ item()?.subtitleLanguage ? item()?.subtitleLanguage?.join(', ') : 'Não informado' }}</p>
+        <p><span>Áudios disponíveis:</span> {{ item()?.audioLanguage ? item()?.audioLanguage?.join(', ') : 'Não informado' }}</p> -->
+
+        @if(item()?.edition){
+        <div class="item-details__edition">
+            <app-icon icon="edition" />
+            <p>{{ item()?.edition }}</p>
+        </div>
+        }
+
     </section>
 
     <section>
@@ -119,7 +126,7 @@
 
     <section>
         <h4>Aquisição</h4>
-        <p><span>Data de aquisição:</span> {{ item()?.acquisitionDate | date:'longDate' }}</p>
+        <p><span>Data de aquisição:</span> {{ item()?.acquisitionDate | date:'shortDate' }}</p>
         <p><span>Valor da aquisição:</span> {{ item()?.acquisitionPrice| currency:'BRL' }}</p>
         <p><span>Fornecedor:</span> {{ item()?.supplier }}</p>
         <div class="tags-container">

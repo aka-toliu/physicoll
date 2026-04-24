@@ -1,0 +1,10 @@
+<picture class="card-wishlist__poster">
+    <img [src]="wishlistItem().poster" alt="{{ wishlistItem().title }} poster">
+</picture>
+<div class="card-wishlist__info">
+    <h3>{{ wishlistItem().title }}</h3>
+    <p>{{ wishlistItem().year }}</p>
+</div>
+<button class="btn-remove" (click)="removeFromWishlist($event)">
+    <app-icon icon="bookmark-on"/>
+</button>
