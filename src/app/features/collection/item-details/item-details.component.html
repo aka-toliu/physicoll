@@ -1,10 +1,11 @@
-<header class="item-details__header" [ngStyle]="{color: item()?.format ? 'var(--' + item()?.format?.toLowerCase() + '-color)' : 'var(--grey-30)'}">
+<header class="item-details__header"
+    [ngStyle]="{color: item()?.format ? 'var(--' + item()?.format?.toLowerCase() + '-color)' : 'var(--grey-30)'}">
     <button class="btn-back" (click)="navigateTo('/coll')">
         <app-icon icon="arrow-left" />
     </button>
 
     <div class="btn-container">
-        <button class="btn-options">
+        <button class="btn-options" (click)="toggleOptions($event)">
             <app-icon icon="options" />
         </button>
         <button class="btn-like">
@@ -15,6 +16,30 @@
     <div class="item-details__poster">
         <img [src]="item()?.poster ?? 'assets/default-poster.png'" alt="">
     </div>
+
+    @if(showOptions) {
+        <div>
+            <div class="bg-modal" (click)="toggleOptions($event)"></div>
+        <div class="modal-options">
+        <button class="option">
+            <app-icon icon="edit" />
+            <p>Editar</p>
+        </button>
+        <button class="option">
+            <app-icon icon="share" />
+            <p>Compartilhar</p>
+        </button>
+        <button class="option">
+            <app-icon icon="list" />
+            <p>Adicionar à lista</p>
+        </button>
+        <button class="option">
+            <app-icon icon="delete" />
+            <p>Excluir</p>
+        </button>
+    </div>
+        </div>
+    }
 </header>
 
 <div class="info-container">
@@ -42,21 +67,22 @@
         </div>
         }
 
-        <button type="smooth" class="btn-more-info" (click)="navigateTo('movie/' + item()?.imdbID)">Ver mais informações</button>
+        <button type="smooth" class="btn-more-info" (click)="navigateTo('movie/' + item()?.imdbID)">Ver mais
+            informações</button>
     </section>
 
     <section class="item-details__info">
 
         <h4>Sobre o item</h4>
 
-        <p><span>Formato:</span> 
-        @if(item()?.format === 'DVD') {
-        {{ EFormat.DVD }}
-        } @else if(item()?.format === 'BLURAY') {
-        {{ EFormat.BLURAY }}
-        } @else if(item()?.format === 'VHS') {
-        {{ EFormat.VHS }}
-        }
+        <p><span>Formato:</span>
+            @if(item()?.format === 'DVD') {
+            {{ EFormat.DVD }}
+            } @else if(item()?.format === 'BLURAY') {
+            {{ EFormat.BLURAY }}
+            } @else if(item()?.format === 'VHS') {
+            {{ EFormat.VHS }}
+            }
         </p>
 
         @if (item()?.numberDiscs) {
@@ -131,8 +157,10 @@
         <p><span>Fornecedor:</span> {{ item()?.supplier }}</p>
         <div class="tags-container">
             @if(item()?.isLoaned){ <p class="is-loaned tag">Está emprestado <app-icon icon="loan" /></p> }
-            @if(item()?.availableForSell){ <p class="available-sell tag">Disponível para venda <app-icon icon="sell" /></p> }
-            @if(item()?.availableForExchange){ <p class="available-exchange tag">Disponível para troca <app-icon icon="exchange" /></p> }
+            @if(item()?.availableForSell){ <p class="available-sell tag">Disponível para venda <app-icon icon="sell" />
+            </p> }
+            @if(item()?.availableForExchange){ <p class="available-exchange tag">Disponível para troca <app-icon
+                    icon="exchange" /></p> }
         </div>
     </section>
 
@@ -140,21 +168,20 @@
         <h4>Avaliação pessoal:</h4>
 
         <div class="stars-container">
-            <p class="watched tag" 
-            [ngStyle]="{color: item()?.watched ? 'var(--great-color)' : 'var(--grey-50)'}">
-            {{ item()?.watched ? 'Já' : 'Não' }} assisti
-            @if(item()?.watched) {
+            <p class="watched tag" [ngStyle]="{color: item()?.watched ? 'var(--great-color)' : 'var(--grey-50)'}">
+                {{ item()?.watched ? 'Já' : 'Não' }} assisti
+                @if(item()?.watched) {
                 <app-icon icon="watch" />
-            }
-            </p> 
+                }
+            </p>
             @for(star of stars; track $index) {
             <app-icon [icon]="star === 1 ? 'star-filled' : 'star-line'" />
             }
             <p><b>{{ item()?.personalRating }} </b> <span>/ 5</span></p>
         </div>
-       @if (item()?.observations) {
+        @if (item()?.observations) {
 
-         <p class="review-observation"><span>Observações:</span>{{ item()?.observations }}</p>
-       }
+        <p class="review-observation"><span>Observações:</span>{{ item()?.observations }}</p>
+        }
     </section>
 </div>

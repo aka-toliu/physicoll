@@ -159,6 +159,50 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    position: relative;
+}
+
+.modal-options {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--white);
+    border-radius: 1rem;
+
+    >button {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        background-color: transparent;
+        gap: 1.5rem;
+        padding-inline: 1.5rem;
+        width: 100%;
+        height: 65px;
+
+        >p {
+            width: max-content;
+        }
+    }
+
+    ::ng-deep {
+        i[icon] {
+            --size-icon: 24px;
+        }
+    }
+}
+
+.bg-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    display: block;
 }
 
 .btn-back {
@@ -272,11 +316,12 @@ section {
 .available-exchange {
     color: var(--great-color);
 }
+
 .is-loaned {
     color: var(--regular-color);
 }
 
-.tags-container{
+.tags-container {
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;

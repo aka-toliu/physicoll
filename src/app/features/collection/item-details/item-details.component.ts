@@ -12,7 +12,8 @@ import { EFormat, ECaseState, EDiscState, ETapeState, EVHSCase, EBluRayCase, EDV
   standalone: true,
   imports: [NgClass, IconComponent, DatePipe, CurrencyPipe, NgStyle],
   templateUrl: './item-details.component.html',
-  styleUrl: './item-details.component.scss'
+  styleUrl: './item-details.component.scss',
+
 })
 export class ItemDetailsComponent {
 
@@ -30,6 +31,7 @@ export class ItemDetailsComponent {
 
   protected item = signal<ICollectionItem | null>(null);
   protected stars!: number[];
+  protected showOptions = false;
 
   ngOnInit(): void {
     this.getItem();
@@ -54,11 +56,16 @@ export class ItemDetailsComponent {
   }
 
   getLabel(value: any, enumObj: any): string {
-  return enumObj[value] || value;
+    return enumObj[value] || value;
   }
 
   navigateTo(route: string) {
     this.router.navigate([route]);
+  }
+
+  toggleOptions(event: Event) {
+    event.stopPropagation();
+    this.showOptions = !this.showOptions;
   }
 
 }
