@@ -126,7 +126,7 @@ export class CollFormComponent implements OnChanges {
       lastWatchedDate: [null],
       personalRating: [0],
       observations: [null],
-      addedAt: [new Date()]
+      addedAt: [new Date().toISOString()]
     });
   }
 

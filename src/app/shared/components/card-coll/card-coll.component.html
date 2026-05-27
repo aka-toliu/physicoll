@@ -19,10 +19,14 @@
     <app-icon icon="tape" />
     }
 </span>
+@if (viewMode() === 'list') {
 <div class="card-coll__info">
-    <h3 class="card-coll__title">{{ item()?.title}}</h3>
-    <p class="card-coll__year">{{ item()?.year }}</p>
-    <p class="card-coll__director">{{ item()?.director?.join(', ') }}</p>
+
+    <div class="movie-info-container">
+        <h3 class="card-coll__title">{{ item()?.title}}</h3>
+        <p class="card-coll__year">{{ item()?.year }}</p>
+        <p class="card-coll__director">{{ item()?.director?.join(', ') }}</p>
+    </div>
 
     <div class="item-info-container">
 
@@ -63,10 +67,11 @@
         }
 
         @if(item()?.availableForExchange){
-         <div class="card-coll__exchange tag available-exchange">
+        <div class="card-coll__exchange tag available-exchange">
             <app-icon icon="exchange" />
-         </div>
+        </div>
         }
     </div>
 
 </div>
+}

@@ -13,16 +13,19 @@ import { Router } from '@angular/router';
   styleUrl: './card-coll.component.scss',
   host: {
     '(click)': 'navigateTo(item()?.id!)',
+    '[class.card-coll--grid]': "viewMode() === 'grid'",
+    '[class.card-coll--list]': "viewMode() === 'list'"
   }
 })
 export class CardCollComponent {
 
   item = input.required<ICollectionItem | null>();
+  viewMode = input<'grid' | 'list'>('list');
 
   private route = inject(Router);
 
-  navigateTo(id: string){
-    this.route.navigate(['coll/', id]);    
+  navigateTo(id: string) {
+    this.route.navigate(['coll/', id]);
   }
 
 }

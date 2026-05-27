@@ -5,6 +5,8 @@
         align-items: center;
         padding: 1rem;
         background-color: var(--white);
+        flex-direction: column;
+        gap: 0.5rem;
 
         >h1 {
             font-size: 1.5rem;
@@ -14,9 +16,202 @@
     &__list {
         display: flex;
         gap: 1rem;
-        padding: 2rem 1rem;
+        padding: 1rem 1rem 7rem 1rem;
         flex-direction: column;
         height: 85vh;
         overflow-y: auto;
+
+        &--grid {
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-content: flex-start;
+        }
+    }
+}
+
+.search-container {
+    display: flex;
+    width: 100%;
+    position: relative;
+    justify-content: center;
+    gap: 1rem;
+    align-items: flex-start;
+
+    >label {
+        display: flex;
+        align-items: center;
+        position: relative;
+        justify-content: center;
+
+        input.search-input {
+            margin: 0;
+            width: 100%;
+            border-radius: 10rem;
+            padding-inline: 1rem 3rem;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background-image: url('/assets/icons/search.svg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            right: 1rem;
+            pointer-events: none;
+            z-index: 3;
+        }
+    }
+}
+
+.format-container {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    overflow-x: auto;
+    padding-block: 0.5rem;
+
+    label {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        padding: 0.5rem 1.2rem;
+        border: 1px solid var(--grey-20);
+        color: var(--grey-30);
+        border-radius: 100px;
+        transition: background-color 0.3s ease, width 0.3s ease, color 0.3s ease;
+        width: fit-content;
+        justify-content: center;
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        &:has(input[type="radio"]:checked) {
+            background-color: color-mix(in srgb, currentColor 10%, transparent);
+            color: var(--black);
+            border-color: var(--purple-dark);
+            font-weight: 500;
+        }
+
+        &:hover:not(:has(input[type="radio"]:checked)) {
+            background-color: var(--grey-20);
+        }
+
+    }
+}
+
+
+.modal-options {
+    position: fixed;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--white);
+    border-radius: 1rem;
+    width: 95%;
+    height: fit-content;
+    max-height: 80vh;
+    padding: 1rem;
+    gap: 1rem;
+    overflow-y: auto;
+
+    >label {
+        max-height: fit-content;
+    }
+
+}
+
+.btn-filter {
+    background-color: var(--grey-10);
+    border: 2px solid var(--grey-20);
+    padding: 0.8rem;
+    height: fit-content;
+    --size-icon: 24px;
+}
+
+.bg-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    display: block;
+}
+
+.sort-wrapper {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+
+    select {
+        // flex: 1;
+        border: 1px solid var(--black);
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        -ms-appearance: none;
+        -o-appearance: none;
+        appearance: none;
+    }
+
+
+
+    label {
+        display: flex;
+        justify-content: center;
+
+        &::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background-image: url('/assets/icons/sort.svg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            right: 1rem;
+            pointer-events: none;
+            z-index: 3;
+            margin-top: 0.5rem;
+        }
+    }
+
+    .switch-view {
+        display: flex;
+        border: 1px solid var(--grey-20);
+        border-radius: 0.5rem;
+
+        >button {
+            background-color: transparent;
+            padding: 0.8rem;
+            height: fit-content;
+            --size-icon: 24px;
+
+            ::ng-deep {
+                i[icon] {
+                    color: var(--grey-20);
+                }
+            }
+
+            &.switch-view__btn--active {
+                background-color: var(--grey-10);
+                border: 1px solid var(--grey-20);
+
+                ::ng-deep {
+                    i[icon] {
+                        color: var(--black);
+                    }
+                }
+            }
+        }
     }
 }

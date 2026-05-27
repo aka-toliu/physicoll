@@ -1,12 +1,42 @@
 :host {
     display: flex;
-    padding: 0.5rem;
+    padding: 0.5em 3rem 0.5rem 0.5rem;
     background-color: var(--white);
-    width: 100%;
     border-radius: 1rem;
     gap: 1.5rem;
     align-items: center;
     position: relative;
+
+    &:is(.card-coll--grid) {
+        width: fit-content;
+        padding: 0.5rem;
+        height: fit-content;
+
+        .card-coll__poster {
+            >img {
+                height: 150px;
+                width: 100px;
+            }
+        }
+
+        .card-coll__format {
+            padding: 0.4rem;
+            top: 0.45rem;
+            right: 0.45rem;
+            background-color: color-mix(in srgb, currentColor 100%, transparent);
+
+            ::ng-deep {
+                i[icon] {
+                    --size-icon: 18px;
+                }
+            }
+        }
+
+    }
+
+    &:is(.card-coll--list) {
+        width: 100%;
+    }
 }
 
 .card-coll {
@@ -28,17 +58,10 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        justify-content: flex-start;
         height: 100%;
         flex: 1;
         position: relative;
         gap: 0.5rem;
-
-        >h3 {
-            font-size: 0.9rem;
-            font-weight: 600;
-            width: 82%;
-        }
 
         .item-info-container {
             display: flex;
@@ -49,7 +72,7 @@
 
     &__format {
         position: absolute;
-        top: .5rem;
+        top: 0.5rem;
         right: 0.5rem;
         padding: 0.7rem 0.4rem;
         background-color: var(--grey-10);
@@ -91,6 +114,8 @@
         -webkit-line-clamp: 2;
         text-overflow: ellipsis;
         overflow: hidden;
+        font-size: 0.9rem;
+        font-weight: 600;
     }
 
     &__edition {
@@ -147,7 +172,8 @@
     }
 
 
-    &__sell, &__exchange{
+    &__sell,
+    &__exchange {
 
         ::ng-deep {
             i[icon] {
@@ -156,11 +182,11 @@
         }
     }
 
-    &__sell{
+    &__sell {
         color: var(--good-color);
     }
 
-    &__exchange{
+    &__exchange {
         color: var(--great-color);
     }
 
@@ -179,11 +205,8 @@
             }
         }
     }
-
-
-
-
 }
+
 
 .DVD {
     color: var(--dvd-color);
