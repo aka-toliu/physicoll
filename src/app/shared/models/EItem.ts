@@ -11,13 +11,11 @@ export enum EDVDCase {
     STEELBOOK = 'Metal / Alumínio (Steelbook)',
     DIGIPACK = 'Papelão/Plástico (Digipak)',
     DIGIBOOK = 'Papelão Rígido (Digibook)',
-    CUSTOM = 'Personalizada'
 }
 
 export enum EBluRayCase {
     AMARAY_BLUE = 'Plástico (Amaray Blue)',
     CRITERIOM = "Plástico Translúcido (Criterion Case)",
-    CUSTOM = 'Personalizada'
 }
 
 export enum EVHSCase {

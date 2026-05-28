@@ -34,7 +34,7 @@
     width: 100%;
     position: relative;
     justify-content: center;
-    gap: 1rem;
+    gap: 0.5rem;
     align-items: flex-start;
 
     >label {
@@ -48,6 +48,7 @@
             width: 100%;
             border-radius: 10rem;
             padding-inline: 1rem 3rem;
+            height: 40px;
         }
 
         &::after {
@@ -71,15 +72,15 @@
     gap: 0.5rem;
     width: 100%;
     overflow-x: auto;
-    padding-block: 0.5rem;
+    padding-top: 0.5rem;
 
-    label {
+    label.format-option {
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 0.5rem;
         cursor: pointer;
-        padding: 0.5rem 1.2rem;
+        padding: 0.2rem 1rem;
         border: 1px solid var(--grey-20);
         color: var(--grey-30);
         border-radius: 100px;
@@ -92,9 +93,8 @@
         }
 
         &:has(input[type="radio"]:checked) {
-            background-color: color-mix(in srgb, currentColor 10%, transparent);
             color: var(--black);
-            border-color: var(--purple-dark);
+            border: 2px solid var(--primary-color);
             font-weight: 500;
         }
 
@@ -116,22 +116,52 @@
     width: 95%;
     height: fit-content;
     max-height: 80vh;
-    padding: 1rem;
+    padding: 1.5rem;
     gap: 1rem;
     overflow-y: auto;
+
+    .btn-container{
+        display: flex;
+        gap: 0.5rem;
+         > button {
+            flex: 1;
+
+            &:nth-child(2){
+                background-color: var(--grey-10);
+            }
+         }
+    }
 
     >label {
         max-height: fit-content;
     }
 
+    .sort-option {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        font-size: 1rem;
+        gap: 0.7rem;
+
+        input[type="radio"] {
+            height: 16px;
+            width: 16px;
+            margin: unset;
+        }
+    }
+
 }
 
-.btn-filter {
-    background-color: var(--grey-10);
+.btn-filter,
+.btn-sort {
+    background-color: transparent;
     border: 2px solid var(--grey-20);
-    padding: 0.8rem;
-    height: fit-content;
-    --size-icon: 24px;
+    padding-inline: 0.7rem;
+    height: 40px;
+    width: fit-content;
+    --size-icon: 18px;
+    display: flex;
+    align-items: center;
 }
 
 .bg-modal {
@@ -145,73 +175,54 @@
     display: block;
 }
 
-.sort-wrapper {
+.format-view-wrapper{
     display: flex;
-    gap: 1rem;
-    align-items: flex-end;
-    justify-content: center;
     width: 100%;
-    position: relative;
+    gap: 1rem;
+}
 
-    select {
-        // flex: 1;
-        border: 1px solid var(--black);
-        -moz-appearance: none;
-        -webkit-appearance: none;
-        -ms-appearance: none;
-        -o-appearance: none;
-        appearance: none;
-    }
+.switch-view {
+    display: flex;
+    border: 1px solid var(--grey-20);
+    justify-content: flex-end;
+    padding: 0.5rem 1rem;
+    border-radius: 0;
+    background-color: var(--grey-10);
+    box-shadow: var(--shadow-bottom);
 
-
-
-    label {
-        display: flex;
-        justify-content: center;
-
-        &::after {
-            content: '';
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            background-image: url('/assets/icons/sort.svg');
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: contain;
-            right: 1rem;
-            pointer-events: none;
-            z-index: 3;
-            margin-top: 0.5rem;
-        }
-    }
-
-    .switch-view {
-        display: flex;
+    >button {
+        background-color: transparent;
+        padding: 0.5rem;
+        height: 40px;
+        --size-icon: 20px;
         border: 1px solid var(--grey-20);
-        border-radius: 0.5rem;
 
-        >button {
-            background-color: transparent;
-            padding: 0.8rem;
-            height: fit-content;
-            --size-icon: 24px;
+        &:nth-child(1) {
+            border-top-right-radius: 0rem;
+            border-bottom-right-radius: 0rem;
+        }
+
+        &:nth-child(2) {
+            border-top-left-radius: 0rem;
+            border-bottom-left-radius: 0rem;
+        }
+
+        ::ng-deep {
+            i[icon] {
+                color: var(--grey-20);
+            }
+        }
+
+        &.switch-view__btn--active {
+            background-color: var(--grey-20);
+            border: 1px solid var(--grey-20);
 
             ::ng-deep {
                 i[icon] {
-                    color: var(--grey-20);
-                }
-            }
-
-            &.switch-view__btn--active {
-                background-color: var(--grey-10);
-                border: 1px solid var(--grey-20);
-
-                ::ng-deep {
-                    i[icon] {
-                        color: var(--black);
-                    }
+                    color: var(--black);
                 }
             }
         }
     }
+
 }

@@ -2,91 +2,221 @@
     <h1>Minha coleção</h1>
     <div class="search-container">
         <label>
-            <input type="text" placeholder="Buscar por título..." (input)="updateSearchQuery($event)" class="search-input">
+            <input type="text" placeholder="Buscar por título..." (input)="updateValueFilter($event, 'search-query')"
+                class="search-input">
         </label>
-        <button class="btn-filter" (click)="toggleFilters()"><app-icon [icon]="'filter'" /></button>
+        <button class="btn-filter" (click)="toggleFilters('filters')"
+            [style.border]="activeFiltersCount() > 0 ? '2px solid var(--primary-color)' : ''"><app-icon
+                [icon]="'filter'" /> {{ activeFiltersCount() }}</button>
+        <button class="btn-sort" (click)="toggleFilters('sort')"
+            [style.border]="sortCriterion() !== 'added-newest'? '2px solid var(--primary-color)' : ''"><app-icon
+                [icon]="'sort'" /></button>
 
         @if(showFilters()) {
-        <div class="bg-modal" (click)="toggleFilters()"></div>
+        <div class="bg-modal" (click)="toggleFilters('filters')"></div>
         <div class="modal-options">
             <h3>Filtros</h3>
-
+            <h4>Informações da obra</h4>
             <label>
-                <p>Estado da capa</p>
-                <select class="filter__state-case">
-                    <option value="">Selecione</option>
-                    @for (option of caseStateOptions; track $index) {
-                    <option value="{{ option }}">{{ ECaseState[option] }}</option>
+                <p>Por diretor</p>
+                <select class="filter__directors" (change)="updateValueFilter($event, 'director')"
+                    [value]="filterDirector()">
+                    <option value="" [selected]="filterDirector() === ''">Todos</option>
+                    @for (option of directors(); track $index) {
+                    <option [value]="option" [selected]="filterDirector() === option">{{ option }}</option>
                     }
                 </select>
             </label>
             <label>
-                <span>Disponível para troca</span>
-                <input type="checkbox">
+                <p>Por gênero</p>
+                <select class="filter__genres" (change)="updateValueFilter($event, 'genre')" [value]="filterGenre()">
+                    <option value="" [selected]="filterGenre() === ''">Todos</option>
+                    @for (option of genres(); track $index) {
+                    <option [value]="option" [selected]="filterGenre() === option">{{ option }}</option>
+                    }
+                </select>
             </label>
             <label>
-                <span>Disponível para venda</span>
-                <input type="checkbox">
+                <p>Por país</p>
+                <select class="filter__country" (change)="updateValueFilter($event, 'country')"
+                    [value]="filterCountry()">
+                    <option value="" [selected]="filterCountry() === ''">Todos</option>
+                    @for (option of countries(); track $index) {
+                    <option [value]="option" [selected]="filterCountry() === option">{{ option }}</option>
+                    }
+                </select>
+            </label>
+            <h4>Estado de conservação</h4>
+            <label>
+                <p>Por estado da capa</p>
+                <select class="filter__state-case" (change)="updateValueFilter($event, 'case-state')"
+                    [value]="filterCaseState()">
+                    <option value="" [selected]="filterCaseState() === ''">Todos</option>
+                    @for (option of caseStateOptions; track $index) {
+                    <option [value]="option" [selected]="filterCaseState() === option">{{ ECaseState[option] }}</option>
+                    }
+                </select>
+            </label>
+            <label>
+                <p>Por estado do disco</p>
+                <select class="filter__state-disc" (change)="updateValueFilter($event, 'disc-state')"
+                    [value]="filterDiscState()">
+                    <option value="" [selected]="filterDiscState() === ''">Todos</option>
+                    @for (option of discStateOptions; track $index) {
+                    <option [value]="option" [selected]="filterDiscState() === option">{{ EDiscState[option] }}</option>
+                    }
+                </select>
+            </label>
+            <label>
+                <p>Por estado da fita</p>
+                <select class="filter__state-tape" (change)="updateValueFilter($event, 'tape-state')"
+                    [value]="filterTapeState()">
+                    <option value="" [selected]="filterTapeState() === ''">Todos</option>
+                    @for (option of tapeStateOptions; track $index) {
+                    <option [value]="option" [selected]="filterTapeState() === option">{{ ETapeState[option] }}</option>
+                    }
+                </select>
+            </label>
+            <h4>Informações do item</h4>
+
+            <label>
+                <p>Tipo de capa</p>
+                <select class="filter__case-type" (change)="updateValueFilter($event, 'case-type')"
+                    [value]="filterCaseType()">
+                    <option value="" [selected]="filterCaseType() === ''">Todos</option>
+                    @for (option of caseDVDOptions; track $index) {
+                    <option [value]="option" [selected]="filterCaseType() === option">{{ EDVDCase[option] }}</option>
+                    }
+                    @for (option of caseBluRayOptions; track $index) {
+                    <option [value]="option" [selected]="filterCaseType() === option">{{ EBluRayCase[option] }}</option>
+                    }
+                    @for (option of caseVHSOptions; track $index) {
+                    <option [value]="option" [selected]="filterCaseType() === option">{{ EVHSCase[option] }}</option>
+                    }
+                </select>
             </label>
             <label>
                 <span>É edição especial</span>
-                <input type="checkbox">
+                <input type="checkbox" [checked]="filterIsSpecial()"
+                    (change)="updateCheckboxFilter($event, 'isSpecialEdition')">
+            </label>
+            <h4>Disponibilidade</h4>
+            <label>
+                <span>Disponível para troca</span>
+                <input type="checkbox" [checked]="filterAvailableForExchange()"
+                    (change)="updateCheckboxFilter($event, 'availableForExchange')">
+            </label>
+            <label>
+                <span>Disponível para venda</span>
+                <input type="checkbox" [checked]="filterAvailableForSale()"
+                    (change)="updateCheckboxFilter($event, 'availableForSale')">
+            </label>
+
+            <div class="btn-container">
+                <button class="btn-clear" (click)="clearAllFilters()">Limpar filtros</button>
+                <button class="btn-close" (click)="toggleFilters('filters')">Fechar</button>
+            </div>
+        </div>
+        }
+        @if(showSort()) {
+        <div class="bg-modal" (click)="toggleFilters('sort')"></div>
+        <div class="modal-options">
+            <h3>Ordenação</h3>
+            <label class="sort-option">
+                <input type="radio" name="sort" value="added-newest" [checked]="sortCriterion() === 'added-newest'"
+                    (change)="updateSortCriterion($event)">
+                <span>Adicionado recentemente (padrão)</span>
+            </label>
+            <label class="sort-option">
+                <input type="radio" name="sort" value="added-oldest" [checked]="sortCriterion() === 'added-oldest'"
+                    (change)="updateSortCriterion($event)">
+                <span>Adicionado há mais tempo</span>
+            </label>
+            <label class="sort-option">
+                <input type="radio" name="sort" value="title-asc" [checked]="sortCriterion() === 'title-asc'"
+                    (change)="updateSortCriterion($event)">
+                <span>Título (A-Z)</span>
+            </label>
+            <label class="sort-option">
+                <input type="radio" name="sort" value="title-desc" [checked]="sortCriterion() === 'title-desc'"
+                    (change)="updateSortCriterion($event)">
+                <span>Título (Z-A)</span>
+            </label>
+            <label class="sort-option">
+                <input type="radio" name="sort" value="acquisition-newest"
+                    [checked]="sortCriterion() === 'acquisition-newest'" (change)="updateSortCriterion($event)">
+                <span>Adquirido recentemente</span>
+            </label>
+            <label class="sort-option">
+                <input type="radio" name="sort" value="acquisition-oldest"
+                    [checked]="sortCriterion() === 'acquisition-oldest'" (change)="updateSortCriterion($event)">
+                <span>Adquirido há mais tempo</span>
+            </label>
+            <label class="sort-option">
+                <input type="radio" name="sort" value="year-newest" [checked]="sortCriterion() === 'year-newest'"
+                    (change)="updateSortCriterion($event)">
+                <span>Ano de lançamento (Novo)</span>
+            </label>
+            <label class="sort-option">
+                <input type="radio" name="sort" value="year-oldest" [checked]="sortCriterion() === 'year-oldest'"
+                    (change)="updateSortCriterion($event)">
+                <span>Ano de lançamento (Antigo)</span>
+            </label>
+            <label class="sort-option">
+                <input type="radio" name="sort" value="rating-highest" [checked]="sortCriterion() === 'rating-highest'"
+                    (change)="updateSortCriterion($event)">
+                <span>Maior avaliação pessoal</span>
+            </label>
+            <label class="sort-option">
+                <input type="radio" name="sort" value="rating-lowest" [checked]="sortCriterion() === 'rating-lowest'"
+                    (change)="updateSortCriterion($event)">
+                <span>Menor avaliação pessoal</span>
             </label>
         </div>
         }
     </div>
 
-    <div class="sort-wrapper">
-        <label for="sort-select">
-            <p>Ordenar por:</p>
-            <select id="sort-select" (change)="updateSortCriterion($event)" class="sort-select">
-                <option value="added-newest">Adicionado recentemente</option>
-                <option value="added-oldest">Adicionado há mais tempo</option>
-                <option value="title-asc">Título (A-Z)</option>
-                <option value="title-desc">Título (Z-A)</option>
-                <option value="acquisition-newest">Adquirido recentemente</option>
-                <option value="acquisition-oldest">Adquirido há mais tempo</option>
-                <option value="year-newest">Ano de lançamento (Novo)</option>
-                <option value="year-oldest">Ano de lançamento (Antigo)</option>
-                <option value="rating-highest">Maior avaliação pessoal</option>
-                <option value="rating-lowest">Menor avaliação pessoal</option>
-            </select>
-        </label>
-        <div class="switch-view">
-            <button [ngClass]="viewMode() === 'list' ? 'switch-view__btn--active' : ''" (click)="viewMode.set('list')"><app-icon icon="list-view" /></button>
-            <button [ngClass]="viewMode() === 'grid' ? 'switch-view__btn--active' : ''" (click)="viewMode.set('grid')"><app-icon icon="grid-view" /></button>
+    <div class="format-view-wrapper">
+        <div class="format-container">
+            <label for="format-all" class="format-option">
+                <span>Todos</span>
+                @if(filterFormat() === ''){<b>{{ filteredCollection()?.length }}</b>}
+                <input type="radio" id="format-all" name="format" value=""
+                    (change)="updateValueFilter($event, 'format')" checked>
+            </label>
+            <label for="format-dvd" class="format-option">
+                <span>DVD</span>
+                @if(filterFormat() === 'DVD'){<b>{{ filteredCollection()?.length }}</b>}
+                <input type="radio" id="format-dvd" name="format" value="DVD"
+                    (change)="updateValueFilter($event, 'format')">
+            </label>
+            <label for="format-blueray" class="format-option"><span>BluRay</span>
+                @if(filterFormat() === 'BLURAY'){<b>{{ filteredCollection()?.length }}</b>}
+                <input type="radio" id="format-blueray" name="format" value="BLURAY"
+                    (change)="updateValueFilter($event, 'format')">
+            </label>
+            <label for="format-vhs" class="format-option"><span>VHS</span>
+                @if(filterFormat() === 'VHS'){<b>{{ filteredCollection()?.length }}</b>}
+                <input type="radio" id="format-vhs" name="format" value="VHS"
+                    (change)="updateValueFilter($event, 'format')">
+            </label>
         </div>
     </div>
-
-    <div class="format-container">
-        <label for="format-all" class="format-option">
-            <span>Todos</span>
-            <b>{{ collection()?.length }}</b>
-            <input type="radio" id="format-all" name="format" value="" (change)="updateFormat($event)" checked>
-        </label>
-        <label for="format-dvd" class="format-option">
-            <span>DVD</span>
-            @if(filterFormat() === 'DVD'){<b>{{ filteredCollection()?.length }}</b>}
-            <input type="radio" id="format-dvd" name="format" value="DVD" (change)="updateFormat($event)">
-        </label>
-        <label for="format-blueray" class="format-option"><span>BluRay</span>
-            @if(filterFormat() === 'BLURAY'){<b>{{ filteredCollection()?.length }}</b>}
-            <input type="radio" id="format-blueray" name="format" value="BLURAY" (change)="updateFormat($event)">
-        </label>
-        <label for="format-vhs" class="format-option"><span>VHS</span>
-            @if(filterFormat() === 'VHS'){<b>{{ filteredCollection()?.length }}</b>}
-            <input type="radio" id="format-vhs" name="format" value="VHS" (change)="updateFormat($event)">
-        </label>
-    </div>
 </header>
+<div class="switch-view">
+    <button [ngClass]="viewMode() === 'list' ? 'switch-view__btn--active' : ''" (click)="viewMode.set('list')"><app-icon
+            icon="list-view" /></button>
+    <button [ngClass]="viewMode() === 'grid' ? 'switch-view__btn--active' : ''" (click)="viewMode.set('grid')"><app-icon
+            icon="grid-view" /></button>
+</div>
 
 <div class="coll__list" [ngClass]="viewMode() === 'grid' ? 'coll__list--grid' : 'coll__list--list'">
 
-    @if(collection()){
+    @if(filteredCollection() && filteredCollection()?.length! > 0) {
     @for (item of filteredCollection(); track $index) {
     <app-card-coll [item]="item" [viewMode]="viewMode()"></app-card-coll>
     }
     } @else {
-    <p>Você ainda não adicionou nenhum item à coleção.</p>
+    <p>Nenhum item encontrado na coleção.</p>
     }
 </div>
