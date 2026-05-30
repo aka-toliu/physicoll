@@ -16,7 +16,7 @@
                 </div>
             </div>
             @if (!isMyself()) {
-                <button type="smooth">Seguir</button>
+            <button type="smooth">Seguir</button>
             }
         </div>
     </div>
@@ -25,7 +25,25 @@
     }
 </header>
 <main class="profile__container">
-    
+
+    <div class="cards-container">
+        <div class="card card__collection">
+            <app-icon icon="collections" />
+            <p>Coleção</p>
+            <b>{{ countCollection() || 0 }}</b>
+        </div>
+        <div class="card card__lists">
+            <app-icon icon="list" />
+            <p>Listas</p>
+            <b>{{ countLists() || 0 }}</b>
+        </div>
+        <div class="card card__wishlist">
+            <app-icon icon="like-on" />
+            <p>Salvos</p>
+            <b>{{ countWishlist() || 0 }}</b>
+        </div>
+    </div>
+
     <button type="smooth" (click)="onLogout()">Sair</button>
 
 </main>

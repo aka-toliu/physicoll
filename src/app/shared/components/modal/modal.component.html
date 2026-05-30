@@ -1,0 +1,24 @@
+@if (modalControl()) {
+<div class="modal">
+
+    <div>
+        <ng-content select=".modal-title"></ng-content>
+    </div>
+
+    <div class="modal-content">
+        <ng-content select=".modal-body"></ng-content>
+    </div>
+
+    <div class="modal__btn-container">
+        <button class="modal__btn-close" (click)="closeModal()">
+            <ng-content select=".modal-btn-close-content"> Fechar</ng-content>
+        </button>
+        <button class="modal__btn-confirm" (click)="confirmModalAction()">
+            <ng-content select=".modal-btn-confirm-content"> Confirmar</ng-content>
+        </button>
+    </div>
+</div>
+}
+@if (modalControl()) {
+<div class="modal-bg" (click)="closeModal()"></div>
+}

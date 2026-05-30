@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, inject, input, model, OnChanges, output, signal, SimpleChanges } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, HostListener, inject, input, model, OnChanges, output, signal, SimpleChanges } from '@angular/core';
 import { NgxMaskDirective } from 'ngx-mask';
 import { IconComponent } from '../icon/icon.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -7,6 +7,9 @@ import { EBluRayCase, ECaseState, EDiscState, EDVDCase, EFormat, EResolution, ET
 import { CollectionService } from '../../../core/services/collection.service';
 import { IMovieDetail } from '../../models/IMovies';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { ELanguages } from '../../models/ELanguages';
+import { ICollectionItem } from '../../models/ICollection';
+import { ProfileService } from '../../../core/services/profile.service';
 
 @Component({
   selector: 'app-coll-form',
@@ -43,7 +46,9 @@ export class CollFormComponent implements OnChanges {
 
   public modalControl = model<boolean>();
   public modalClose = output<boolean>();
+  public updateItem = output<boolean>();
   public movieDetails = input<IMovieDetail | null>(null);
+  public itemDetails = input<ICollectionItem | null>(null);
 
   private uid = signal(localStorage.getItem('UID'));
 
@@ -53,6 +58,8 @@ export class CollFormComponent implements OnChanges {
 
   // SERVICES
   private collectionService = inject(CollectionService);
+  private profileService = inject(ProfileService);
+  protected elementRef = inject(ElementRef);
 
   // ENUMS
   public caseDVDOptions = Object.keys(EDVDCase) as Array<keyof typeof EDVDCase>;
@@ -63,7 +70,9 @@ export class CollFormComponent implements OnChanges {
   public discStateOptions = Object.keys(EDiscState) as Array<keyof typeof EDiscState>;
   public tapeStateOptions = Object.keys(ETapeState) as Array<keyof typeof ETapeState>;
   public resolutionOptions = Object.keys(EResolution) as Array<keyof typeof EResolution>;
+  public languageOptions = Object.keys(ELanguages) as Array<keyof typeof ELanguages>;
   public EFormat = EFormat;
+  public ELanguages = ELanguages;
   public ECaseState = ECaseState;
   public EDiscState = EDiscState;
   public ETapeState = ETapeState;
@@ -73,6 +82,9 @@ export class CollFormComponent implements OnChanges {
 
   public starRating = signal<number[]>([0, 0, 0, 0, 0]);
 
+  protected audioOpenDropdown = signal<boolean>(false);
+  protected subtitleOpenDropdown = signal<boolean>(false);
+
 
   ngOnInit(): void {
     this.onBuildForm();
@@ -80,6 +92,9 @@ export class CollFormComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['movieDetails'] && this.movieDetails()) {
+      this.onPatchForm();
+    }
+    if (changes['itemDetails'] && this.itemDetails()) {
       this.onPatchForm();
     }
   }
@@ -146,6 +161,48 @@ export class CollFormComponent implements OnChanges {
       });
     }
 
+    if (this.itemDetails()) {
+      this.formItem.patchValue({
+        imdbID: this.itemDetails()?.imdbID,
+        title: this.itemDetails()?.title,
+        year: this.itemDetails()?.year,
+        poster: this.itemDetails()?.poster,
+        director: this.itemDetails()?.director,
+        genre: this.itemDetails()?.genre,
+        actors: this.itemDetails()?.actors,
+        writer: this.itemDetails()?.writer,
+        country: this.itemDetails()?.country,
+        originalLanguage: this.itemDetails()?.originalLanguage,
+        format: this.itemDetails()?.format,
+        hasMoreThanOneDisc: this.itemDetails()?.hasMoreThanOneDisc,
+        numberDiscs: this.itemDetails()?.numberDiscs,
+        caseType: this.itemDetails()?.caseType,
+        stateCase: this.itemDetails()?.stateCase,
+        stateDisc: this.itemDetails()?.stateDisc,
+        stateTape: this.itemDetails()?.stateTape,
+        storageLocation: this.itemDetails()?.storageLocation,
+        acquisitionDate: this.itemDetails()?.acquisitionDate,
+        acquisitionPrice: this.itemDetails()?.acquisitionPrice,
+        supplier: this.itemDetails()?.supplier,
+        availableForExchange: this.itemDetails()?.availableForExchange,
+        availableForSell: this.itemDetails()?.availableForSell,
+        isLoaned: this.itemDetails()?.isLoaned,
+        isSpecialEdition: this.itemDetails()?.isSpecialEdition,
+        audioLanguage: this.itemDetails()?.audioLanguage,
+        subtitleLanguage: this.itemDetails()?.subtitleLanguage,
+        edition: this.itemDetails()?.edition,
+        resolution: this.itemDetails()?.resolution,
+        isFavorite: this.itemDetails()?.isFavorite,
+        watched: this.itemDetails()?.watched,
+        lastWatchedDate: this.itemDetails()?.lastWatchedDate,
+        personalRating: this.itemDetails()?.personalRating,
+        observations: this.itemDetails()?.observations,
+        addedAt: this.itemDetails()?.addedAt
+      });
+
+      this.rating(this.itemDetails()?.personalRating || 0);
+    }
+
     this.toggleSpecialEdition(this.formItem.controls['edition'].value);
     this.toggleNumberDiscs(this.formItem.controls['hasMoreThanOneDisc'].value);
 
@@ -156,6 +213,9 @@ export class CollFormComponent implements OnChanges {
     this.formItem.get('hasMoreThanOneDisc')?.valueChanges.subscribe((value) => {
       this.toggleNumberDiscs(value);
     });
+
+    console.log('Item Details:', this.formItem.value);
+
   }
 
   toggleSpecialEdition(isSpecialEdition: boolean) {
@@ -178,16 +238,67 @@ export class CollFormComponent implements OnChanges {
     }
   }
 
+  addAudioLanguage(event: Event, language: string): void {
+    event.preventDefault();
+    const currentLanguages: string[] = this.formItem.controls['audioLanguage'].value || [];
+
+    if (currentLanguages.includes(language)) {
+      const updatedLanguages = currentLanguages.filter(lang => lang !== language);
+      this.formItem.controls['audioLanguage'].setValue(updatedLanguages);
+    } else {
+      this.formItem.controls['audioLanguage'].setValue([...currentLanguages, language]);
+    }
+  }
+
+  addSubtitleLanguage(event: Event, language: string): void {
+    event.preventDefault();
+    const currentLanguages: string[] = this.formItem.controls['subtitleLanguage'].value || [];
+
+    if (currentLanguages.includes(language)) {
+      const updatedLanguages = currentLanguages.filter(lang => lang !== language);
+      this.formItem.controls['subtitleLanguage'].setValue(updatedLanguages);
+    } else {
+      this.formItem.controls['subtitleLanguage'].setValue([...currentLanguages, language]);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event): void {
+    const target = event.target as HTMLElement;
+    const chipSelectContainer = target.closest('.chip-select');
+
+    if (this.audioOpenDropdown() && !chipSelectContainer) {
+      this.audioOpenDropdown.set(false);
+    }
+
+    if (this.subtitleOpenDropdown() && !chipSelectContainer) {
+      this.subtitleOpenDropdown.set(false);
+    }
+  }
+
   onSubmit(event: Event) {
     event.preventDefault();
     console.log(this.formItem.value);
-    this.collectionService.addToCollection(this.uid(), this.formItem.value).subscribe({
-      next: () => {
-        console.log('Item adicionado à coleção com sucesso!');
-        this.modalClose.emit(false);
-      },
-      error: () => console.error('Erro ao adicionar item à coleção')
-    })
+
+    if (this.movieDetails()) {
+      this.collectionService.addToCollection(this.uid(), this.formItem.value).subscribe({
+        next: () => {
+          console.log('Item adicionado à coleção com sucesso!');
+          this.modalClose.emit(false);
+        },
+        error: () => console.error('Erro ao adicionar item à coleção')
+      })
+    }
+
+    if (this.itemDetails()) {
+      this.collectionService.editCollectionItem(this.uid(), this.itemDetails()?.id || '', this.formItem.value).subscribe({
+        next: () => {
+          console.log('Item editado com sucesso!');
+          this.modalClose.emit(false);
+          this.updateItem.emit(true);
+        },
+        error: () => console.error('Erro ao editar item da coleção')
+      })}
   }
 
   onCancel(event: Event) {
@@ -195,5 +306,6 @@ export class CollFormComponent implements OnChanges {
     this.modalControl.set(false);
     this.modalClose.emit(false);
   }
+
 
 }

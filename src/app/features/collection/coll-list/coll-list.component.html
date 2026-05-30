@@ -16,12 +16,13 @@
         <div class="bg-modal" (click)="toggleFilters('filters')"></div>
         <div class="modal-options">
             <h3>Filtros</h3>
+
             <h4>Informações da obra</h4>
             <label>
                 <p>Por diretor</p>
                 <select class="filter__directors" (change)="updateValueFilter($event, 'director')"
-                    [value]="filterDirector()">
-                    <option value="" [selected]="filterDirector() === ''">Todos</option>
+                    [class.has-value]="filterDirector() !== ''" [value]="filterDirector()">
+                    <option class="default-option" value="" [selected]="filterDirector() === ''">Todos</option>
                     @for (option of directors(); track $index) {
                     <option [value]="option" [selected]="filterDirector() === option">{{ option }}</option>
                     }
@@ -29,8 +30,9 @@
             </label>
             <label>
                 <p>Por gênero</p>
-                <select class="filter__genres" (change)="updateValueFilter($event, 'genre')" [value]="filterGenre()">
-                    <option value="" [selected]="filterGenre() === ''">Todos</option>
+                <select class="filter__genres" (change)="updateValueFilter($event, 'genre')" [value]="filterGenre()"
+                    [class.has-value]="filterGenre() !== ''">
+                    <option class="default-option" value="" [selected]="filterGenre() === ''">Todos</option>
                     @for (option of genres(); track $index) {
                     <option [value]="option" [selected]="filterGenre() === option">{{ option }}</option>
                     }
@@ -39,19 +41,20 @@
             <label>
                 <p>Por país</p>
                 <select class="filter__country" (change)="updateValueFilter($event, 'country')"
-                    [value]="filterCountry()">
-                    <option value="" [selected]="filterCountry() === ''">Todos</option>
+                    [value]="filterCountry()" [class.has-value]="filterCountry() !== ''">
+                    <option class="default-option" value="" [selected]="filterCountry() === ''">Todos</option>
                     @for (option of countries(); track $index) {
                     <option [value]="option" [selected]="filterCountry() === option">{{ option }}</option>
                     }
                 </select>
             </label>
+
             <h4>Estado de conservação</h4>
             <label>
                 <p>Por estado da capa</p>
                 <select class="filter__state-case" (change)="updateValueFilter($event, 'case-state')"
-                    [value]="filterCaseState()">
-                    <option value="" [selected]="filterCaseState() === ''">Todos</option>
+                    [value]="filterCaseState()" [class.has-value]="filterCaseState() !== ''">
+                    <option class="default-option" value="" [selected]="filterCaseState() === ''">Todos</option>
                     @for (option of caseStateOptions; track $index) {
                     <option [value]="option" [selected]="filterCaseState() === option">{{ ECaseState[option] }}</option>
                     }
@@ -60,8 +63,8 @@
             <label>
                 <p>Por estado do disco</p>
                 <select class="filter__state-disc" (change)="updateValueFilter($event, 'disc-state')"
-                    [value]="filterDiscState()">
-                    <option value="" [selected]="filterDiscState() === ''">Todos</option>
+                    [value]="filterDiscState()" [class.has-value]="filterDiscState() !== ''">
+                    <option class="default-option" value="" [selected]="filterDiscState() === ''">Todos</option>
                     @for (option of discStateOptions; track $index) {
                     <option [value]="option" [selected]="filterDiscState() === option">{{ EDiscState[option] }}</option>
                     }
@@ -70,20 +73,20 @@
             <label>
                 <p>Por estado da fita</p>
                 <select class="filter__state-tape" (change)="updateValueFilter($event, 'tape-state')"
-                    [value]="filterTapeState()">
-                    <option value="" [selected]="filterTapeState() === ''">Todos</option>
+                    [value]="filterTapeState()" [class.has-value]="filterTapeState() !== ''">
+                    <option class="default-option" value="" [selected]="filterTapeState() === ''">Todos</option>
                     @for (option of tapeStateOptions; track $index) {
                     <option [value]="option" [selected]="filterTapeState() === option">{{ ETapeState[option] }}</option>
                     }
                 </select>
             </label>
-            <h4>Informações do item</h4>
 
+            <h4>Informações do item</h4>
             <label>
-                <p>Tipo de capa</p>
+                <p>Por tipo de capa</p>
                 <select class="filter__case-type" (change)="updateValueFilter($event, 'case-type')"
-                    [value]="filterCaseType()">
-                    <option value="" [selected]="filterCaseType() === ''">Todos</option>
+                    [value]="filterCaseType()" [class.has-value]="filterCaseType() !== ''">
+                    <option class="default-option" value="" [selected]="filterCaseType() === ''">Todos</option>
                     @for (option of caseDVDOptions; track $index) {
                     <option [value]="option" [selected]="filterCaseType() === option">{{ EDVDCase[option] }}</option>
                     }
@@ -95,25 +98,69 @@
                     }
                 </select>
             </label>
+
             <label>
+                <p>Por fonecedor</p>
+                <select class="filter__supplier" (change)="updateValueFilter($event, 'supplier')"
+                    [value]="filterSupplier()" [class.has-value]="filterSupplier() !== ''">
+                    <option class="default-option" value="" [selected]="filterSupplier() === ''">Todos</option>
+                    @for (option of suppliers(); track $index) {
+                    <option [value]="option" [selected]="filterSupplier() === option">{{ option }}</option>
+                    }
+                </select>
+            </label>
+
+            <label [class.has-value]="filterIsSpecial()">
                 <span>É edição especial</span>
                 <input type="checkbox" [checked]="filterIsSpecial()"
                     (change)="updateCheckboxFilter($event, 'isSpecialEdition')">
             </label>
-            <h4>Disponibilidade</h4>
+
             <label>
+                <p>Por edição</p>
+                <select class="filter__edition" (change)="updateValueFilter($event, 'edition')"
+                    [value]="filterEdition()" [class.has-value]="filterEdition() !== ''">
+                    <option class="default-option" value="" [selected]="filterEdition() === ''">Todos</option>
+                    @for (option of edition(); track $index) {
+                    <option [value]="option" [selected]="filterEdition() === option">{{ option }}</option>
+                    }
+                </select>
+            </label>
+            <label>
+                <p>Por idioma de áudio</p>
+                <select class="filter__audio-language" (change)="updateValueFilter($event, 'audio-language')"
+                    [value]="filterAudioLanguage()" [class.has-value]="filterAudioLanguage() !== ''">
+                    <option class="default-option" value="" [selected]="filterAudioLanguage() === ''">Todos</option>
+                    @for (option of audioLanguages(); track $index) {
+                    <option [value]="option" [selected]="filterAudioLanguage() === option">{{ $any(ELanguages)[option] || option }}</option>
+                    }
+                </select>
+            </label>
+            <label>
+                <p>Por idioma de legenda</p>
+                <select class="filter__subtitle-language" (change)="updateValueFilter($event, 'subtitle-language')"
+                    [value]="filterSubtitleLanguage()" [class.has-value]="filterSubtitleLanguage() !== ''">
+                    <option class="default-option" value="" [selected]="filterSubtitleLanguage() === ''">Todos</option>
+                    @for (option of subtitleLanguages(); track $index) {
+                    <option [value]="option" [selected]="filterSubtitleLanguage() === option">{{ $any(ELanguages)[option] || option }}</option>
+                    }
+                </select>
+            </label>
+
+            <h4>Disponibilidade</h4>
+            <label [class.has-value]="filterAvailableForExchange()">
                 <span>Disponível para troca</span>
                 <input type="checkbox" [checked]="filterAvailableForExchange()"
                     (change)="updateCheckboxFilter($event, 'availableForExchange')">
             </label>
-            <label>
+            <label [class.has-value]="filterAvailableForSale()">
                 <span>Disponível para venda</span>
                 <input type="checkbox" [checked]="filterAvailableForSale()"
                     (change)="updateCheckboxFilter($event, 'availableForSale')">
             </label>
 
             <div class="btn-container">
-                <button class="btn-clear" (click)="clearAllFilters()">Limpar filtros</button>
+                <button [disabled]="activeFiltersCount() === 0" class="btn-clear" (click)="clearAllFilters()">Limpar filtros ({{ activeFiltersCount() }})</button>
                 <button class="btn-close" (click)="toggleFilters('filters')">Fechar</button>
             </div>
         </div>
@@ -204,9 +251,9 @@
     </div>
 </header>
 <div class="switch-view">
-    <button [ngClass]="viewMode() === 'list' ? 'switch-view__btn--active' : ''" (click)="viewMode.set('list')"><app-icon
+    <button [ngClass]="viewMode() === 'list' ? 'switch-view__btn--active' : ''" (click)="changeViewMode('list')"><app-icon
             icon="list-view" /></button>
-    <button [ngClass]="viewMode() === 'grid' ? 'switch-view__btn--active' : ''" (click)="viewMode.set('grid')"><app-icon
+    <button [ngClass]="viewMode() === 'grid' ? 'switch-view__btn--active' : ''" (click)="changeViewMode('grid')"><app-icon
             icon="grid-view" /></button>
 </div>
 

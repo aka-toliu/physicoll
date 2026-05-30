@@ -1,10 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { collection, doc, Firestore, getDoc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
+import { collection, doc, Firestore, getCountFromServer, getDoc, getDocs, increment, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
 import { from, Observable } from 'rxjs';
 import { IProfile } from '../../shared/models/IProfile';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ProfileService {
 
@@ -14,7 +14,7 @@ export class ProfileService {
         const userDocRef = doc(this.firestore, `users/${uid}`);
         const promise = getDoc(userDocRef).then(docSnap => {
             if (docSnap.exists()) {
-                return docSnap.data() as IProfile;
+                return { uid: docSnap.id, ...docSnap.data() } as IProfile;
             } else {
                 throw new Error('Perfil não encontrado');
             }
@@ -22,7 +22,7 @@ export class ProfileService {
         return from(promise);
     }
 
-    getProfileByUsername(username: string): Observable<IProfile>{
+    getProfileByUsername(username: string): Observable<IProfile> {
         const usersCollectionRef = collection(this.firestore, 'users');
         const q = query(usersCollectionRef, where('username', '==', username));
         const promise = getDocs(q).then(querySnapshot => {
@@ -42,7 +42,7 @@ export class ProfileService {
         const promise = setDoc(userDocRef, profileData);
         return from(promise);
     }
-    
+
     verifyProfileExists(uid: string): Observable<boolean> {
         const userDocRef = doc(this.firestore, `users/${uid}`);
         const promise = getDoc(userDocRef).then(docSnap => docSnap.exists());
@@ -50,4 +50,12 @@ export class ProfileService {
     }
 
 
+  getCount(uid: string, collectionName: string): Observable<number> {
+    const collectionRef = collection(this.firestore, `users/${uid}/${collectionName}`);
+    const promise = getCountFromServer(collectionRef).then(snapshot => {
+      return snapshot.data().count; 
+    });
+
+    return from(promise);
+  }
 }

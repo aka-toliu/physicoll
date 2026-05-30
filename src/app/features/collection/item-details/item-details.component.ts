@@ -5,12 +5,17 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CollectionService } from '../../../core/services/collection.service';
 import { ICollectionItem } from '../../../shared/models/ICollection';
 import { EFormat, ECaseState, EDiscState, ETapeState, EVHSCase, EBluRayCase, EDVDCase } from '../../../shared/models/EItem';
+import { ELanguages } from '../../../shared/models/ELanguages';
+import { CollFormComponent } from '../../../shared/components/coll-form/coll-form.component';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
+import { ProfileService } from '../../../core/services/profile.service';
+
 
 
 @Component({
   selector: 'app-item-details',
   standalone: true,
-  imports: [NgClass, IconComponent, DatePipe, CurrencyPipe, NgStyle],
+  imports: [NgClass, IconComponent, DatePipe, CurrencyPipe, NgStyle, CollFormComponent, ModalComponent],
   templateUrl: './item-details.component.html',
   styleUrl: './item-details.component.scss',
 
@@ -20,7 +25,11 @@ export class ItemDetailsComponent {
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private collectionService = inject(CollectionService);
+  private profileService = inject(ProfileService);
+  private uid = signal(localStorage.getItem('UID'));
 
+  public languageOptions = Object.keys(ELanguages) as Array<keyof typeof ELanguages>;
+  public ELanguages = ELanguages;
   public ECaseState = ECaseState;
   public EFormat = EFormat;
   public EDiscState = EDiscState;
@@ -31,7 +40,11 @@ export class ItemDetailsComponent {
 
   protected item = signal<ICollectionItem | null>(null);
   protected stars!: number[];
-  protected showOptions = false;
+  protected showOptions = signal(false);
+  
+  protected showDeleteModal = signal(false);
+  protected modalEditCollection = signal(false);
+  
 
   ngOnInit(): void {
     this.getItem();
@@ -55,6 +68,20 @@ export class ItemDetailsComponent {
 
   }
 
+  deleteItem(){
+    const uid = localStorage.getItem('UID');
+    const itemId = this.item()?.id;
+    this.collectionService.deleteCollectionItem(uid, itemId!).subscribe({
+      next: () => {
+        console.log('Item deletado com sucesso');
+        this.router.navigate(['/coll']);
+      },
+      error: (err) => {
+        console.error('Error ao deletar item:', err);
+      }
+    });
+  }
+
   getLabel(value: any, enumObj: any): string {
     return enumObj[value] || value;
   }
@@ -65,7 +92,7 @@ export class ItemDetailsComponent {
 
   toggleOptions(event: Event) {
     event.stopPropagation();
-    this.showOptions = !this.showOptions;
+    this.showOptions.set(!this.showOptions());
   }
 
 }

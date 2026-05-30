@@ -69,8 +69,8 @@ export interface IItem {
     isSpecialEdition: boolean;
     edition: string;
     resolution: EResolution;
-    audioLanguage: string;
-    subtitleLanguage: string;
+    audioLanguage: string[];
+    subtitleLanguage: string[];
     isFavorite: boolean;
     watched: boolean;
     lastWatchedDate: Date | null;

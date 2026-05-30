@@ -5,11 +5,12 @@ import { ProfileService } from '../../core/services/profile.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IProfile } from '../../shared/models/IProfile';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -23,6 +24,10 @@ export class ProfileComponent implements OnInit {
 
   public userData = signal<IProfile | null | undefined>(undefined);
   private uid = signal(localStorage.getItem('UID'));
+
+  protected countCollection = signal(0);
+  protected countLists = signal(0);
+  protected countWishlist = signal(0);
 
   protected isMyself = signal(false);
   private routeSubscription!: Subscription;
@@ -52,6 +57,7 @@ export class ProfileComponent implements OnInit {
     this.profileService.getProfile(uid).subscribe({
       next: (profile) => {
         this.userData.set(profile);
+        this.getCounters(profile.uid);
         console.log('profile', profile);
         this.isMyself.set(true);
       },
@@ -66,6 +72,7 @@ export class ProfileComponent implements OnInit {
     this.profileService.getProfileByUsername(username).subscribe({
       next: (profile) => {         
         this.userData.set(profile);
+        this.getCounters(profile.uid);
         console.log('profile', profile);
         this.checkIsMyself(this.authService.userData().uid, profile.uid);
       },
@@ -88,5 +95,20 @@ export class ProfileComponent implements OnInit {
     this.authService.logout().subscribe();
   }
 
+  getCounters(uid: string) {
+    console.log('Obtendo contadores para UID:', uid);
+    if (this.userData()) {
+      this.profileService.getCount(uid, 'collection').subscribe({
+        next: (count) => this.countCollection.set(count),
+        error: (err) => console.error('Error ao obter contagem de coleção:', err)
+      });
+      this.profileService.getCount(uid, 'lists').subscribe({
+        next: (count) => this.countLists.set(count)
+      });
+      this.profileService.getCount(uid, 'wishlist').subscribe({
+        next: (count) => this.countWishlist.set(count)
+      });
+    }
+  }
 
 }

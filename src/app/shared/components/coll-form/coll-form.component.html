@@ -2,7 +2,8 @@
 <div class="modal-add-item" [@moveForm]>
     <form [formGroup]="formItem" class="item__form">
 
-        <h4 class="item-subtitle">Detalhes do item</h4>
+        <h4 class="item-subtitle"> 
+            @if(movieDetails()){<span>Adicionar</span>} @else if (itemDetails()) {<span>Editar</span>} detalhes do item</h4>
         <!-- ----------------------------------------------------------------------- -->
 
         <fieldset class="item__format">
@@ -26,7 +27,7 @@
             <p>Tipo de capa:</p>
             <select formControlName="caseType" name="tipo-capa" placeholder="Ex: Plástico, Digipack, Steelbook">
                 <option value="" selected>Selecione</option>
-                
+
                 @if(formItem.get('format')?.value === 'DVD') {
                 @for (key of caseDVDOptions; track $index) {
                 <option [value]="key">{{ EDVDCase[key] }}</option>
@@ -160,16 +161,52 @@
             <input type="text" formControlName="edition" name="edition" placeholder="Ex: Versão extendida">
         </label>
 
-        <label for="idiomas-audio" class="item__audio-languages">
-            <p>Idiomas de áudio:</p>
-            <input type="text" formControlName="audioLanguage" name="idiomas-audio" placeholder="Ex: Inglês, Português">
-        </label>
 
-        <label for="idiomas-legenda" class="item__subtitle-languages">
-            <p>Idiomas de legenda:</p>
-            <input type="text" formControlName="subtitleLanguage" name="idiomas-legenda"
-                placeholder="Ex: Inglês, Português">
-        </label>
+        <div class="chip-select" (click)="audioOpenDropdown.set(true)">
+            <p class="chip-select__label">Linguagem de áudio disponível</p>
+            <div class="chip-select__container">
+                <div class="chip-select__selected-chips">
+                    @for (audio of (formItem.get('audioLanguage')?.value ?? []); track $index) {
+                    <span class="chip-select__selected-chip">{{ $any(ELanguages)[audio] || audio }}</span>
+                    }
+                </div>
+                @if(audioOpenDropdown()){
+                <div class="chip-select__options">
+                    <input class="chip-select__search" type="text" placeholder="Procurar linguagem...">
+                    @for (lang of languageOptions; track $index) {
+                    <label class="chip-select__option" (click)="addAudioLanguage($event, lang)">
+                        <input type="checkbox" [checked]="formItem.get('audioLanguage')?.value?.includes(lang)"
+                            readonly>
+                        <span class="checkmark">{{ ELanguages[lang] }}</span>
+                    </label>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="chip-select" (click)="subtitleOpenDropdown.set(true)">
+            <p class="chip-select__label">Linguagem de legenda disponível</p>
+            <div class="chip-select__container">
+                <div class="chip-select__selected-chips">
+                    @for (subtitle of (formItem.get('subtitleLanguage')?.value ?? []); track $index) {
+                    <span class="chip-select__selected-chip">{{ $any(ELanguages)[subtitle] || subtitle }}</span>
+                    }
+                </div>
+                @if(subtitleOpenDropdown()){
+                <div class="chip-select__options">
+                    <input class="chip-select__search" type="text" placeholder="Procurar linguagem...">
+                    @for (lang of languageOptions; track $index) {
+                    <label class="chip-select__option" (click)="addSubtitleLanguage($event, lang)">
+                        <input type="checkbox" [checked]="formItem.get('subtitleLanguage')?.value?.includes(lang)"
+                            readonly>
+                        <span class="checkmark">{{ ELanguages[lang] }}</span>
+                    </label>
+                    }
+                </div>
+                }
+            </div>
+        </div>
 
         <label for="assisti" class="item__watched">
             <input type="checkbox" formControlName="watched" name="assisti">
@@ -197,6 +234,7 @@
             <p>Observações:</p>
             <textarea formControlName="observations" name="observacoes" placeholder="Escreva aqui..."></textarea>
         </label>
+
 
         <button class="btn__save" (click)="onSubmit($event)">Salvar</button>
         <button class="btn__cancel" (click)="onCancel($event)">Cancelar</button>

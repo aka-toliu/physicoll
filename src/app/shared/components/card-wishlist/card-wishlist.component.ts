@@ -11,7 +11,7 @@ import { IconComponent } from '../icon/icon.component';
   templateUrl: './card-wishlist.component.html',
   styleUrl: './card-wishlist.component.scss',
   host: {
-    '(click)': 'navigateTo(wishlistItem().imdbID)'
+    '(click)': 'navigateTo(wishlistItem().imdbID)',
   }
 })
 export class CardWishlistComponent {

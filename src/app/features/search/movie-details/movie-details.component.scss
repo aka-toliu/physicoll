@@ -13,7 +13,7 @@
         flex-direction: column;
         align-items: center;
         width: 100%;
-        background-color: var(--grey-20);
+        background-color: var(--gray-20);
         height: 20vh;
         position: relative;
         background-position: center;
@@ -46,7 +46,7 @@
         position: absolute;
         border-radius: 0.5rem;
         box-shadow: 0px 8px 7px -4px #00000059;
-        border: 1px solid var(--grey-10);
+        border: 1px solid var(--gray-10);
         overflow: hidden;
     }
 
@@ -60,7 +60,7 @@
     }
 
     &__plot {
-        color: var(--grey-50);
+        color: var(--gray-50);
         font-size: 0.9rem;
     }
 
@@ -109,7 +109,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background-color: var(--grey-10);
+                background-color: var(--gray-10);
                 width: 60px;
                 padding: 0;
 
@@ -120,7 +120,7 @@
                 }
 
                 &.in-wishlist {
-                    background-color: color-mix(in srgb, var(--wishlist-color) 10%, var(--grey-10) 50%);
+                    background-color: color-mix(in srgb, var(--wishlist-color) 10%, var(--gray-10) 50%);
 
                     ::ng-deep {
                         i[icon] {

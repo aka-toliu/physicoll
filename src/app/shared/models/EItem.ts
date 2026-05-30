@@ -26,27 +26,27 @@ export enum EVHSCase {
 }
 
 export enum ECaseState {
-    CASE_GREAT = 'Ótimo',
-    CASE_GOOD = 'Bom',
-    CASE_REGULAR = 'Regular',
+    CASE_TERRIBLE = 'Péssimo',
     CASE_POOR = 'Ruim',
-    CASE_TERRIBLE = 'Péssimo'
+    CASE_REGULAR = 'Regular',
+    CASE_GOOD = 'Bom',
+    CASE_GREAT = 'Ótimo',
 }
 
 export enum EDiscState {
-    DISC_GREAT = 'Ótimo',
-    DISC_GOOD = 'Bom',
-    DISC_REGULAR = 'Regular',
+    DISC_TERRIBLE = 'Péssimo',
     DISC_POOR = 'Ruim',
-    DISC_TERRIBLE = 'Péssimo'
+    DISC_REGULAR = 'Regular',
+    DISC_GOOD = 'Bom',
+    DISC_GREAT = 'Ótimo',
 }
 
 export enum ETapeState {
-    TAPE_GREAT = 'Ótimo',
-    TAPE_GOOD = 'Bom',
-    TAPE_REGULAR = 'Regular',
+    TAPE_TERRIBLE = 'Péssimo',
     TAPE_POOR = 'Ruim',
-    TAPE_TERRIBLE = 'Péssimo'
+    TAPE_REGULAR = 'Regular',
+    TAPE_GOOD = 'Bom',
+    TAPE_GREAT = 'Ótimo',
 }
 
 export enum EStateDescription{

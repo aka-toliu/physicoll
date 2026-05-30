@@ -14,4 +14,7 @@ export interface IProfile {
     };
     followers: string[];
     following: string[];
+    countCollection: number;
+    countLists: number;
+    countWishlist: number;
 }

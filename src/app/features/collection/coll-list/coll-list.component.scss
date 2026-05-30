@@ -81,8 +81,8 @@
         gap: 0.5rem;
         cursor: pointer;
         padding: 0.2rem 1rem;
-        border: 1px solid var(--grey-20);
-        color: var(--grey-30);
+        border: 1px solid var(--gray-20);
+        color: var(--gray-30);
         border-radius: 100px;
         transition: background-color 0.3s ease, width 0.3s ease, color 0.3s ease;
         width: fit-content;
@@ -99,7 +99,7 @@
         }
 
         &:hover:not(:has(input[type="radio"]:checked)) {
-            background-color: var(--grey-20);
+            background-color: var(--gray-20);
         }
 
     }
@@ -124,10 +124,15 @@
         display: flex;
         gap: 0.5rem;
          > button {
-            flex: 1;
+            
+
+            &:nth-child(1){
+                width: fit-content;
+            }
 
             &:nth-child(2){
-                background-color: var(--grey-10);
+                flex: 1;
+                background-color: var(--gray-10);
             }
          }
     }
@@ -155,7 +160,7 @@
 .btn-filter,
 .btn-sort {
     background-color: transparent;
-    border: 2px solid var(--grey-20);
+    border: 2px solid var(--gray-20);
     padding-inline: 0.7rem;
     height: 40px;
     width: fit-content;
@@ -183,11 +188,11 @@
 
 .switch-view {
     display: flex;
-    border: 1px solid var(--grey-20);
+    border: 1px solid var(--gray-20);
     justify-content: flex-end;
     padding: 0.5rem 1rem;
     border-radius: 0;
-    background-color: var(--grey-10);
+    background-color: var(--gray-10);
     box-shadow: var(--shadow-bottom);
 
     >button {
@@ -195,7 +200,7 @@
         padding: 0.5rem;
         height: 40px;
         --size-icon: 20px;
-        border: 1px solid var(--grey-20);
+        border: 1px solid var(--gray-20);
 
         &:nth-child(1) {
             border-top-right-radius: 0rem;
@@ -209,13 +214,13 @@
 
         ::ng-deep {
             i[icon] {
-                color: var(--grey-20);
+                color: var(--gray-20);
             }
         }
 
         &.switch-view__btn--active {
-            background-color: var(--grey-20);
-            border: 1px solid var(--grey-20);
+            background-color: var(--gray-20);
+            border: 1px solid var(--gray-20);
 
             ::ng-deep {
                 i[icon] {
@@ -225,4 +230,12 @@
         }
     }
 
+}
+
+.has-value{
+    border-color: var(--primary-color);
+}
+
+.default-option{
+    color: var(--gray-50);
 }

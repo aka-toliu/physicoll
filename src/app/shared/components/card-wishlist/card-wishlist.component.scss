@@ -41,14 +41,14 @@
 
         p{
             font-size: 1rem;
-            color: var(--grey-50);
+            color: var(--gray-50);
         }
     }
 
 }
     .btn-remove{
         color: var(--wishlist-color);
-        background-color: color-mix(in srgb, var(--wishlist-color) 10%, var(--grey-10) 50%);
+        background-color: color-mix(in srgb, var(--wishlist-color) 10%, var(--gray-10) 50%);
         display: flex;
         align-items: center;
         justify-content: center;

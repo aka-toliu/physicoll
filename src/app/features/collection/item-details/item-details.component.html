@@ -1,5 +1,5 @@
 <header class="item-details__header"
-    [ngStyle]="{color: item()?.format ? 'var(--' + item()?.format?.toLowerCase() + '-color)' : 'var(--grey-30)'}">
+    [ngStyle]="{color: item()?.format ? 'var(--' + item()?.format?.toLowerCase() + '-color)' : 'var(--gray-30)'}">
     <button class="btn-back" (click)="navigateTo('/coll')">
         <app-icon icon="arrow-left" />
     </button>
@@ -17,30 +17,31 @@
         <img [src]="item()?.poster ?? 'assets/default-poster.png'" alt="">
     </div>
 
-    @if(showOptions) {
-        <div>
+    @if(showOptions()) {
+    <div>
         <div class="bg-modal" (click)="toggleOptions($event)"></div>
         <div class="modal-options">
-        <button class="option">
-            <app-icon icon="edit" />
-            <p>Editar</p>
-        </button>
-        <button class="option">
-            <app-icon icon="share" />
-            <p>Compartilhar</p>
-        </button>
-        <button class="option">
-            <app-icon icon="list" />
-            <p>Adicionar à lista</p>
-        </button>
-        <button class="option">
-            <app-icon icon="delete" />
-            <p>Excluir</p>
-        </button>
-    </div>
+            <button class="option" (click)="modalEditCollection.set(true); showOptions.set(false)">
+                <app-icon icon="edit" />
+                <p>Editar</p>
+            </button>
+            <button class="option" disabled>
+                <app-icon icon="share" />
+                <p>Compartilhar</p>
+            </button>
+            <button class="option" disabled>
+                <app-icon icon="list" />
+                <p>Adicionar à lista</p>
+            </button>
+            <button class="option" (click)="showDeleteModal.set(true); showOptions.set(false)">
+                <app-icon icon="delete" />
+                <p>Excluir</p>
+            </button>
         </div>
+    </div>
     }
 </header>
+
 
 <div class="info-container">
 
@@ -107,6 +108,23 @@
         </div>
         }
 
+        @if(item()?.audioLanguage){
+        <div class="audio-languages">
+            Linguagem de áudio disponível:
+            @for(language of item()?.audioLanguage; track $index) {
+            <p class="tag">{{ $any(ELanguages)[language] || language }}</p>
+            }
+        </div>
+        }
+
+        @if(item()?.subtitleLanguage){
+        <div class="subtitle-languages">
+            Linguagem de legenda disponível:
+            @for(language of item()?.subtitleLanguage; track $index) {
+            <p class="tag">{{ $any(ELanguages)[language] || language }}</p>
+            }
+        </div>
+        }
     </section>
 
     <section>
@@ -168,7 +186,7 @@
         <h4>Avaliação pessoal:</h4>
 
         <div class="stars-container">
-            <p class="watched tag" [ngStyle]="{color: item()?.watched ? 'var(--great-color)' : 'var(--grey-50)'}">
+            <p class="watched tag" [ngStyle]="{color: item()?.watched ? 'var(--great-color)' : 'var(--gray-50)'}">
                 {{ item()?.watched ? 'Já' : 'Não' }} assisti
                 @if(item()?.watched) {
                 <app-icon icon="watch" />
@@ -185,3 +203,14 @@
         }
     </section>
 </div>
+
+<app-coll-form (modalClose)="modalEditCollection.set($event)" (updateItem)="getItem()"
+    [modalControl]="modalEditCollection()" [itemDetails]="item()" />
+
+<app-modal [modalControl]="showDeleteModal()" (modalClose)="showDeleteModal.set($event)" (confirmModal)="deleteItem()">
+    <h3 class="modal-title">Tem certeza que deseja excluir este item?</h3>
+
+    <p class="modal-body">
+        Esta ação não pode ser desfeita. Todos os dados associados a este item serão perdidos.
+    </p>
+</app-modal>

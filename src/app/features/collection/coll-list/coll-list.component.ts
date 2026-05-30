@@ -6,6 +6,8 @@ import { IconComponent } from "../../../shared/components/icon/icon.component";
 import { NgClass } from '@angular/common';
 import { EBluRayCase, ECaseState, EDiscState, EDVDCase, ETapeState, EVHSCase } from '../../../shared/models/EItem';
 import { ɵInternalFormsSharedModule } from "@angular/forms";
+import { ELanguages } from '../../../shared/models/ELanguages';
+import { ProfileService } from '../../../core/services/profile.service';
 
 
 @Component({
@@ -23,7 +25,7 @@ export class CollListComponent implements OnInit {
 
   protected showFilters = signal(false);
   protected showSort = signal(false);
-  protected viewMode = signal<'grid' | 'list'>('list');
+  protected viewMode = signal<'grid' | 'list'>(localStorage.getItem('viewMode') ? localStorage.getItem('viewMode') as 'grid' | 'list' : 'list');
 
   public caseStateOptions = Object.keys(ECaseState) as Array<keyof typeof ECaseState>;
   public discStateOptions = Object.keys(EDiscState) as Array<keyof typeof EDiscState>;
@@ -37,6 +39,7 @@ export class CollListComponent implements OnInit {
   public EDVDCase = EDVDCase;
   public EBluRayCase = EBluRayCase;
   public EVHSCase = EVHSCase;
+  public ELanguages = ELanguages;
 
 
   protected collection = signal<ICollectionItem[] | null>([]);
@@ -53,6 +56,10 @@ export class CollListComponent implements OnInit {
   protected filterIsSpecial = signal<boolean | null>(null);
   protected filterAvailableForSale = signal<boolean | null>(null);
   protected filterAvailableForExchange = signal<boolean | null>(null);
+  protected filterSupplier = signal<string>('');
+  protected filterEdition = signal<string>('');
+  protected filterAudioLanguage = signal<string>('');
+  protected filterSubtitleLanguage = signal<string>('');
   protected sortCriterion = signal<string>('added-newest');
 
   protected directors = computed(() => {
@@ -62,11 +69,39 @@ export class CollListComponent implements OnInit {
     return Array.from(directorsSet).sort((a, b) => a.localeCompare(b));
   });
 
+  protected suppliers = computed(() => {
+    const list = this.collection() || [];
+    const allSuppliers = list.flatMap(item => item.supplier || []);
+    const suppliersSet = new Set<string>(allSuppliers);
+    return Array.from(suppliersSet).sort((a, b) => a.localeCompare(b));
+  });
+
+  protected edition = computed(() => {
+    const list = this.collection() || [];
+    const allEditions = list.flatMap(item => item.edition || []);
+    const suppliersSet = new Set<string>(allEditions);
+    return Array.from(suppliersSet).sort((a, b) => a.localeCompare(b));
+  });
+
   protected genres = computed(() => {
     const list = this.collection() || [];
     const allGenres = list.flatMap(item => item.genre || []);
     const genresSet = new Set<string>(allGenres);
     return Array.from(genresSet).sort((a, b) => a.localeCompare(b));
+  });
+
+  protected audioLanguages = computed(() => {
+    const list = this.collection() || [];
+    const allLanguages = list.flatMap(item => item.audioLanguage || []);
+    const languagesSet = new Set<string>(allLanguages);
+    return Array.from(languagesSet).sort((a, b) => a.localeCompare(b));
+  });
+
+  protected subtitleLanguages = computed(() => {
+    const list = this.collection() || [];
+    const allLanguages = list.flatMap(item => item.subtitleLanguage || []);
+    const languagesSet = new Set<string>(allLanguages);
+    return Array.from(languagesSet).sort((a, b) => a.localeCompare(b));
   });
 
   protected countries = computed(() => {
@@ -88,6 +123,10 @@ export class CollListComponent implements OnInit {
     if (this.filterDiscState() !== '') count++;
     if (this.filterTapeState() !== '') count++;
     if (this.filterCaseType() !== '') count++;
+    if (this.filterSupplier() !== '') count++;
+    if (this.filterEdition() !== '') count++;
+    if (this.filterAudioLanguage() !== '') count++;
+    if (this.filterSubtitleLanguage() !== '') count++;
     return count;
   });
 
@@ -106,7 +145,10 @@ export class CollListComponent implements OnInit {
     const discState = this.filterDiscState();
     const tapeState = this.filterTapeState();
     const caseType = this.filterCaseType();
-
+    const supplier = this.filterSupplier();
+    const edition = this.filterEdition();
+    const audioLanguage = this.filterAudioLanguage();
+    const subtitleLanguage = this.filterSubtitleLanguage();
     let result = list.filter(item => {
 
       // Filtro por título (busca)
@@ -150,10 +192,26 @@ export class CollListComponent implements OnInit {
       // Filtro por País
       const matchesCountry = !country ||
         item.country?.includes(country);
-      
-        // Filtro por Tipo de Capa
+
+      // Filtro por Tipo de Capa
       const matchesCaseType = !caseType ||
         item.caseType === caseType;
+
+      // Filtro por Fornecedor
+      const matchesSupplier = !supplier ||
+        item.supplier === supplier;
+
+      // Filtro por Edição      
+      const matchesEdition = !edition ||
+        item.edition === edition;
+
+      // Filtro por Idioma de Áudio
+      const matchesAudioLanguage = !audioLanguage ||
+        item.audioLanguage?.includes(audioLanguage);
+
+      // Filtro por Idioma de Legenda
+      const matchesSubtitleLanguage = !subtitleLanguage ||
+        item.subtitleLanguage?.includes(subtitleLanguage);
 
       return matchesName
         && matchesFormat
@@ -166,7 +224,11 @@ export class CollListComponent implements OnInit {
         && matchesDiscState
         && matchesTapeState
         && matchesCountry
-        && matchesCaseType;
+        && matchesCaseType
+        && matchesSupplier
+        && matchesEdition
+        && matchesAudioLanguage
+        && matchesSubtitleLanguage;
 
     });
 
@@ -190,11 +252,17 @@ export class CollListComponent implements OnInit {
         case 'rating-lowest':
           return (a.personalRating || 0) - (b.personalRating || 0);
 
-        case 'added-newest':
-          return new Date(b.addedAt || 0).getTime() - new Date(a.addedAt || 0).getTime();
+        case 'added-newest': {
+          const timeA = a.addedAt ? new Date(a.addedAt).getTime() : 0;
+          const timeB = b.addedAt ? new Date(b.addedAt).getTime() : 0;
+          return timeB - timeA;
+        }
 
-        case 'added-oldest':
-          return new Date(a.addedAt || 0).getTime() - new Date(b.addedAt || 0).getTime();
+        case 'added-oldest': {
+          const timeA = a.addedAt ? new Date(a.addedAt).getTime() : 0;
+          const timeB = b.addedAt ? new Date(b.addedAt).getTime() : 0;
+          return timeA - timeB;
+        }
 
         case 'year-newest':
           return +(b.year || 0) - +(a.year || 0);
@@ -217,6 +285,7 @@ export class CollListComponent implements OnInit {
       next: (collection) => {
         this.collection.set(collection),
           console.log(collection);
+        console.log(this.suppliers());
       },
       error: () => console.error('Erro ao obter coleção')
     });
@@ -252,6 +321,18 @@ export class CollListComponent implements OnInit {
         break;
       case 'case-type':
         this.filterCaseType.set(value);
+        break;
+      case 'supplier':
+        this.filterSupplier.set(value);
+        break;
+      case 'edition':
+        this.filterEdition.set(value);
+        break;
+      case 'audio-language':
+        this.filterAudioLanguage.set(value);
+        break;
+      case 'subtitle-language':
+        this.filterSubtitleLanguage.set(value);
         break;
     }
   }
@@ -296,6 +377,15 @@ export class CollListComponent implements OnInit {
     this.filterDiscState.set('');
     this.filterTapeState.set('');
     this.filterCountry.set('');
+    this.filterSupplier.set('');
+    this.filterEdition.set('');
+    this.filterAudioLanguage.set('');
+    this.filterSubtitleLanguage.set('');
+  }
+
+  changeViewMode(mode: 'grid' | 'list'): void {
+    this.viewMode.set(mode);
+    localStorage.setItem('viewMode', mode);
   }
 
 }
