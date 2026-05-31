@@ -1,0 +1,18 @@
+@if (ranking()) {
+<b class="card-movie__ranking">{{ ranking() }}</b>
+}
+<picture class="card-movie__poster">
+    <img [src]="movie()?.poster" alt="">
+</picture>
+
+<p class="card-movie__count">
+
+    @if(type() === 'collected'){
+    <app-icon icon="collections" />
+    }
+
+    @else if(type() === 'wished'){
+    <app-icon icon="like-on" />
+    }
+    <span>{{ count() }}</span>
+</p>

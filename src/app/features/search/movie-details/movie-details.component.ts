@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MoviesService } from '../../../core/services/movies.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IItem, IMovieDetail } from '../../../shared/models/IMovies';
+import { IItem, IMovieDetail, IMovieResult, IMovieTrack } from '../../../shared/models/IMovies';
 import { CommonModule, Location, NgStyle } from '@angular/common';
 import { Form, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ECaseState, EDiscState, EFormat, EResolution, ETapeState, EVHSCase } from '../../../shared/models/EItem';
@@ -10,6 +10,7 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CollectionService } from '../../../core/services/collection.service';
 import { CollFormComponent } from '../../../shared/components/coll-form/coll-form.component';
 import { WishlistService } from '../../../core/services/wishlist.service';
+import { TrackMoviesService } from '../../../core/services/track-movies.service';
 
 
 
@@ -26,6 +27,7 @@ export class MovieDetailsComponent implements OnInit {
   private router = inject(Router);
   private moviesService = inject(MoviesService);
   private wishlistService = inject(WishlistService);
+  private trackMoviesService = inject(TrackMoviesService);
   private location = inject(Location);
 
 
@@ -85,6 +87,7 @@ export class MovieDetailsComponent implements OnInit {
       this.wishlistService.addToWishlist(uid!, item).subscribe({
         next: () => {
           this.inWishlist = true;
+          this.addCount(this.movie());
         },
         error: (err) => {
           console.error('Erro ao adicionar item à wishlist:', err);
@@ -94,13 +97,49 @@ export class MovieDetailsComponent implements OnInit {
       this.wishlistService.removeFromWishlist(uid!, this.movie()!.imdbID).subscribe({
         next: () => {
           this.inWishlist = false;
+          this.removeCount(this.movie());
         },
         error: (err) => {
           console.error('Erro ao remover item da wishlist:', err);
         }
       });
     }
+  }
 
+  addCount(movie: IMovieResult | null) {
+
+    const movieTrack = {
+      poster: movie?.Poster,
+      imdbID: movie?.imdbID,
+      title: movie?.Title
+    }
+
+    this.trackMoviesService.addCountMovieWished(movieTrack as IMovieTrack).subscribe({
+      next: () => {
+        console.log('Contagem de busca atualizada com sucesso');
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar contagem de busca:', err);
+      }
+    });
+  }
+
+  removeCount(movie: IMovieResult | null) {
+
+    const movieTrack = {
+      poster: movie?.Poster,
+      imdbID: movie?.imdbID,
+      title: movie?.Title
+    }
+
+    this.trackMoviesService.removeCountMovieWished(movieTrack as IMovieTrack).subscribe({
+      next: () => {
+        console.log('Contagem de favoritos atualizada com sucesso');
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar contagem de busca:', err);
+      }
+    });
   }
 
   onBack() {

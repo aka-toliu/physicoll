@@ -78,3 +78,12 @@ export interface IItem {
     observations: string;
     addedAt: Date;
 }
+
+export interface IMovieTrack{
+    imdbID: string;
+    title: string;
+    poster: string;
+    searchCount: number;
+    collectedCount: number;
+    wishedCount: number;
+}

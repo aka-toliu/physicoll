@@ -1,6 +1,7 @@
 :host {
     display: block;
     height: calc(100vh - 80px);
+    position: relative;
 }
 
 .search-movie {
@@ -48,6 +49,7 @@
         overflow-y: auto;
         width: 100%;
         height: calc(85vh - 80px);
+
     }
 
     &__list {
@@ -69,7 +71,7 @@
         border-radius: 0.25rem;
         cursor: pointer;
 
-        > h3{
+        >h3 {
             font-weight: 700;
             font-size: 1.1rem;
         }
@@ -83,5 +85,39 @@
         &:hover {
             background-color: var(--gray-10);
         }
+    }
+
+
+}
+
+.search__trends {
+    display: block;
+    overflow-y: auto;
+    height: calc(85vh - 80px);
+
+    .trends-title{
+        padding: 1rem;
+        border-bottom: 1px solid var(--gray-20);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        ::ng-deep{
+            i[icon]{
+                --size-icon: 24px;
+            }
+        }
+    }
+}
+
+.most-searched, .most-collected, .most-wished {
+    &__container {
+        display: flex;
+        gap: 2rem;
+        padding: 1.5rem 2rem;
+        overflow-x: auto;
+        border-bottom: 1px solid var(--gray-20);
+        background-color: color-mix(in srgb, var(--gray-20) 30%, transparent);
+
     }
 }

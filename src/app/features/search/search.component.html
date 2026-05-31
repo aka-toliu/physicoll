@@ -1,21 +1,37 @@
 <header class="search-movie__header">
     <h2>Procurar</h2>
-<label class="search-movie__form">
-    <app-icon icon="search" color="black"/>
-    <input class="search-movie__input" #searchBox type="search" name="search" placeholder="Pesquisar filme"
-        (input)="searchMovies(searchBox.value)" />
-</label>
+    <label class="search-movie__form">
+        <app-icon icon="search" color="black" />
+        <input class="search-movie__input" #searchBox type="search" name="search" placeholder="Pesquisar filme"
+            (input)="searchMovies(searchBox.value)" />
+    </label>
 </header>
 
-<!-- <div class="search__trends">
-    <p>Mais procurados</p>
-    <p>Mais adicionados à coleção</p>
-</div> -->
-
+@if(results()?.Response === false){
+<div class="search__trends">
+    <h5 class="trends-title"><app-icon icon="trend"/>Mais procurados </h5>
+    <div class="most-searched__container">
+        @for (movie of mostSearched(); track $index) {
+        <app-card-movie [movie]="movie" [ranking]="$index + 1"></app-card-movie>
+        }
+    </div>
+    <h5 class="trends-title"><app-icon icon="trend"/>Mais adicionados em coleções</h5>
+    <div class="most-collected__container">
+        @for (movie of mostCollected(); track $index) {
+        <app-card-movie [movie]="movie" [count]="movie.collectedCount" type="collected"></app-card-movie>
+        }
+    </div>
+    <h5 class="trends-title"><app-icon icon="trend"/>Mais salvos na lista de desejos</h5>
+        <div class="most-wished__container">
+        @for (movie of mostWished(); track $index) {
+        <app-card-movie [movie]="movie" [count]="movie.wishedCount" type="wished"></app-card-movie>
+        }
+    </div>
+</div>
+}
+@if (results()?.Response) {
 <main class="search-movie__result">
 
-
-    @if (results()?.Response) {
 
     <ul class="search-movie__list">
 
@@ -23,11 +39,13 @@
         <p>Carregando...</p>
         }
 
-        @if (results()?.totalResults) {
+        @if (results()?.totalResults?.length! > 0) {
         <p>{{ results()?.totalResults }} resultados encontrados</p>
+        }@else {
+            Nenhum resultado encontrado.
         }
         @for (movie of results()?.Search; track movie.imdbID) {
-        <li class="search-movie__item" (click)="selectMovie(movie.imdbID)">
+        <li class="search-movie__item" (click)="selectMovie(movie)">
             <img class="search-movie__poster"
                 [src]="movie.Poster !== 'N/A' ? movie.Poster : 'assets/default-poster.png'" alt="{{ movie.Title }}"
                 #poster (error)="poster.src = 'assets/default-poster.png'">
@@ -36,6 +54,6 @@
         </li>
         }
     </ul>
-    }
-
+    
 </main>
+}

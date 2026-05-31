@@ -5,11 +5,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgStyle, CommonModule } from '@angular/common';
 import { EBluRayCase, ECaseState, EDiscState, EDVDCase, EFormat, EResolution, ETapeState, EVHSCase } from '../../models/EItem';
 import { CollectionService } from '../../../core/services/collection.service';
-import { IMovieDetail } from '../../models/IMovies';
+import { IMovieDetail, IMovieResult, IMovieTrack } from '../../models/IMovies';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ELanguages } from '../../models/ELanguages';
 import { ICollectionItem } from '../../models/ICollection';
 import { ProfileService } from '../../../core/services/profile.service';
+import { TrackMoviesService } from '../../../core/services/track-movies.service';
 
 @Component({
   selector: 'app-coll-form',
@@ -59,6 +60,7 @@ export class CollFormComponent implements OnChanges {
   // SERVICES
   private collectionService = inject(CollectionService);
   private profileService = inject(ProfileService);
+  private trackMoviesService = inject(TrackMoviesService);
   protected elementRef = inject(ElementRef);
 
   // ENUMS
@@ -284,6 +286,7 @@ export class CollFormComponent implements OnChanges {
       this.collectionService.addToCollection(this.uid(), this.formItem.value).subscribe({
         next: () => {
           console.log('Item adicionado à coleção com sucesso!');
+          this.addCount(this.movieDetails())
           this.modalClose.emit(false);
         },
         error: () => console.error('Erro ao adicionar item à coleção')
@@ -298,13 +301,32 @@ export class CollFormComponent implements OnChanges {
           this.updateItem.emit(true);
         },
         error: () => console.error('Erro ao editar item da coleção')
-      })}
+      })
+    }
   }
 
   onCancel(event: Event) {
     event.preventDefault();
     this.modalControl.set(false);
     this.modalClose.emit(false);
+  }
+
+  addCount(movie: IMovieResult | null) {
+
+    const movieTrack = {
+      poster: movie?.Poster,
+      imdbID: movie?.imdbID,
+      title: movie?.Title
+    }
+
+    this.trackMoviesService.addCountMovieCollected(movieTrack as IMovieTrack).subscribe({
+      next: () => {
+        console.log('Contagem de busca atualizada com sucesso');
+      },
+      error: (err) => {
+        console.error('Erro ao atualizar contagem de busca:', err);
+      }
+    });
   }
 
 
