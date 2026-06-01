@@ -1,16 +1,19 @@
-.wishlist{
+.wishlist {
 
-    &__header{
+    &__header {
         padding: 1rem;
         background-color: var(--white);
         box-shadow: var(--shadow-bottom);
         justify-content: center;
         display: flex;
     }
-    &__container{
+
+    &__container {
         display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
         padding: 1rem;
+        overflow-y: auto;
+        height: calc(85vh - 13px);
     }
 }

@@ -6,6 +6,7 @@
     border-radius: 1rem;
     gap: 1rem;
     position: relative;
+    height: fit-content;
 }
 
 .card-wishlist{
@@ -14,8 +15,8 @@
     align-items: center;
 
     &__poster{
-        width: 80px;
-        height: 120px;
+        width: 66px;
+        height: 100px;
         overflow: hidden;
         border-radius: 0.5rem;
         display: block;
@@ -34,7 +35,7 @@
         flex: 1;
 
         h3{
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: bold;
             width: 80%;
         }

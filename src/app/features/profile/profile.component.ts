@@ -29,6 +29,11 @@ export class ProfileComponent implements OnInit {
   protected countLists = signal(0);
   protected countWishlist = signal(0);
 
+  protected isLoading = computed(() => this.userData() === undefined);
+  protected loadingCountColl = signal(true);
+  protected loadingCountLists = signal(true);
+  protected loadingCountWishlist = signal(true);
+
   protected isMyself = signal(false);
   private routeSubscription!: Subscription;
 
@@ -99,16 +104,20 @@ export class ProfileComponent implements OnInit {
     console.log('Obtendo contadores para UID:', uid);
     if (this.userData()) {
       this.profileService.getCount(uid, 'collection').subscribe({
-        next: (count) => this.countCollection.set(count),
+        next: (count) => {this.countCollection.set(count); this.loadingCountColl.set(false)},
         error: (err) => console.error('Error ao obter contagem de coleção:', err)
       });
       this.profileService.getCount(uid, 'lists').subscribe({
-        next: (count) => this.countLists.set(count)
+        next: (count) => {this.countLists.set(count); this.loadingCountLists.set(false)}
       });
       this.profileService.getCount(uid, 'wishlist').subscribe({
-        next: (count) => this.countWishlist.set(count)
+        next: (count) => {this.countWishlist.set(count); this.loadingCountWishlist.set(false)}
       });
     }
+  }
+
+    navigateTo(route: string) {
+    this.router.navigate(['/', route]);
   }
 
 }

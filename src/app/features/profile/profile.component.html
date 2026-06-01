@@ -27,20 +27,35 @@
 <main class="profile__container">
 
     <div class="cards-container">
-        <div class="card card__collection">
+        <div class="card card__collection" (click)="navigateTo('coll')">
             <app-icon icon="collections" />
             <p>Coleção</p>
-            <b>{{ countCollection() || 0 }}</b>
+            <b>@if(loadingCountColl()) {
+                ...
+            } @else {
+                {{ countCollection() || 0 }}
+            }
+            </b>
         </div>
-        <div class="card card__lists">
+        <div class="card card__lists" (click)="navigateTo('lists')">
             <app-icon icon="list" />
             <p>Listas</p>
-            <b>{{ countLists() || 0 }}</b>
+            <b>@if(loadingCountLists()) {
+                ...
+            } @else {
+                {{ countLists() || 0 }}
+            }
+            </b>
         </div>
-        <div class="card card__wishlist">
+        <div class="card card__wishlist" (click)="navigateTo('wishlist')">
             <app-icon icon="like-on" />
             <p>Salvos</p>
-            <b>{{ countWishlist() || 0 }}</b>
+            <b>@if(loadingCountWishlist()) {
+                ...
+            } @else {
+                {{ countWishlist() || 0 }}
+            }
+            </b>
         </div>
     </div>
 
