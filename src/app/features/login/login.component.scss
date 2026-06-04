@@ -14,15 +14,16 @@
         width: 100%;
         display: flex;
         justify-content: center;
-        align-items: center;
     }
 
     &__art {
-        height: 50%;
+        height:80%;
+        align-items: center;
     }
 
     &__container {
-        height: 50%;
+        height: 20%;
+        align-items: flex-start;
     }
 
     &__logo {
