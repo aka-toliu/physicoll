@@ -259,11 +259,18 @@
 
 <div class="coll__list" [ngClass]="viewMode() === 'grid' ? 'coll__list--grid' : 'coll__list--list'">
 
-    @if(filteredCollection() && filteredCollection()?.length! > 0) {
-    @for (item of filteredCollection(); track $index) {
-    <app-card-coll [item]="item" [viewMode]="viewMode()"></app-card-coll>
-    }
-    } @else {
+  @if (filteredCollection() && filteredCollection().length > 0) {
+    
+    <div @coll-list style="display: contents;">
+      
+      @for (item of filteredCollection(); track item.imdbID) {
+        <app-card-coll [item]="item" [viewMode]="viewMode()"></app-card-coll>
+      }
+      
+    </div>
+
+  } @else {
     <p>Nenhum item encontrado na coleção.</p>
-    }
+  }
+
 </div>

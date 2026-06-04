@@ -8,6 +8,7 @@ import { EBluRayCase, ECaseState, EDiscState, EDVDCase, ETapeState, EVHSCase } f
 import { ɵInternalFormsSharedModule } from "@angular/forms";
 import { ELanguages } from '../../../shared/models/ELanguages';
 import { ProfileService } from '../../../core/services/profile.service';
+import { trigger, transition, query, style, stagger, animate } from '@angular/animations';
 
 
 @Component({
@@ -15,7 +16,20 @@ import { ProfileService } from '../../../core/services/profile.service';
   standalone: true,
   imports: [CardCollComponent, IconComponent, NgClass, ɵInternalFormsSharedModule],
   templateUrl: './coll-list.component.html',
-  styleUrl: './coll-list.component.scss'
+  styleUrl: './coll-list.component.scss',
+animations: [
+  trigger('coll-list', [
+    // 🟢 Roda estritamente quando a estrutura de dados inicial entra no DOM
+    transition(':enter', [
+      query('app-card-coll', [
+        style({ opacity: 0, transform: 'translateY(15px)' }),
+        stagger(45, [
+          animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+        ])
+      ], { optional: true })
+    ])
+  ])
+]
 })
 export class CollListComponent implements OnInit {
 

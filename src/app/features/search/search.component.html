@@ -1,7 +1,6 @@
 <header class="search-movie__header">
     <h2>Procurar</h2>
     <label class="search-movie__form">
-        <app-icon icon="search" color="black" />
         <input class="search-movie__input" #searchBox type="search" name="search" placeholder="Pesquisar filme"
             (input)="searchMovies(searchBox.value)" />
     </label>

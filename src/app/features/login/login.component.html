@@ -1,5 +1,11 @@
-<h1>Login</h1>
-<!-- <input type="email" #email placeholder="exemple@email.com" />
-<input type="password" #password placeholder="password">
-<button (click)="onLogin(email.value, password.value)">Login</button> -->
-<button (click)="onLoginWithGoogle()">Entrar com o Google</button>
+<div class="login__art">
+    <img src="assets/logo-physicoll-slogan.svg" alt="Logo Physicoll" class="login__logo">
+</div>
+
+<div class="login__container">
+    
+    <button class="login__btn-login-google" (click)="onLoginWithGoogle()">
+        <app-icon icon="logo-google" class="login__icon" />
+        Entrar com conta Google
+    </button>
+</div>

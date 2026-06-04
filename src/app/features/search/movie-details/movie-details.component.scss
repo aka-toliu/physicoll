@@ -86,6 +86,7 @@
             ::ng-deep {
                 i[icon] {
                     --size-icon: 24px;
+                    color: var(--primary-color);
                 }
             }
         }
@@ -103,6 +104,12 @@
                 >p {
                     flex: 1;
                 }
+
+                ::ng-deep {
+                    i[icon] {
+                        color: var(--primary-color);
+                    }
+                }
             }
 
             .btn-add-wishlist {
@@ -116,6 +123,7 @@
                 ::ng-deep {
                     i[icon] {
                         --size-icon: 30px;
+                        color: var(--primary-color);
                     }
                 }
 

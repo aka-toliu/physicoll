@@ -15,7 +15,7 @@ import { WishlistComponent } from './features/wishlist/wishlist.component';
 export const routes: Routes = [
 
     { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: 'login', title: 'Login', component: LoginComponent},
+    { path: 'login', title: 'Login', component: LoginComponent, data: {footer: false} },
     { path: 'search', title: "Search", component: SearchComponent},
     { path: 'movie/:id', title: 'Movie Details', component: MovieDetailsComponent},
     { path: 'profile', title: "Profile", component: ProfileComponent},

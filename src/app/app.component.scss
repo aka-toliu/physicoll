@@ -1,5 +1,5 @@
 :host {
-    background-color: var(--bg-color);
+    background-color: color-mix(in srgb, var(--secondary-color) 40%, var(--white));
     display: block;
     min-height: 100vh;
 }

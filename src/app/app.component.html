@@ -1,3 +1,5 @@
 <router-outlet></router-outlet>
 
-<app-navbar/>
+@if (showFooter()) {
+  <app-navbar/>
+}

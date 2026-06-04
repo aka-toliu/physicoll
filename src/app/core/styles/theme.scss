@@ -1,7 +1,12 @@
 :root{
-    --primary-color: #ff9900;
-    --secondary-color: #ee7575;
-    --tertiary-color: #64d647;
+    --brand-color-1: #FF9900;
+    --brand-color-2: #94C9CD;
+    --brand-color-3: #DC526B;
+    --brand-color-4: #9BCF96;
+
+    --primary-color: #432330;
+    --secondary-color: #F1E8D7;
+
     --bg-color: #f1f1f1;
     --text-color: #333;
     --gray-10: #f0f0f0;
@@ -9,6 +14,17 @@
     --gray-30: #a9a9a9;
     --gray-40: #9b9b9b;
     --gray-50: #727272;
+
+    --bg-color-10:color-mix(in srgb, var(--secondary-color) 10%, var(--white));
+    --bg-color-20:color-mix(in srgb, var(--secondary-color) 20%, var(--white));
+    --bg-color-30:color-mix(in srgb, var(--secondary-color) 30%, var(--white));
+    --bg-color-40:color-mix(in srgb, var(--secondary-color) 40%, var(--white));
+    --bg-color-50:color-mix(in srgb, var(--secondary-color) 50%, var(--white));
+    --bg-color-60:color-mix(in srgb, var(--secondary-color) 60%, var(--white));
+    --bg-color-70:color-mix(in srgb, var(--secondary-color) 70%, var(--white));
+    --bg-color-80:color-mix(in srgb, var(--secondary-color) 80%, var(--white));
+    --bg-color-90:color-mix(in srgb, var(--secondary-color) 90%, var(--white));
+    
     --black: #000000;
     --white: #ffffff;
     --transp-white: #ffffff75;

@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [],
+  imports: [IconComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
