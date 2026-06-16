@@ -10,6 +10,9 @@ import { SearchComponent } from './features/search/search.component';
 import { MovieDetailsComponent } from './features/search/movie-details/movie-details.component';
 import { ProfileComponent } from './features/profile/profile.component';
 import { WishlistComponent } from './features/wishlist/wishlist.component';
+import { ListsComponent } from './features/lists/lists.component';
+import { ListsListComponent } from './features/lists/lists-list/lists-list.component';
+import { ListDetailsComponent } from './features/lists/list-details/list-details.component';
 
 
 export const routes: Routes = [
@@ -24,6 +27,10 @@ export const routes: Routes = [
     { path: 'coll', title: 'Collections', component: CollectionComponent, children: [ 
         { path: '', component: CollListComponent },
         { path: ':itemID', component: ItemDetailsComponent },
+    ]},
+    { path: 'lists', title: 'Lists', component: ListsComponent, children: [
+        { path: '', component: ListsListComponent },
+        { path: ':listID', component: ListDetailsComponent },
     ]},
     { path: 'not-found', title: 'Not Found', component: NotFoundComponent},
     { path: '**', redirectTo: 'not-found' },
