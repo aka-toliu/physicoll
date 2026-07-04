@@ -21,8 +21,10 @@ export class ListsService {
     return user.uid;
   }
 
+  private userID = localStorage.getItem('UID');
+
   createList(list: IList): Observable<string> {
-    const colRef = collection(this.firestore, `users/${this.userId}/lists`);
+    const colRef = collection(this.firestore, `users/${this.userID}/lists`);
     const newList: IList = {
       ...list,
       createdAt: new Date(),
@@ -32,13 +34,13 @@ export class ListsService {
   }
 
   deleteList(listID: string): Observable<void> {
-    const docRef = doc(this.firestore, `users/${this.userId}/lists/${listID}`);
+    const docRef = doc(this.firestore, `users/${this.userID}/lists/${listID}`);
     return from(deleteDoc(docRef));
   }
 
-  getUserLists(): Observable<IItemList[]> {
-    const colRef = collection(this.firestore, `users/${this.userId}/lists`);
-    return collectionData(colRef, { idField: 'id' }) as Observable<IItemList[]>;
+  getUserLists(): Observable<IList[]> {
+    const colRef = collection(this.firestore, `users/${this.userID}/lists`);
+    return collectionData(colRef, { idField: 'id' }) as Observable<IList[]>;
   }
 
   getListById(listID: string): Observable<IList | undefined> {
@@ -48,7 +50,7 @@ export class ListsService {
 
 
   addItemToList(listID: string, movieItem: Omit<IItemList, 'itemId' | 'addedAt'>): Observable<void> {
-    const docRef = doc(this.firestore, `users/${this.userId}/lists/${listID}`);
+    const docRef = doc(this.firestore, `users/${this.userID}/lists/${listID}`);
     
     const newItem: IItemList = {
       ...movieItem,

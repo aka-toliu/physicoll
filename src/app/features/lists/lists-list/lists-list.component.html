@@ -1,1 +1,10 @@
-<p>lists-list works!</p>
+<header>
+    <h2>Suas listas</h2>
+</header>
+
+<div class="lists-container">
+    <button> Nova lista</button>
+    @for (list of lists(); track $index) {
+    <app-card-list [list]="list" />
+}
+</div>

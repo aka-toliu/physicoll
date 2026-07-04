@@ -3,6 +3,9 @@ export interface IItemList {
     id: string;
     type: 'collection' | 'wishlist';
     addedAt: string;
+    poster: string;
+    title: string;
+    order: number;
 }
 
 export interface IList {
