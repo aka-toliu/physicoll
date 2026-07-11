@@ -10,17 +10,29 @@
     flex-direction: column;
     gap: 1rem;
     z-index: 10;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    &__content{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+    }
 
     &__btn-container {
         display: flex;
         gap: 1rem;
+        width: 100%;
+
+        >button {
+            flex: 1;
+        }
     }
 
-    &__btn-close{
+    &__btn-close {
         background-color: var(--gray-10);
     }
 

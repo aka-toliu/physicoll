@@ -1,4 +1,4 @@
-:host{
+:host {
     background-color: var(--white);
     padding: 0.8rem;
     width: 100%;
@@ -9,23 +9,58 @@
     box-shadow: var(--shadow-bottom);
 }
 
-h3{
+h3 {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.items-list{
-    display: flex;
-    width: 100%;
-    overflow-x: auto;
-    gap: 0.5rem;
+.list {
+    &__info {
+        position: relative;
 
-    .item-poster{
-        width: 80px;
-        aspect-ratio: 2/3;
-        object-fit: cover;
-        border-radius: 0.5rem;
-        overflow: hidden;
+        .btn-options {
+            position: absolute;
+            right: 0rem;
+            top: 0rem;
+            background: none;
+            width: 30px;
+            height: 30px;
+
+            ::ng-deep {
+                app-icon>i {
+                    color: var(--gray-50);
+                }
+            }
+        }
+    }
+
+    &__title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        ::ng-deep {
+            app-icon>i {
+                width: 24px;
+                height: 24px;
+                // color: var(--gray-50);
+            }
+        }
+    }
+
+    &__items-container {
+        display: flex;
+        width: 100%;
+        overflow-x: auto;
+        gap: 0.5rem;
+
+        .item-poster {
+            width: 80px;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
     }
 }

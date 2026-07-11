@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurrencyPipe, DatePipe, NgClass, NgStyle } from '@angular/common';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
@@ -9,6 +9,8 @@ import { ELanguages } from '../../../shared/models/ELanguages';
 import { CollFormComponent } from '../../../shared/components/coll-form/coll-form.component';
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { ProfileService } from '../../../core/services/profile.service';
+import { ListsService } from '../../../core/services/lists.service';
+import { IList } from '../../../shared/models/ILists';
 
 
 
@@ -25,6 +27,7 @@ export class ItemDetailsComponent {
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private collectionService = inject(CollectionService);
+  private listsService = inject(ListsService);
   private profileService = inject(ProfileService);
   private uid = signal(localStorage.getItem('UID'));
 
@@ -41,9 +44,13 @@ export class ItemDetailsComponent {
   protected item = signal<ICollectionItem | null>(null);
   protected stars!: number[];
   protected showOptions = signal(false);
+  protected lists = signal<IList[]>([]);
+  protected listSelected = signal<string | null>(null);
   
   protected showDeleteModal = signal(false);
   protected modalEditCollection = signal(false);
+  protected showModalAddToList = signal(false);
+
   
 
   ngOnInit(): void {
@@ -93,6 +100,38 @@ export class ItemDetailsComponent {
   toggleOptions(event: Event) {
     event.stopPropagation();
     this.showOptions.set(!this.showOptions());
+  }
+
+  getLists(): void{
+    this.listsService.getUserLists().subscribe({
+      next: (lists) => {
+        console.log('Listas do usuário:', lists);
+        this.lists.set(lists);
+      },
+      error: (err) => {
+        console.error('Erro ao buscar listas do usuário:', err);
+      }
+    });
+  }
+
+
+  addToList(): void {
+    const movieToAdd = {
+      id: this.item()?.imdbID!,
+      title: this.item()?.title!,
+      poster: this.item()?.poster!,
+      order: computed(() => this.lists().find(list => list.id === this.listSelected())?.items.length || 0)(),
+      type: 'collection' as const
+    }
+
+    this.listsService.addItemToList(this.listSelected()!, movieToAdd).subscribe({
+      next: () => {
+        console.log('Item adicionado à lista com sucesso');
+      },
+      error: (err) => {
+        console.error('Erro ao adicionar item à lista:', err);
+      }
+    });
   }
 
 }

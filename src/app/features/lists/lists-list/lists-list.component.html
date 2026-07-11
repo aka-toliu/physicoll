@@ -3,8 +3,21 @@
 </header>
 
 <div class="lists-container">
-    <button> Nova lista</button>
+    <button (click)="modalNovaLista.set(true)"> Nova lista</button>
     @for (list of lists(); track $index) {
     <app-card-list [list]="list" />
 }
 </div>
+
+<app-modal [modalControl]="modalNovaLista()" (modalClose)="modalNovaLista.set($event)" (confirmModal)="addNewList()">
+    <h3 class="modal-title">Nova Lista</h3>
+    <form class="modal-body" [formGroup]="formList">
+        <label>
+            <input type="text" placeholder="Digite o nome da lista" formControlName="title" />
+        </label>
+        <label>
+            <span>Lista privada</span>
+            <input type="checkbox" formControlName="isPrivated" />
+        </label>
+    </form>
+</app-modal>

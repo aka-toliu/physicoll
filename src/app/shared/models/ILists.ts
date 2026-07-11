@@ -11,7 +11,8 @@ export interface IItemList {
 export interface IList {
   id?: string;
   title: string;
-  isPublic?: boolean;
-  createdAt: any;
+  isPrivated?: boolean;
+  createdAt: string | Date;
+  icon: string;
   items: IItemList[];
 }

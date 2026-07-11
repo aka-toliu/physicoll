@@ -29,7 +29,7 @@
                 <app-icon icon="share" />
                 <p>Compartilhar</p>
             </button>
-            <button class="option" disabled>
+            <button class="option" (click)="showModalAddToList.set(true); showOptions.set(false); getLists()">
                 <app-icon icon="list" />
                 <p>Adicionar à lista</p>
             </button>
@@ -213,4 +213,21 @@
     <p class="modal-body">
         Esta ação não pode ser desfeita. Todos os dados associados a este item serão perdidos.
     </p>
+</app-modal>
+
+<app-modal [modalControl]="showModalAddToList()" (modalClose)="showModalAddToList.set($event)" [disableControl]="!listSelected()" (confirmModal)="addToList()">
+    <h3 class="modal-title">Adicionar à lista</h3>
+    <div class="modal-body">
+        <p>Selecione a lista para adicionar o item:</p>
+        <div class="lists-container">
+            @for(list of lists(); track $index) {
+                <label class="list-item">
+                    <input type="radio" name="list" [value]="list.id" (change)="listSelected.set(list?.id!)"/>
+                    <app-icon icon="list" />
+                    <h4>{{ list.title }}</h4>
+                    <p>{{ list.items.length }} itens</p>
+                </label>
+            }
+        </div>
+    </div>
 </app-modal>

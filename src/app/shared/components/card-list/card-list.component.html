@@ -1,9 +1,10 @@
-<div class="list-info">
-    <h3><app-icon [icon]="'list'"/> {{ list()?.title }}</h3>
+<div class="list__info">
+    <h4 class="list__title"><app-icon [icon]="'list'"/> {{ list()?.title }}</h4>
+    <button class="btn-options"><app-icon [icon]="'options'"/></button>
 </div>
-<div class="items-list">
+<div class="list__items-container">
     @for (item of recentItems(); track $index) {
         <img class="item-poster" src="{{ item?.poster }}" alt="{{ item?.title }}" />
     }
 </div>
-<p>{{ list()?.items?.length }} items</p>
+<p>{{ list()?.items?.length }} itens</p>

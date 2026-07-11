@@ -1,4 +1,4 @@
-import { Component, model, output } from '@angular/core';
+import { Component, input, model, output } from '@angular/core';
 
 @Component({
   selector: 'app-modal',
@@ -12,6 +12,7 @@ export class ModalComponent {
   public modalControl = model<boolean>(false);
   public modalClose = output<boolean>();
   public confirmModal = output<boolean>();
+  public disableControl = input<boolean>(false);
 
   closeModal(): void {
     this.modalControl.set(false);

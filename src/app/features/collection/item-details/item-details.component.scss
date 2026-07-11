@@ -345,5 +345,37 @@ section {
         border: none;
 
     }
+}
 
+.lists-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: auto;
+    max-height: 50vh;
+    padding-top: 1rem;
+
+    .list-item {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        gap: 1rem;
+        border: 1px solid var(--gray-20);
+        border-radius: 0.5rem;
+        height: 60px;
+        flex: 1;
+
+        input[type="radio"] {
+           margin: 0;
+        }
+
+        p {
+            position: absolute;
+            right: 0.5rem;
+            top: -0.6rem;
+            left: auto;
+        }
+    }
 }

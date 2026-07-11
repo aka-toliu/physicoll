@@ -1,1 +1,16 @@
-<p>list-details works!</p>
+<header class="list-header">
+    <h1>{{ list()?.title }}</h1>
+</header>
+<div class="items-container">
+    @for (item of list()?.items; track $index) {
+        <div class="card-item" (click)="navigateTo(item.id, 'search')">
+            <img [src]="item.poster" alt="{{ item.title }}" />
+            <!-- <h3>{{ item.title }}</h3>
+            @if(item.type === 'collection'){
+                <app-icon icon="collections" />
+            } -->
+        </div>
+    } @empty {
+        Nenhum item adicionado.
+    }
+</div>

@@ -27,8 +27,7 @@ export class ListsService {
     const colRef = collection(this.firestore, `users/${this.userID}/lists`);
     const newList: IList = {
       ...list,
-      createdAt: new Date(),
-      items: []
+      createdAt: new Date().toISOString(),
     };
     return from(addDoc(colRef, newList).then(docRef => docRef.id));
   }
@@ -40,11 +39,11 @@ export class ListsService {
 
   getUserLists(): Observable<IList[]> {
     const colRef = collection(this.firestore, `users/${this.userID}/lists`);
-    return collectionData(colRef, { idField: 'id' }) as Observable<IList[]>;
+    return collectionData(colRef, { idField: 'id' }).pipe() as Observable<IList[]>;
   }
 
   getListById(listID: string): Observable<IList | undefined> {
-    const docRef = doc(this.firestore, `users/${this.userId}/lists/${listID}`);
+    const docRef = doc(this.firestore, `users/${this.userID}/lists/${listID}`);
     return docData(docRef, { idField: 'id' }) as Observable<IList | undefined>;
   }
 

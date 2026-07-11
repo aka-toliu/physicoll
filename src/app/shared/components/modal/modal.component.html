@@ -5,7 +5,7 @@
         <ng-content select=".modal-title"></ng-content>
     </div>
 
-    <div class="modal-content">
+    <div class="modal__content">
         <ng-content select=".modal-body"></ng-content>
     </div>
 
@@ -13,8 +13,8 @@
         <button class="modal__btn-close" (click)="closeModal()">
             <ng-content select=".modal-btn-close-content"> Fechar</ng-content>
         </button>
-        <button class="modal__btn-confirm" (click)="confirmModalAction()">
-            <ng-content select=".modal-btn-confirm-content"> Confirmar</ng-content>
+        <button class="modal__btn-confirm" (click)="confirmModalAction()" [disabled]="disableControl()">
+            <ng-content select=".modal-btn-confirm-content"> Confirmar </ng-content>
         </button>
     </div>
 </div>
