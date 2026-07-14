@@ -3,11 +3,12 @@ import { ListsService } from '../../../core/services/lists.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IList } from '../../../shared/models/ILists';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
+import { CardMovieListComponent } from '../../../shared/components/card-movie-list/card-movie-list.component';
 
 @Component({
   selector: 'app-list-details',
   standalone: true,
-  imports: [IconComponent],
+  imports: [IconComponent, CardMovieListComponent],
   templateUrl: './list-details.component.html',
   styleUrl: './list-details.component.scss'
 })
@@ -15,9 +16,10 @@ export class ListDetailsComponent {
 
   private listsService = inject(ListsService);
   private activatedRoute = inject(ActivatedRoute);
-  private router = inject(Router);
+
 
   protected list = signal<IList | null>(null);
+  public editMode = signal<boolean>(false);
 
   ngOnInit(): void {
     this.getListDetails();
@@ -40,11 +42,5 @@ export class ListDetailsComponent {
     });
   }
 
-  navigateTo(id: string, type: string): void {
-    if (type === 'collection') {
-      this.router.navigate(['/coll', id]);
-    } else if (type === 'search') {
-      this.router.navigate(['/movie', id]);
-    }
-  }
+
 }

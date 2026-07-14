@@ -1,0 +1,17 @@
+<div class="card-item">
+    <img [src]="item()?.poster" alt="{{ item()?.title }}" />
+
+    @if (edit()) {
+    <button class="btn-delete" (click)="showDeleteModal.set(true)">
+        <app-icon [icon]="'delete'" />
+    </button>
+
+    <button class="btn-edit">
+        <app-icon [icon]="'edit'" />
+    </button>
+    }
+</div>
+
+<app-modal [modalControl]="showDeleteModal()" (modalClose)="showDeleteModal.set($event)" (confirmModal)="deleteItem()">
+    <p class="modal-body">Tem certeza que deseja excluir este item?</p>
+</app-modal>

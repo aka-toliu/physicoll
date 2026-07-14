@@ -4,6 +4,30 @@
     justify-content: center;
     background-color: var(--white);
     box-shadow: var(--shadow-bottom);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+
+    .actions-container{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .btn-edit{
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: fit-content;
+        padding: 1rem;
+
+        ::ng-deep {
+            app-icon>i {
+                --size-icon: 20px;
+            }
+        }
+    }
 }
 
 .items-container {
@@ -11,23 +35,4 @@
     gap: 1rem;
     padding: 1rem;
     flex-wrap: wrap;
-}
-.card-item{
-    width: 120px;
-    aspect-ratio: 2 / 3;
-    object-fit: cover;
-    display: flex;
-    border: 1px solid var(--gray-20);
-    border-radius: 0.5rem;
-    overflow: hidden;
-    box-shadow: var(--shadow-bottom);
-
-    > img {
-        width: 100%;
-        object-fit: cover;
-    }
-
-    > h3, app-icon {
-        position: absolute;
-    }
 }

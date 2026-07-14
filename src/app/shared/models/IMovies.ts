@@ -87,3 +87,13 @@ export interface IMovieTrack{
     collectedCount: number;
     wishedCount: number;
 }
+
+export interface IMovieList{
+    title: string;
+    poster: string;
+    addedAt: string;
+    order: number;
+    type: string;
+    id: string;
+    itemId: string;
+}

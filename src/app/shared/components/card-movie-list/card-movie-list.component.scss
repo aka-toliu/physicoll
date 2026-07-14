@@ -1,0 +1,61 @@
+.card-item {
+    width: 120px;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    display: flex;
+    border: 1px solid var(--gray-20);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-bottom);
+    position: relative;
+
+    >img {
+        width: 100%;
+        object-fit: cover;
+    }
+
+    >h3,
+    app-icon {
+        position: absolute;
+    }
+
+    .btn-delete {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.5rem;
+        background: var(--warn);
+        padding: 0.5rem;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        ::ng-deep {
+            app-icon>i {
+                --size-icon: 20px;
+                color: var(--white);
+            }
+        }
+    }
+
+    .btn-edit {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: var(--primary-color);
+        padding: 0.5rem;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        ::ng-deep {
+            app-icon>i {
+                --size-icon: 20px;
+                color: var(--white);
+            }
+        }
+    }
+}

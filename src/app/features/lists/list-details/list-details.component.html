@@ -1,16 +1,26 @@
 <header class="list-header">
-    <h1>{{ list()?.title }}</h1>
+
+
+    @if (editMode()) {
+    <input type="text" value="{{ list()?.title }}" />
+    }@else {
+    <h3>{{ list()?.title }}</h3>
+    }
+
+    <div class="actions-container">
+        @if (editMode()) {
+        <button class="btn-edit" type="smooth" (click)="editMode.set(false)">
+            Cancelar
+        </button>
+        }@else { <button class="btn-edit" type="smooth" (click)="editMode.set(true)">
+            Editar
+        </button>}
+    </div>
 </header>
 <div class="items-container">
     @for (item of list()?.items; track $index) {
-        <div class="card-item" (click)="navigateTo(item.id, 'search')">
-            <img [src]="item.poster" alt="{{ item.title }}" />
-            <!-- <h3>{{ item.title }}</h3>
-            @if(item.type === 'collection'){
-                <app-icon icon="collections" />
-            } -->
-        </div>
+    <app-card-movie-list [item]="item" [edit]="editMode()" [listID]="list()?.id!" />
     } @empty {
-        Nenhum item adicionado.
+    Nenhum item adicionado.
     }
 </div>
