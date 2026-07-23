@@ -1,25 +1,39 @@
-<header class="list-header">
+<header class="list-header" [formGroup]="formItem">
 
 
-    @if (editMode()) {
-    <input type="text" value="{{ list()?.title }}" />
-    }@else {
-    <h3>{{ list()?.title }}</h3>
-    }
+    <div class="info-list__container">
+        @if (editMode()) {
+        <input type="text" formControlName="title" />
+        <!-- <label>
+            Privado
+            <input type="checkbox" formControlName="isPrivated"/>
+        </label> -->
+        }@else {
+        <h3>{{ list()?.title }}</h3>
+        }
+    </div>
 
     <div class="actions-container">
         @if (editMode()) {
-        <button class="btn-edit" type="smooth" (click)="editMode.set(false)">
+        <button class="btn-edit" type="smooth" (click)="cancelEdit()">
             Cancelar
         </button>
-        }@else { <button class="btn-edit" type="smooth" (click)="editMode.set(true)">
+        <button class="btn-edit" type="smooth" (click)="saveNewOrder()">
+            Salvar
+        </button>
+        }@else {
+        <button class="btn-edit" type="smooth" (click)="editMode.set(true)">
             Editar
-        </button>}
+        </button>
+        }
     </div>
 </header>
-<div class="items-container">
-    @for (item of list()?.items; track $index) {
-    <app-card-movie-list [item]="item" [edit]="editMode()" [listID]="list()?.id!" />
+<div class="items-container" [ngClass]="editMode() ? 'edit-mode' : ''" cdkDropList
+    [cdkDropListData]="list()?.items || []" (cdkDropListDropped)="drop($event)">
+
+    @for (item of list()?.items; track item.itemId) {
+    <app-card-movie-list cdkDrag [cdkDragDisabled]="!editMode()" [item]="item" [edit]="editMode()"
+        [listID]="list()?.id!" />
     } @empty {
     Nenhum item adicionado.
     }

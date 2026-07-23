@@ -1,13 +1,9 @@
-<div class="card-item">
+<div class="card-item" [ngClass]="edit() ? 'edit-mode' : ''">
     <img [src]="item()?.poster" alt="{{ item()?.title }}" />
 
     @if (edit()) {
     <button class="btn-delete" (click)="showDeleteModal.set(true)">
         <app-icon [icon]="'delete'" />
-    </button>
-
-    <button class="btn-edit">
-        <app-icon [icon]="'edit'" />
     </button>
     }
 </div>

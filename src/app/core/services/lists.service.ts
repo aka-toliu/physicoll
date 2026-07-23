@@ -65,7 +65,7 @@ export class ListsService {
   }
 
   removeItemFromListById(listID: string, itemId: string): Observable<void> {
-  const docRef = doc(this.firestore, `users/${this.userId}/lists/${listID}`);
+  const docRef = doc(this.firestore, `users/${this.userID}/lists/${listID}`);
 
   const promise = getDoc(docRef).then(snapshot => {
     if (!snapshot.exists()) return;
@@ -80,6 +80,31 @@ export class ListsService {
 
   return from(promise);
 }
+
+updateListItems(listID: string, updatedItems: IItemList[]): Observable<void> {
+    const docRef = doc(this.firestore, `users/${this.userID}/lists/${listID}`);
+    
+    const promise = updateDoc(docRef, { 
+      items: updatedItems 
+    });
+
+    return from(promise);
+  }
+
+  updateList(listID: string, updatedList: Partial<IList>): Observable<void> {
+    const docRef = doc(this.firestore, `users/${this.userID}/lists/${listID}`);
+
+    const payload: Partial<IList> = {
+      title: updatedList.title,
+      isPrivated: updatedList.isPrivated ?? false,
+      icon: updatedList.icon ?? 'list',
+      items: updatedList.items ?? []
+    };
+
+    const promise = updateDoc(docRef, payload);
+
+    return from(promise);
+  }
 
 
 

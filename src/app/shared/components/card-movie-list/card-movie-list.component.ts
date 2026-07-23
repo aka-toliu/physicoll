@@ -4,11 +4,13 @@ import { IItem, IMovieList } from '../../models/IMovies';
 import { IconComponent } from '../icon/icon.component';
 import { ModalComponent } from '../modal/modal.component';
 import { ListsService } from '../../../core/services/lists.service';
+import { NgClass } from '@angular/common';
+
 
 @Component({
   selector: 'app-card-movie-list',
   standalone: true,
-  imports: [IconComponent, ModalComponent],
+  imports: [IconComponent, ModalComponent, NgClass],
   templateUrl: './card-movie-list.component.html',
   styleUrl: './card-movie-list.component.scss',
   host: {

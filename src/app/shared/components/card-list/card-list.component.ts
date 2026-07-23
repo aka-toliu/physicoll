@@ -21,7 +21,7 @@ export class CardListComponent {
 
   public recentItems = computed(() => {
     if (!this.list()) return [];
-    return this.list()?.items.sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime()).slice(0, 5);
+    return this.list()?.items.slice(0, 5);
   });
 
   navigateToListDetails(listId: string | undefined): void {
