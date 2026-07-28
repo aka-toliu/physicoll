@@ -31,7 +31,7 @@
 <div class="items-container" [ngClass]="editMode() ? 'edit-mode' : ''" cdkDropList
     [cdkDropListData]="list()?.items || []" (cdkDropListDropped)="drop($event)">
 
-    @for (item of list()?.items; track item.itemId) {
+    @for (item of list()?.items; track $index) {
     <app-card-movie-list cdkDrag [cdkDragDisabled]="!editMode()" [item]="item" [edit]="editMode()"
         [listID]="list()?.id!" />
     } @empty {

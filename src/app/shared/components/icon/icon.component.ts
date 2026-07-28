@@ -11,6 +11,7 @@ import { Component, input } from '@angular/core';
 export class IconComponent {
 
   icon = input.required<string>();
-  color = input<string>('primary-color');
-  
+  size = input<number>(32);
+  colorVar = input<string>('primary-color');
+  colorHex = input<string>('#000000');
 }
