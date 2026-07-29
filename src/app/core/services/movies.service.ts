@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IMovieDetail, IMovieSearch, ITMDBMovieSearchResponse, ITMDBMovieDetail } from '../../shared/models/IMovies';
-import { environment } from '../../../environments/environment.development';
+import { ITMDBMovieSearchResponse, ITMDBMovieDetail } from '../../shared/models/IMovies';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
