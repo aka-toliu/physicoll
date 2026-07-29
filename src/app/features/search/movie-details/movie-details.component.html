@@ -1,64 +1,109 @@
+@if (movie(); as movieData) {
 <header class="movie__header"
-    [ngStyle]="{'background-image': movie()?.Poster !== 'N/A' ? 'url(' + movie()?.Poster + ')' : 'url(assets/default-poster.png)'}">
+    [ngStyle]="{
+        'background-image': 'url(' + moviesService.getImageUrl(movieData.backdrop_path || movieData.poster_path, 'original') + ')'
+    }">
     
     <button class="btn-back" (click)="onBack()">
         <app-icon icon="arrow-left" />
     </button>
 
     <div class="movie__poster">
-        <img [src]="movie()?.Poster !== 'N/A' ? movie()?.Poster : 'assets/default-poster.png'"
-            alt="{{ movie()?.Title }}" class="movie__poster-image">
+        <img [src]="moviesService.getImageUrl(movieData.poster_path, 'w500')"
+            alt="{{ movieData.title }}" class="movie__poster-image"
+            #poster (error)="poster.src = 'assets/images/no-poster.png'">
     </div>
 </header>
+
 <main class="movie__info">
     <div class="movie__title">
-        <h1>{{ movie()?.Title }}</h1>
-        <h4 class="info-year">{{ movie()?.Year }}</h4>
+        <h1>{{ movieData.title }}</h1>
+        <h4 class="info-year">
+            {{ movieData.release_date ? movieData.release_date.split('-')[0] : 'N/A' }}
+        </h4>
     </div>
+
     <div class="btn-container">
         <button class="btn-add" (click)="modalAddToCollection.set(true)">
             <p>Adicionar à coleção</p>
             <app-icon icon="add" />
         </button>
-        <button class="btn-add-wishlist"  [ngClass]="{'in-wishlist': inWishlist}" (click)="toggleWishlist()">
-            <app-icon [icon]="inWishlist ? 'bookmark-on' : 'bookmark-off'" />
+        <button class="btn-add-wishlist" [ngClass]="{'in-wishlist': inWishlist()}" (click)="toggleWishlist()">
+            <app-icon [icon]="inWishlist() ? 'bookmark-on' : 'bookmark-off'" />
         </button>
-
     </div>
-    <p class="movie__plot">{{ movie()?.Plot }}</p>
+
+    <p class="movie__plot">{{ movieData.overview || 'Sem sinopse disponível em português.' }}</p>
+
+    <!-- Elenco Principal -->
+    @if (movieData.credits?.cast?.length) {
     <h4 class="info-category">
         <app-icon icon="actors" />
-        {{ movie()?.Actors }}
+        @for (actor of movieData.credits?.cast?.slice(0, 5); track actor.id; let last = $last) {
+            {{ actor.name }}{{ !last ? ', ' : '' }}
+        }
     </h4>
+    }
+
+    <!-- Gêneros -->
+    @if (movieData.genres?.length) {
     <h4 class="info-category">
         <app-icon icon="genre" />
-        {{ movie()?.Genre }}
+        @for (genre of movieData.genres; track genre.id; let last = $last) {
+            {{ genre.name }}{{ !last ? ', ' : '' }}
+        }
     </h4>
+    }
+
+    <!-- Direção -->
+    @if (movieData.credits?.crew) {
     <h4 class="info-category">
         <app-icon icon="director" />
-        {{ movie()?.Director }}
+        @for (crewItem of movieData.credits?.crew; track $index) {
+            @if (crewItem.job === 'Director') {
+                {{ crewItem.name }}
+            }
+        }
     </h4>
-        <h4 class="info-category">
-        <app-icon icon="writer" />
-        {{ movie()?.Writer }}
-    </h4>
+    }
+
+    <!-- Idioma Original -->
+    @if (movieData.original_language) {
     <h4 class="info-category">
         <app-icon icon="language" />
-        {{ movie()?.Language }}
+        {{ movieData.original_language | uppercase }}
     </h4>
+    }
+
+    <!-- Países de Produção -->
+    @if (movieData.production_countries?.length) {
     <h4 class="info-category">
         <app-icon icon="country" />
-        {{ movie()?.Country }}
+        @for (country of movieData.production_countries; track country.iso_3166_1; let last = $last) {
+            {{ country.name }}{{ !last ? ', ' : '' }}
+        }
     </h4>
+    }
+
+    <!-- Duração -->
+    @if (movieData.runtime) {
     <h4 class="info-category">
         <app-icon icon="runtime" />
-        {{ movie()?.Runtime }}
+        {{ movieData.runtime }} min
     </h4>
-        <h4 class="info-category">
-        <app-icon icon="trophy" />
-        {{ movie()?.Awards }}
-    </h4>
+    }
 </main>
 
+@if (modalAddToCollection()) {
+  <app-coll-form 
+      [movieDetails]="movieData" 
+      (modalClose)="modalAddToCollection.set($event)" 
+      [(modalControl)]="modalAddToCollection">
+  </app-coll-form>
+}
 
-<app-coll-form [movieDetails]="movie()" (modalClose)="modalAddToCollection.set($event)" [modalControl]="modalAddToCollection()"></app-coll-form>
+} @else if (loading()) {
+<div class="movie__loading">
+    <p>Carregando detalhes do filme...</p>
+</div>
+}

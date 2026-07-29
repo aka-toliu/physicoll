@@ -3,105 +3,102 @@
 </header>
 
 <form>
-
     <div class="search-movie">
-
         <input class="search-movie__input" #searchBox type="search" name="search" placeholder="Pesquisar filme"
             (input)="searchMovies(searchBox.value)" />
 
         <button [disabled]="!movieSelected()">Salvar</button>
 
-
-        @if (results()?.Response) {
-
+        @if (results()) {
         <ul class="search-movie__list">
 
             @if (isSearchLoading()) {
             <p>Carregando...</p>
             }
 
-            @if (results()?.totalResults) {
-            <p>{{ results()?.totalResults }} resultados encontrados</p>
+            @if (results()?.total_results) {
+            <p>{{ results()?.total_results }} resultados encontrados</p>
             }
-            @for (movie of results()?.Search; track movie.imdbID) {
-            <li class="search-movie__results" (click)="selectMovie(movie.imdbID)">
+
+            @for (movie of results()?.results; track movie.id) {
+            <li class="search-movie__results" (click)="selectMovie(movie.id)">
                 <img class="search-movie__poster"
-                    [src]="movie.Poster !== 'N/A' ? movie.Poster : 'assets/default-poster.png'" alt="{{ movie.Title }}"
+                    [src]="moviesService.getImageUrl(movie.poster_path, 'w185')" 
+                    alt="{{ movie.title }}"
                     #poster (error)="poster.src = 'assets/default-poster.png'">
-                <h3 class="search-movie__title">{{ movie.Title }}</h3>
-                <p class="search-movie__year">{{ movie.Year }}</p>
+                <h3 class="search-movie__title">{{ movie.title }}</h3>
+                <p class="search-movie__year">
+                    {{ movie.release_date ? movie.release_date.split('-')[0] : 'N/A' }}
+                </p>
             </li>
             }
         </ul>
         }
-
-
     </div>
-    @if (movieSelected()) {
+
+    @if (movieSelected(); as movie) {
     <div class="movie__details">
         <div class="movie__poster">
-            <img [src]="movieSelected()?.Poster !== 'N/A' ? movieSelected()?.Poster : 'assets/default-poster.png'"
-                alt="{{ movieSelected()?.Title }}" class="movie__poster-image">
+            <img [src]="moviesService.getImageUrl(movie.poster_path, 'w500')"
+                alt="{{ movie.title }}" class="movie__poster-image"
+                #posterDetail (error)="posterDetail.src = 'assets/default-poster.png'">
         </div>
+
         <div class="movie__info">
-            <h3>{{ movieSelected()?.Title }}</h3>
-            <p>{{ movieSelected()?.Year }}</p>
-            <p>Diretor: {{ movieSelected()?.Director }}</p>
-            <p>Atores: {{ movieSelected()?.Actors }}</p>
-            <p>Roteirista: {{ movieSelected()?.Writer }}</p>
-            <p>Gênero: {{ movieSelected()?.Genre }}</p>
-            <p>País: {{ movieSelected()?.Country }}</p>
-            <p>Língua: {{ movieSelected()?.Language }}</p>
+            <h3>{{ movie.title }}</h3>
+            <p>{{ movie.release_date ? movie.release_date.split('-')[0] : 'N/A' }}</p>
+
+            <!-- Direção -->
+            @if (movie.credits?.crew) {
+            <p>
+                Diretor: 
+                @for (crewItem of movie.credits?.crew; track crewItem.id || $index; let last = $last) {
+                    @if (crewItem.job === 'Director') {
+                        {{ crewItem.name }}{{ !last ? ', ' : '' }}
+                    }
+                }
+            </p>
+            }
+
+            <!-- Elenco Principal -->
+            @if (movie.credits?.cast?.length) {
+            <p>
+                Atores: 
+                @for (actor of movie.credits?.cast?.slice(0, 5); track actor.id; let last = $last) {
+                    {{ actor.name }}{{ !last ? ', ' : '' }}
+                }
+            </p>
+            }
+
+            <!-- Gêneros -->
+            @if (movie.genres?.length) {
+            <p>
+                Gênero: 
+                @for (genre of movie.genres; track genre.id; let last = $last) {
+                    {{ genre.name }}{{ !last ? ', ' : '' }}
+                }
+            </p>
+            }
+
+            <!-- Países de Produção -->
+            @if (movie.production_countries?.length) {
+            <p>
+                País: 
+                @for (country of movie.production_countries; track country.iso_3166_1; let last = $last) {
+                    {{ country.name }}{{ !last ? ', ' : '' }}
+                }
+            </p>
+            }
+
+            <!-- Idioma Original -->
+            @if (movie.original_language) {
+            <p>Língua: {{ movie.original_language | uppercase }}</p>
+            }
         </div>
-        <!-- <div class="movie__info">
-            <h4>Detalhes do filme</h4>
-            <label for="title" class="movie__title">
-                Título:
-                <input type="text" name="title" placeholder="Ex: Jurassic Park">
-            </label>
-            <label for="director" class="movie__director">
-                Diretor:
-                <input type="text" name="director" placeholder="Ex: Steven Spielberg">
-            </label>
-            <label for="writer" class="movie__writer">
-                Roteirista:
-                <input type="text" name="writer" placeholder="Ex: John Doe">
-            </label>
-            <label for="year" class="movie__year">
-                Ano:
-                <input type="text" name="year" placeholder="Ex: 1993">
-            </label>
-            <label for="genre" class="movie__genre">
-                Gênero:
-                <input type="text" name="genre" placeholder="Ex: Ação, Aventura">
-            </label>
-            <label for="duration" class="movie__duration">
-                Duração:
-                <input type="text" name="duration" placeholder="Ex: 120 minutos">
-            </label>
-            <label for="actors" class="movie__actors">
-                Atores:
-                <input type="text" name="actors" placeholder="Ex: John Doe, Jane Doe">
-            </label>
-            <label for="language" class="movie__language">
-                Idioma original:
-                <input type="text" name="language" placeholder="Ex: Inglês">
-            </label>
-            <label for="country" class="movie__country">
-                País de origem:
-                <input type="text" name="country" placeholder="Ex: Estados Unidos">
-            </label>
-            <label for="plot" class="movie__plot">
-                Sinopse:
-                <textarea name="plot"
-                    placeholder="Ex: Um parque temático com dinossauros geneticamente recriados..."></textarea>
-            </label>
-        </div> -->
     </div>
 
     <div class="item__details card">
-       
+        <!-- Campos customizados da sua mídia física (formItem) entram aqui -->
     </div>
     }
-
 </form>

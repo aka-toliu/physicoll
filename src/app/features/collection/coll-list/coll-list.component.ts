@@ -7,29 +7,28 @@ import { NgClass } from '@angular/common';
 import { EBluRayCase, ECaseState, EDiscState, EDVDCase, ETapeState, EVHSCase } from '../../../shared/models/EItem';
 import { ɵInternalFormsSharedModule } from "@angular/forms";
 import { ELanguages } from '../../../shared/models/ELanguages';
-import { ProfileService } from '../../../core/services/profile.service';
 import { trigger, transition, query, style, stagger, animate } from '@angular/animations';
 
 
 @Component({
   selector: 'app-coll-list',
   standalone: true,
-  imports: [CardCollComponent, IconComponent, NgClass, ɵInternalFormsSharedModule],
+  imports: [CardCollComponent, IconComponent, NgClass],
   templateUrl: './coll-list.component.html',
   styleUrl: './coll-list.component.scss',
-animations: [
-  trigger('coll-list', [
-    // 🟢 Roda estritamente quando a estrutura de dados inicial entra no DOM
-    transition(':enter', [
-      query('app-card-coll', [
-        style({ opacity: 0, transform: 'translateY(15px)' }),
-        stagger(45, [
-          animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
-        ])
-      ], { optional: true })
+  animations: [
+    trigger('coll-list', [
+      // 🟢 Roda estritamente quando a estrutura de dados inicial entra no DOM
+      transition(':enter', [
+        query('app-card-coll', [
+          style({ opacity: 0, transform: 'translateY(15px)' }),
+          stagger(45, [
+            animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+          ])
+        ], { optional: true })
+      ])
     ])
-  ])
-]
+  ]
 })
 export class CollListComponent implements OnInit {
 
@@ -127,6 +126,7 @@ export class CollListComponent implements OnInit {
 
   protected activeFiltersCount = computed(() => {
     let count = 0;
+    if (this.filterFormat() !== '') count++;
     if (this.filterCaseState() !== '') count++;
     if (this.filterIsSpecial()) count++;
     if (this.filterAvailableForSale()) count++;
@@ -278,11 +278,17 @@ export class CollListComponent implements OnInit {
           return timeA - timeB;
         }
 
-        case 'year-newest':
-          return +(b.year || 0) - +(a.year || 0);
+        case 'year-newest': {
+          const yearA = parseInt((a.year || '').split('-')[0]) || 0;
+          const yearB = parseInt((b.year || '').split('-')[0]) || 0;
+          return yearB - yearA;
+        }
 
-        case 'year-oldest':
-          return +(a.year || 0) - +(b.year || 0);
+        case 'year-oldest': {
+          const yearA = parseInt((a.year || '').split('-')[0]) || 0;
+          const yearB = parseInt((b.year || '').split('-')[0]) || 0;
+          return yearA - yearB;
+        }
 
         default:
           return 0;
@@ -294,14 +300,13 @@ export class CollListComponent implements OnInit {
     this.getCollection();
   }
 
-  getCollection() {
-    this.collectionService.getCollection(this.uid()).subscribe({
-      next: (collection) => {
-        this.collection.set(collection),
-          console.log(collection);
-        console.log(this.suppliers());
-      },
-      error: () => console.error('Erro ao obter coleção')
+  getCollection(): void {
+    const userUid = this.uid();
+    if (!userUid) return;
+
+    this.collectionService.getCollection(userUid).subscribe({
+      next: (collection) => this.collection.set(collection),
+      error: (err) => console.error('Erro ao obter coleção:', err)
     });
   }
 

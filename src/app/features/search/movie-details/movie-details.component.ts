@@ -1,18 +1,14 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MoviesService } from '../../../core/services/movies.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IItem, IMovieDetail, IMovieResult, IMovieTrack } from '../../../shared/models/IMovies';
+import { ITMDBMovieDetail, IMovieTrack } from '../../../shared/models/IMovies';
 import { CommonModule, Location, NgStyle } from '@angular/common';
-import { Form, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ECaseState, EDiscState, EFormat, EResolution, ETapeState, EVHSCase } from '../../../shared/models/EItem';
+import { ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskDirective } from 'ngx-mask';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
-import { CollectionService } from '../../../core/services/collection.service';
 import { CollFormComponent } from '../../../shared/components/coll-form/coll-form.component';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { TrackMoviesService } from '../../../core/services/track-movies.service';
-
-
 
 @Component({
   selector: 'app-movie-details',
@@ -25,47 +21,49 @@ export class MovieDetailsComponent implements OnInit {
 
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
-  private moviesService = inject(MoviesService);
+  public moviesService = inject(MoviesService);
   private wishlistService = inject(WishlistService);
   private trackMoviesService = inject(TrackMoviesService);
   private location = inject(Location);
 
+  protected loading = signal<boolean>(true);
+  protected inWishlist = signal<boolean>(false);
+  protected movie = signal<ITMDBMovieDetail | null>(null);
 
-  protected loading = false;
-  protected inWishlist = false;
-  protected movie = signal<IMovieDetail | null>(null);
-
-  public modalAddToCollection = signal(false);
+  public modalAddToCollection = signal<boolean>(false);
 
   ngOnInit(): void {
     this.onGetMovieDetails();
   }
 
+onGetMovieDetails(): void {
+  this.activatedRoute.params.subscribe(params => {
+    const movieId = params['id'];
+    if (movieId) {
+      this.loading.set(true);
+      this.moviesService.getMovie(movieId).subscribe({
+        next: (movie) => {
+          this.movie.set(movie);
+          this.loading.set(false);
+          const idToVerify = movie.imdb_id || movie.id.toString();
+          this.verificarWishlist(idToVerify);
+        },
+        error: (err) => {
+          console.error('Erro ao carregar detalhes do filme:', err);
+          this.loading.set(false);
+        }
+      });
+    }
+  });
+}
 
-  onGetMovieDetails() {
-    this.activatedRoute.params.subscribe(params => {
-      const movieId = params['id'];
-      if (movieId) {
-        this.moviesService.getMovie(movieId).subscribe({
-          next: (movie) => {
-            this.movie.set(movie);
-            this.loading = false;
-            this.verificarWishlist(movie.imdbID);
-          },
-          error: (err) => {
-            console.error('Error:', err);
-          }
-        });
-      }
-    });
-  }
-
-  verificarWishlist(imdbID: string) {
+  verificarWishlist(id: string): void {
     const uid = localStorage.getItem('UID');
-    this.wishlistService.verifyInWishlist(uid!, imdbID).subscribe({
+    if (!uid) return;
+
+    this.wishlistService.verifyInWishlist(uid, id).subscribe({
       next: (exists) => {
-        console.log('Item na wishlist:', exists);
-        this.inWishlist = exists;
+        this.inWishlist.set(exists);
       },
       error: (err) => {
         console.error('Erro ao verificar item na wishlist:', err);
@@ -73,31 +71,38 @@ export class MovieDetailsComponent implements OnInit {
     });
   }
 
-  toggleWishlist() {
+  toggleWishlist(): void {
     const uid = localStorage.getItem('UID');
+    const movieData = this.movie();
 
-    if (!this.inWishlist) {
+    if (!uid || !movieData) return;
+
+    const movieIdentifier = movieData.imdb_id || movieData.id.toString();
+
+    if (!this.inWishlist()) {
       const item = {
-        imdbID: this.movie()!.imdbID,
-        title: this.movie()!.Title,
-        year: this.movie()!.Year,
-        poster: this.movie()!.Poster,
+        tmdbID: movieData.id,
+        imdbID: movieIdentifier,
+        title: movieData.title,
+        year: movieData.release_date ? movieData.release_date.split('-')[0] : 'N/A',
+        poster: this.moviesService.getImageUrl(movieData.poster_path, 'w500'),
         addedAt: new Date()
       };
-      this.wishlistService.addToWishlist(uid!, item).subscribe({
+
+      this.wishlistService.addToWishlist(uid, item).subscribe({
         next: () => {
-          this.inWishlist = true;
-          this.addCount(this.movie());
+          this.inWishlist.set(true);
+          this.addCount(movieData);
         },
         error: (err) => {
           console.error('Erro ao adicionar item à wishlist:', err);
         }
       });
     } else {
-      this.wishlistService.removeFromWishlist(uid!, this.movie()!.imdbID).subscribe({
+      this.wishlistService.removeFromWishlist(uid, movieIdentifier).subscribe({
         next: () => {
-          this.inWishlist = false;
-          this.removeCount(this.movie());
+          this.inWishlist.set(false);
+          this.removeCount(movieData);
         },
         error: (err) => {
           console.error('Erro ao remover item da wishlist:', err);
@@ -106,45 +111,45 @@ export class MovieDetailsComponent implements OnInit {
     }
   }
 
-  addCount(movie: IMovieResult | null) {
+  addCount(movie: ITMDBMovieDetail | null): void {
+    if (!movie) return;
 
-    const movieTrack = {
-      poster: movie?.Poster,
-      imdbID: movie?.imdbID,
-      title: movie?.Title
-    }
+    const movieTrack: IMovieTrack = {
+      tmdbID: movie.id,
+      imdbID: movie.imdb_id || movie.id.toString(),
+      title: movie.title,
+      poster: this.moviesService.getImageUrl(movie.poster_path, 'w500'),
+      searchCount: 0,
+      collectedCount: 0,
+      wishedCount: 1
+    };
 
-    this.trackMoviesService.addCountMovieWished(movieTrack as IMovieTrack).subscribe({
-      next: () => {
-        console.log('Contagem de busca atualizada com sucesso');
-      },
-      error: (err) => {
-        console.error('Erro ao atualizar contagem de busca:', err);
-      }
+    this.trackMoviesService.addCountMovieWished(movieTrack).subscribe({
+      next: () => console.log('Contagem de wishlist atualizada com sucesso'),
+      error: (err) => console.error('Erro ao atualizar contagem de wishlist:', err)
     });
   }
 
-  removeCount(movie: IMovieResult | null) {
+  removeCount(movie: ITMDBMovieDetail | null): void {
+    if (!movie) return;
 
-    const movieTrack = {
-      poster: movie?.Poster,
-      imdbID: movie?.imdbID,
-      title: movie?.Title
-    }
+    const movieTrack: IMovieTrack = {
+      tmdbID: movie.id,
+      imdbID: movie.imdb_id || movie.id.toString(),
+      title: movie.title,
+      poster: this.moviesService.getImageUrl(movie.poster_path, 'w500'),
+      searchCount: 0,
+      collectedCount: 0,
+      wishedCount: 1
+    };
 
-    this.trackMoviesService.removeCountMovieWished(movieTrack as IMovieTrack).subscribe({
-      next: () => {
-        console.log('Contagem de favoritos atualizada com sucesso');
-      },
-      error: (err) => {
-        console.error('Erro ao atualizar contagem de busca:', err);
-      }
+    this.trackMoviesService.removeCountMovieWished(movieTrack).subscribe({
+      next: () => console.log('Contagem de wishlist decrementada com sucesso'),
+      error: (err) => console.error('Erro ao decrementar contagem de wishlist:', err)
     });
   }
 
-  onBack() {
+  onBack(): void {
     this.location.back();
   }
-
-
 }

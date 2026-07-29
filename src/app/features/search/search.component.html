@@ -6,53 +6,56 @@
     </label>
 </header>
 
-@if(results()?.Response === false){
+@if (!searchTerm().trim()) {
 <div class="search__trends">
     <h5 class="trends-title"><app-icon icon="trend"/>Mais procurados </h5>
     <div class="most-searched__container">
-        @for (movie of mostSearched(); track $index) {
+        @for (movie of mostSearched(); track movie.tmdbID || movie.imdbID || $index) {
         <app-card-movie [movie]="movie" [ranking]="$index + 1"></app-card-movie>
         }
     </div>
+    
     <h5 class="trends-title"><app-icon icon="trend"/>Mais adicionados em coleções</h5>
     <div class="most-collected__container">
-        @for (movie of mostCollected(); track $index) {
+        @for (movie of mostCollected(); track movie.tmdbID || movie.imdbID || $index) {
         <app-card-movie [movie]="movie" [count]="movie.collectedCount" type="collected"></app-card-movie>
         }
     </div>
+
     <h5 class="trends-title"><app-icon icon="trend"/>Mais salvos na lista de desejos</h5>
-        <div class="most-wished__container">
-        @for (movie of mostWished(); track $index) {
+    <div class="most-wished__container">
+        @for (movie of mostWished(); track movie.tmdbID || movie.imdbID || $index) {
         <app-card-movie [movie]="movie" [count]="movie.wishedCount" type="wished"></app-card-movie>
         }
     </div>
 </div>
-}
-@if (results()?.Response) {
+} @else {
 <main class="search-movie__result">
-
-
     <ul class="search-movie__list">
 
         @if (isSearchLoading()) {
-        <p>Carregando...</p>
+            <p>Carregando...</p>
+        } @else {
+            @if (results() && results()!.total_results > 0) {
+                <p>{{ results()?.total_results }} resultados encontrados</p>
+
+                @for (movie of results()?.results; track movie.id) {
+                <li class="search-movie__item" (click)="selectMovie(movie)">
+                    <img class="search-movie__poster"
+                        [src]="moviesService.getImageUrl(movie.poster_path, 'w500')" 
+                        alt="{{ movie.title }}"
+                        #poster (error)="poster.src = 'assets/images/no-poster.png'">
+                    <h3 class="search-movie__title">{{ movie.title }}</h3>
+                    <p class="search-movie__year">
+                        {{ movie.release_date ? movie.release_date.split('-')[0] : 'N/A' }}
+                    </p>
+                </li>
+                }
+            } @else {
+                <p>Nenhum resultado encontrado.</p>
+            }
         }
 
-        @if (results()?.totalResults?.length! > 0) {
-        <p>{{ results()?.totalResults }} resultados encontrados</p>
-        }@else {
-            Nenhum resultado encontrado.
-        }
-        @for (movie of results()?.Search; track movie.imdbID) {
-        <li class="search-movie__item" (click)="selectMovie(movie)">
-            <img class="search-movie__poster"
-                [src]="movie.Poster !== 'N/A' ? movie.Poster : 'assets/default-poster.png'" alt="{{ movie.Title }}"
-                #poster (error)="poster.src = 'assets/default-poster.png'">
-            <h3 class="search-movie__title">{{ movie.Title }}</h3>
-            <p class="search-movie__year">{{ movie.Year }}</p>
-        </li>
-        }
     </ul>
-    
 </main>
 }

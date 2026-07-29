@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IMovieDetail, IMovieSearch } from '../../shared/models/IMovies';
+import { IMovieDetail, IMovieSearch, ITMDBMovieSearchResponse, ITMDBMovieDetail } from '../../shared/models/IMovies';
+import { environment } from '../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -9,17 +10,39 @@ import { IMovieDetail, IMovieSearch } from '../../shared/models/IMovies';
 export class MoviesService {
 
   private http = inject(HttpClient);
-  private apiURL = 'https://www.omdbapi.com/?apikey=272d0164'
-  
+
+  private readonly baseUrl = environment.tmdbBaseUrl;
+  private readonly apiKey = environment.tmdbApiKey;
+  private readonly defaultLanguage = 'pt-BR';
+
 
   constructor() { }
 
-  searchMovies(search: string): Observable<IMovieSearch> {
-    return this.http.get<IMovieSearch>(`${this.apiURL}&s=${search}`);
+  searchMovies(query: string, page: number = 1): Observable<ITMDBMovieSearchResponse> {
+    const params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('query', query)
+      .set('language', this.defaultLanguage)
+      .set('page', page.toString())
+      .set('include_adult', 'false');
+
+    return this.http.get<ITMDBMovieSearchResponse>(`${this.baseUrl}/search/movie`, { params });
   }
 
-  getMovie(id: string) {
-    return this.http.get<IMovieDetail>(`${this.apiURL}&i=${id}`);
+  getMovie(id: number | string): Observable<ITMDBMovieDetail> {
+    const params = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('language', this.defaultLanguage)
+      .set('append_to_response', 'credits,videos,images');
+
+    return this.http.get<ITMDBMovieDetail>(`${this.baseUrl}/movie/${id}`, { params });
+  }
+
+  getImageUrl(path: string | null, size: 'w185' | 'w500' | 'original' = 'w500'): string {
+    if (!path) {
+      return 'assets/images/no-poster.png';
+    }
+    return `${environment.tmdbImageBaseUrl}/${size}${path}`;
   }
 
 }

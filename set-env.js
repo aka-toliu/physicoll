@@ -19,7 +19,11 @@ export const environment = {
     messagingSenderId: '${process.env.messagingSenderId || ""}',
     appId: '${process.env.appId || ""}',
     measurementId: '${process.env.measurementId || ""}'
-  }
+  },
+  apiKey: '${process.env.omdbApiKey || ""}',
+  tmdbApiKey: '${process.env.tmdbApiKey || ""}',
+  tmdbBaseUrl: 'https://api.themoviedb.org/3',
+  tmdbImageBaseUrl: 'https://image.tmdb.org/t/p'
 };
 `;
 

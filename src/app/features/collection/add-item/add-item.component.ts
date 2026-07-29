@@ -1,13 +1,11 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { MoviesService } from '../../../core/services/movies.service';
-import { IMovieDetail, IMovieSearch } from '../../../shared/models/IMovies';
-import { Subject } from 'rxjs/internal/Subject';
-import { debounceTime } from 'rxjs/internal/operators/debounceTime';
-import { distinctUntilChanged } from 'rxjs/internal/operators/distinctUntilChanged';
-import { switchMap } from 'rxjs/internal/operators/switchMap';
-import { catchError, finalize, of } from 'rxjs';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { debounceTime, distinctUntilChanged, switchMap, catchError, finalize } from 'rxjs/operators';
+import { of } from 'rxjs';
+
+import { MoviesService } from '../../../core/services/movies.service';
+import { ITMDBMovieDetail, ITMDBMovieSearchResponse } from '../../../shared/models/IMovies';
 
 @Component({
   selector: 'app-add-item',
@@ -18,29 +16,32 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 })
 export class AddItemComponent {
 
-  private moviesService = inject(MoviesService);
+  public moviesService = inject(MoviesService);
   searchTerm = signal<string>('');
   isLoading = signal<boolean>(false);
   isSearchLoading = signal<boolean>(false);
 
-  protected movieSelected = signal<IMovieDetail | null>(null);
+  protected movieSelected = signal<ITMDBMovieDetail | null>(null);
 
-  protected results = toSignal(
+  protected results = toSignal<ITMDBMovieSearchResponse | null>(
     toObservable(this.searchTerm).pipe(
       debounceTime(400),
       distinctUntilChanged(),
       switchMap(term => {
-        if (!term.trim()) return of({ Response: false, Search: [], totalResults: null });
+        if (!term.trim()) {
+          return of({ page: 1, results: [], total_pages: 0, total_results: 0 });
+        }
+
         this.isSearchLoading.set(true);
         return this.moviesService.searchMovies(term).pipe(
           catchError(() =>
-            of({ Response: false, Search: [], totalResults: null, error: 'Erro ao buscar filmes' })
+            of({ page: 1, results: [], total_pages: 0, total_results: 0 })
           ),
           finalize(() => this.isSearchLoading.set(false))
         );
       }),
       catchError(() =>
-        of({ Response: false, Search: [], totalResults: null, error: 'Erro ao buscar filmes' })
+        of({ page: 1, results: [], total_pages: 0, total_results: 0 })
       )
     ),
     { initialValue: null }
@@ -50,20 +51,20 @@ export class AddItemComponent {
     this.searchTerm.set(search);
   }
 
-  selectMovie(imdbID: string) {
+  selectMovie(id: number) {
     this.isLoading.set(true);
     this.searchTerm.set('');
-    this.moviesService.getMovie(imdbID).subscribe({
-      next: 
-      (movie) => {
+    
+    this.moviesService.getMovie(id).subscribe({
+      next: (movie) => {
         this.movieSelected.set(movie);
         this.isLoading.set(false);
       },
-      error: () => {
+      error: (err) => {
+        console.error('Erro ao buscar detalhes do filme no TMDB:', err);
         this.movieSelected.set(null);
         this.isLoading.set(false);
       }
     });
   }
-
 }

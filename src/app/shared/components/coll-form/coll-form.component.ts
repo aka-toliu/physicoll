@@ -1,16 +1,17 @@
-import { AfterContentInit, Component, ElementRef, HostListener, inject, input, model, OnChanges, output, signal, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, input, model, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
 import { NgxMaskDirective } from 'ngx-mask';
 import { IconComponent } from '../icon/icon.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgStyle, CommonModule } from '@angular/common';
 import { EBluRayCase, ECaseState, EDiscState, EDVDCase, EFormat, EResolution, ETapeState, EVHSCase } from '../../models/EItem';
 import { CollectionService } from '../../../core/services/collection.service';
-import { IMovieDetail, IMovieResult, IMovieTrack } from '../../models/IMovies';
+import { ITMDBMovieDetail, IMovieTrack } from '../../models/IMovies';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ELanguages } from '../../models/ELanguages';
 import { ICollectionItem } from '../../models/ICollection';
 import { ProfileService } from '../../../core/services/profile.service';
 import { TrackMoviesService } from '../../../core/services/track-movies.service';
+import { MoviesService } from '../../../core/services/movies.service';
 
 @Component({
   selector: 'app-coll-form',
@@ -39,16 +40,15 @@ import { TrackMoviesService } from '../../../core/services/track-movies.service'
         animate('300ms ease-in', style({ opacity: 0 }))
       ])
     ])
-
   ]
 })
-
-export class CollFormComponent implements OnChanges {
+export class CollFormComponent implements OnInit, OnChanges {
 
   public modalControl = model<boolean>();
   public modalClose = output<boolean>();
   public updateItem = output<boolean>();
-  public movieDetails = input<IMovieDetail | null>(null);
+  
+  public movieDetails = input<ITMDBMovieDetail | null>(null);
   public itemDetails = input<ICollectionItem | null>(null);
 
   private uid = signal(localStorage.getItem('UID'));
@@ -61,6 +61,7 @@ export class CollFormComponent implements OnChanges {
   private collectionService = inject(CollectionService);
   private profileService = inject(ProfileService);
   private trackMoviesService = inject(TrackMoviesService);
+  private moviesService = inject(MoviesService);
   protected elementRef = inject(ElementRef);
 
   // ENUMS
@@ -87,20 +88,17 @@ export class CollFormComponent implements OnChanges {
   protected audioOpenDropdown = signal<boolean>(false);
   protected subtitleOpenDropdown = signal<boolean>(false);
 
-
   ngOnInit(): void {
     this.onBuildForm();
+    this.onPatchForm();
+    this.setupFormListeners();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['movieDetails'] && this.movieDetails()) {
-      this.onPatchForm();
-    }
-    if (changes['itemDetails'] && this.itemDetails()) {
+    if ((changes['movieDetails'] && this.movieDetails()) || (changes['itemDetails'] && this.itemDetails())) {
       this.onPatchForm();
     }
   }
-
 
   rating(star: number) {
     this.starRating.set(Array(star).fill(1).concat(Array(5 - star).fill(0)));
@@ -109,19 +107,20 @@ export class CollFormComponent implements OnChanges {
 
   onBuildForm() {
     this.formItem = this.formBuilder.group({
+      tmdbID: [null],
       imdbID: [null],
       title: [null],
       year: [null],
       poster: [null],
-      director: [null],
-      genre: [null],
-      actors: [null],
-      writer: [null],
-      country: [null],
-      originalLanguage: [null],
+      director: [[]],
+      genre: [[]],
+      actors: [[]],
+      writer: [[]],
+      country: [[]],
+      originalLanguage: [[]],
       format: [EFormat.DVD],
       hasMoreThanOneDisc: [false],
-      numberDiscs: [1],
+      numberDiscs: [{ value: 1, disabled: true }],
       caseType: [''],
       stateCase: [null],
       stateDisc: [null],
@@ -134,9 +133,9 @@ export class CollFormComponent implements OnChanges {
       availableForSell: [false],
       isLoaned: [false],
       isSpecialEdition: [false],
-      audioLanguage: [null],
-      subtitleLanguage: [null],
-      edition: [null],
+      audioLanguage: [[]],
+      subtitleLanguage: [[]],
+      edition: [{ value: '', disabled: true }],
       resolution: [null],
       isFavorite: [false],
       watched: [false],
@@ -147,67 +146,7 @@ export class CollFormComponent implements OnChanges {
     });
   }
 
-  onPatchForm() {
-    if (this.movieDetails()) {
-      this.formItem.patchValue({
-        imdbID: this.movieDetails()?.imdbID,
-        title: this.movieDetails()?.Title,
-        year: this.movieDetails()?.Year,
-        poster: this.movieDetails()?.Poster,
-        director: this.movieDetails()?.Director ? this.movieDetails()?.Director.split(',').map((d: string) => d.trim()) : null,
-        genre: this.movieDetails()?.Genre ? this.movieDetails()?.Genre.split(',').map((g: string) => g.trim()) : null,
-        actors: this.movieDetails()?.Actors ? this.movieDetails()?.Actors.split(',').map((a: string) => a.trim()) : null,
-        writer: this.movieDetails()?.Writer ? this.movieDetails()?.Writer.split(',').map((w: string) => w.trim()) : null,
-        country: this.movieDetails()?.Country ? this.movieDetails()?.Country.split(',').map((c: string) => c.trim()) : null,
-        originalLanguage: this.movieDetails()?.Language ? this.movieDetails()?.Language.split(',').map((l: string) => l.trim()) : null
-      });
-    }
-
-    if (this.itemDetails()) {
-      this.formItem.patchValue({
-        imdbID: this.itemDetails()?.imdbID,
-        title: this.itemDetails()?.title,
-        year: this.itemDetails()?.year,
-        poster: this.itemDetails()?.poster,
-        director: this.itemDetails()?.director,
-        genre: this.itemDetails()?.genre,
-        actors: this.itemDetails()?.actors,
-        writer: this.itemDetails()?.writer,
-        country: this.itemDetails()?.country,
-        originalLanguage: this.itemDetails()?.originalLanguage,
-        format: this.itemDetails()?.format,
-        hasMoreThanOneDisc: this.itemDetails()?.hasMoreThanOneDisc,
-        numberDiscs: this.itemDetails()?.numberDiscs,
-        caseType: this.itemDetails()?.caseType,
-        stateCase: this.itemDetails()?.stateCase,
-        stateDisc: this.itemDetails()?.stateDisc,
-        stateTape: this.itemDetails()?.stateTape,
-        storageLocation: this.itemDetails()?.storageLocation,
-        acquisitionDate: this.itemDetails()?.acquisitionDate,
-        acquisitionPrice: this.itemDetails()?.acquisitionPrice,
-        supplier: this.itemDetails()?.supplier,
-        availableForExchange: this.itemDetails()?.availableForExchange,
-        availableForSell: this.itemDetails()?.availableForSell,
-        isLoaned: this.itemDetails()?.isLoaned,
-        isSpecialEdition: this.itemDetails()?.isSpecialEdition,
-        audioLanguage: this.itemDetails()?.audioLanguage,
-        subtitleLanguage: this.itemDetails()?.subtitleLanguage,
-        edition: this.itemDetails()?.edition,
-        resolution: this.itemDetails()?.resolution,
-        isFavorite: this.itemDetails()?.isFavorite,
-        watched: this.itemDetails()?.watched,
-        lastWatchedDate: this.itemDetails()?.lastWatchedDate,
-        personalRating: this.itemDetails()?.personalRating,
-        observations: this.itemDetails()?.observations,
-        addedAt: this.itemDetails()?.addedAt
-      });
-
-      this.rating(this.itemDetails()?.personalRating || 0);
-    }
-
-    this.toggleSpecialEdition(this.formItem.controls['edition'].value);
-    this.toggleNumberDiscs(this.formItem.controls['hasMoreThanOneDisc'].value);
-
+  private setupFormListeners() {
     this.formItem.get('isSpecialEdition')?.valueChanges.subscribe((value) => {
       this.toggleSpecialEdition(value);
     });
@@ -215,28 +154,101 @@ export class CollFormComponent implements OnChanges {
     this.formItem.get('hasMoreThanOneDisc')?.valueChanges.subscribe((value) => {
       this.toggleNumberDiscs(value);
     });
-
-    console.log('Item Details:', this.formItem.value);
-
   }
+
+onPatchForm() {
+  if (!this.formItem) return;
+
+  const movie = this.movieDetails();
+  const item = this.itemDetails();
+
+  if (movie) {
+    const directors = movie.credits?.crew
+      ? movie.credits.crew.filter(c => c.job === 'Director').map(c => c.name)
+      : [];
+    const genres = movie.genres ? movie.genres.map(g => g.name) : [];
+    const actors = movie.credits?.cast ? movie.credits.cast.slice(0, 5).map(a => a.name) : [];
+    const countries = movie.production_countries ? movie.production_countries.map(c => c.name) : [];
+
+    this.formItem.patchValue({
+      tmdbID: movie.id ?? null,
+      imdbID: movie.imdb_id || movie.id?.toString() || null,
+      title: movie.title || null,
+      year: movie.release_date ? movie.release_date.split('-')[0] : 'N/A',
+      poster: this.moviesService.getImageUrl(movie.poster_path, 'w500'),
+      director: directors,
+      genre: genres,
+      actors: actors,
+      writer: [],
+      country: countries,
+      originalLanguage: movie.original_language ? [movie.original_language] : []
+    });
+  }
+
+  if (item) {
+    this.formItem.patchValue({
+      tmdbID: item.tmdbID || null,
+      imdbID: item.imdbID || null,
+      title: item.title,
+      year: item.year,
+      poster: item.poster,
+      director: item.director || [],
+      genre: item.genre || [],
+      actors: item.actors || [],
+      writer: item.writer || [],
+      country: item.country || [],
+      originalLanguage: item.originalLanguage || [],
+      format: item.format,
+      hasMoreThanOneDisc: item.hasMoreThanOneDisc ?? false,
+      numberDiscs: item.numberDiscs ?? 1,
+      caseType: item.caseType,
+      stateCase: item.stateCase,
+      stateDisc: item.stateDisc,
+      stateTape: item.stateTape,
+      storageLocation: item.storageLocation,
+      acquisitionDate: item.acquisitionDate,
+      acquisitionPrice: item.acquisitionPrice,
+      supplier: item.supplier,
+      availableForExchange: item.availableForExchange ?? false,
+      availableForSell: item.availableForSell ?? false,
+      isLoaned: item.isLoaned ?? false,
+      isSpecialEdition: item.isSpecialEdition ?? false,
+      audioLanguage: item.audioLanguage || [],
+      subtitleLanguage: item.subtitleLanguage || [],
+      edition: item.edition || '',
+      resolution: item.resolution,
+      isFavorite: item.isFavorite ?? false,
+      watched: item.watched ?? false,
+      lastWatchedDate: item.lastWatchedDate,
+      personalRating: item.personalRating ?? 0,
+      observations: item.observations,
+      addedAt: item.addedAt || new Date().toISOString()
+    });
+
+    this.rating(item.personalRating || 0);
+  }
+
+  this.toggleSpecialEdition(this.formItem.get('isSpecialEdition')?.value);
+  this.toggleNumberDiscs(this.formItem.get('hasMoreThanOneDisc')?.value);
+}
 
   toggleSpecialEdition(isSpecialEdition: boolean) {
     const editionControl = this.formItem.get('edition');
     if (isSpecialEdition) {
-      editionControl?.enable();
+      editionControl?.enable({ emitEvent: false });
     } else {
-      editionControl?.disable();
-      editionControl?.setValue('');
+      editionControl?.disable({ emitEvent: false });
+      editionControl?.setValue('', { emitEvent: false });
     }
   }
 
   toggleNumberDiscs(hasMoreThanOneDisc: boolean) {
     const numberDiscsControl = this.formItem.get('numberDiscs');
     if (hasMoreThanOneDisc) {
-      numberDiscsControl?.enable();
+      numberDiscsControl?.enable({ emitEvent: false });
     } else {
-      numberDiscsControl?.disable();
-      numberDiscsControl?.setValue(1);
+      numberDiscsControl?.disable({ emitEvent: false });
+      numberDiscsControl?.setValue(1, { emitEvent: false });
     }
   }
 
@@ -280,28 +292,33 @@ export class CollFormComponent implements OnChanges {
 
   onSubmit(event: Event) {
     event.preventDefault();
-    console.log(this.formItem.value);
+
+    const userUid = this.uid();
+    if (!userUid) return;
+
+    // getRawValue inclui os campos mesmo se estiverem disabled
+    const payload = this.formItem.getRawValue();
 
     if (this.movieDetails()) {
-      this.collectionService.addToCollection(this.uid(), this.formItem.value).subscribe({
+      this.collectionService.addToCollection(userUid, payload).subscribe({
         next: () => {
           console.log('Item adicionado à coleção com sucesso!');
-          this.addCount(this.movieDetails())
+          this.addCount(this.movieDetails());
           this.modalClose.emit(false);
         },
         error: () => console.error('Erro ao adicionar item à coleção')
-      })
+      });
     }
 
     if (this.itemDetails()) {
-      this.collectionService.editCollectionItem(this.uid(), this.itemDetails()?.id || '', this.formItem.value).subscribe({
+      this.collectionService.editCollectionItem(userUid, this.itemDetails()?.id || '', payload).subscribe({
         next: () => {
           console.log('Item editado com sucesso!');
           this.modalClose.emit(false);
           this.updateItem.emit(true);
         },
         error: () => console.error('Erro ao editar item da coleção')
-      })
+      });
     }
   }
 
@@ -311,23 +328,26 @@ export class CollFormComponent implements OnChanges {
     this.modalClose.emit(false);
   }
 
-  addCount(movie: IMovieResult | null) {
+  addCount(movie: ITMDBMovieDetail | null) {
+    if (!movie) return;
 
-    const movieTrack = {
-      poster: movie?.Poster,
-      imdbID: movie?.imdbID,
-      title: movie?.Title
-    }
+    const movieTrack: IMovieTrack = {
+      tmdbID: movie.id,
+      imdbID: movie.imdb_id || movie.id.toString(),
+      title: movie.title,
+      poster: this.moviesService.getImageUrl(movie.poster_path, 'w500'),
+      searchCount: 0,
+      collectedCount: 1,
+      wishedCount: 0
+    };
 
-    this.trackMoviesService.addCountMovieCollected(movieTrack as IMovieTrack).subscribe({
+    this.trackMoviesService.addCountMovieCollected(movieTrack).subscribe({
       next: () => {
-        console.log('Contagem de busca atualizada com sucesso');
+        console.log('Contagem de coleção atualizada com sucesso');
       },
       error: (err) => {
-        console.error('Erro ao atualizar contagem de busca:', err);
+        console.error('Erro ao atualizar contagem de coleção:', err);
       }
     });
   }
-
-
 }

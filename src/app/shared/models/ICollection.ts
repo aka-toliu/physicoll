@@ -3,6 +3,7 @@ import { ECaseState } from "./EItem";
 export interface ICollectionItem {
     id: string;
     imdbID: string;
+    tmdbID: number;
     director: string[];
     actors: string[];
     writer: string[];
