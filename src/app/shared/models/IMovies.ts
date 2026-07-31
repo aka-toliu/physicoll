@@ -29,7 +29,7 @@ export interface ITMDBMovieDetail {
   imdb_id: string | null;
   title: string;
   original_title: string;
-  original_language: string; // 🟢 Adicionado aqui!
+  original_language: string;
   overview: string;
   poster_path: string | null;
   backdrop_path: string | null;
@@ -40,6 +40,16 @@ export interface ITMDBMovieDetail {
   genres: { id: number; name: string }[];
   production_countries: { iso_3166_1: string; name: string }[];
   spoken_languages: { english_name: string; iso_639_1: string; name: string }[];
+  budget: number;
+  revenue: number;
+  status: string;
+  tagline: string | null;
+  homepage: string | null;
+  origin_country: string[];
+  adult: boolean;
+  popularity: number;
+  belongs_to_collection: { id: number; name: string; poster_path: string | null; backdrop_path: string | null } | null;
+  production_companies: { id: number; logo_path: string | null; name: string; origin_country: string }[];
   
   credits?: {
     cast: { id: number; name: string; character: string; profile_path: string | null }[];

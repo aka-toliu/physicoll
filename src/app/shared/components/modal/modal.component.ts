@@ -13,6 +13,7 @@ export class ModalComponent {
   public modalClose = output<boolean>();
   public confirmModal = output<boolean>();
   public disableControl = input<boolean>(false);
+  public btnConfirm = input<boolean>(true);
 
   closeModal(): void {
     this.modalControl.set(false);

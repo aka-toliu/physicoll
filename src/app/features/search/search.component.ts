@@ -24,7 +24,6 @@ export class SearchComponent implements OnInit {
   protected searchTerm = signal<string>('');
   protected isSearchLoading = signal<boolean>(false);
 
-  // Tipagem forte para os rankings
   protected mostSearched = signal<IMovieTrack[]>([]);
   protected mostCollected = signal<IMovieTrack[]>([]);
   protected mostWished = signal<IMovieTrack[]>([]);

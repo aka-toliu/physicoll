@@ -13,9 +13,11 @@
         <button class="modal__btn-close" (click)="closeModal()">
             <ng-content select=".modal-btn-close-content"> Fechar</ng-content>
         </button>
-        <button class="modal__btn-confirm" (click)="confirmModalAction()" [disabled]="disableControl()">
+        @if (btnConfirm()) {
+                    <button class="modal__btn-confirm" (click)="confirmModalAction()" [disabled]="disableControl()">
             <ng-content select=".modal-btn-confirm-content"> Confirmar </ng-content>
         </button>
+        }
     </div>
 </div>
 }

@@ -1,17 +1,15 @@
 @if (movie(); as movieData) {
-<header class="movie__header"
-    [ngStyle]="{
+<header class="movie__header" [ngStyle]="{
         'background-image': 'url(' + moviesService.getImageUrl(movieData.backdrop_path || movieData.poster_path, 'original') + ')'
     }">
-    
+
     <button class="btn-back" (click)="onBack()">
         <app-icon icon="arrow-left" />
     </button>
 
     <div class="movie__poster">
-        <img [src]="moviesService.getImageUrl(movieData.poster_path, 'w500')"
-            alt="{{ movieData.title }}" class="movie__poster-image"
-            #poster (error)="poster.src = 'assets/images/no-poster.png'">
+        <img [src]="moviesService.getImageUrl(movieData.poster_path, 'w500')" alt="{{ movieData.title }}"
+            class="movie__poster-image" #poster (error)="poster.src = 'assets/images/no-poster.png'">
     </div>
 </header>
 
@@ -33,74 +31,122 @@
         </button>
     </div>
 
-    <p class="movie__plot">{{ movieData.overview || 'Sem sinopse disponível em português.' }}</p>
+    <p class="movie__plot" [ngClass]="{'plot-extended': plotExtended()}">
+        {{ movieData.overview || 'Sem sinopse disponível em português.' }}
+    </p>
+    <a class="btn-expand-plot" (click)="plotExtended.set(!plotExtended())">{{ plotExtended() ? 'Ver menos' : 'Ver mais' }}</a>
 
-    <!-- Elenco Principal -->
-    @if (movieData.credits?.cast?.length) {
-    <h4 class="info-category">
-        <app-icon icon="actors" />
-        @for (actor of movieData.credits?.cast?.slice(0, 5); track actor.id; let last = $last) {
-            {{ actor.name }}{{ !last ? ', ' : '' }}
-        }
-    </h4>
-    }
+    <!-- Título original -->
+    <p class="category info-original-title">
+        <app-icon icon="movie" />
+        <b>Título original: </b>
+        {{ movieData.original_title }}
+    </p>
 
     <!-- Gêneros -->
     @if (movieData.genres?.length) {
-    <h4 class="info-category">
-        <app-icon icon="genre" />
+    <p class="category info-genre">
+        <app-icon icon="genres" />
+        <b>Gêneros: </b>
         @for (genre of movieData.genres; track genre.id; let last = $last) {
-            {{ genre.name }}{{ !last ? ', ' : '' }}
+        <span class="genre">{{ genre.name }}</span>
         }
-    </h4>
-    }
-
-    <!-- Direção -->
-    @if (movieData.credits?.crew) {
-    <h4 class="info-category">
-        <app-icon icon="director" />
-        @for (crewItem of movieData.credits?.crew; track $index) {
-            @if (crewItem.job === 'Director') {
-                {{ crewItem.name }}
-            }
-        }
-    </h4>
-    }
-
-    <!-- Idioma Original -->
-    @if (movieData.original_language) {
-    <h4 class="info-category">
-        <app-icon icon="language" />
-        {{ movieData.original_language | uppercase }}
-    </h4>
-    }
-
-    <!-- Países de Produção -->
-    @if (movieData.production_countries?.length) {
-    <h4 class="info-category">
-        <app-icon icon="country" />
-        @for (country of movieData.production_countries; track country.iso_3166_1; let last = $last) {
-            {{ country.name }}{{ !last ? ', ' : '' }}
-        }
-    </h4>
+    </p>
     }
 
     <!-- Duração -->
-    @if (movieData.runtime) {
-    <h4 class="info-category">
+    <p class="category info-runtime">
         <app-icon icon="runtime" />
-        {{ movieData.runtime }} min
-    </h4>
+        <b>Duração: </b> {{ movieData.runtime }} min
+    </p>
+
+    <!-- Direção -->
+    <p class="category info-director">
+        <app-icon icon="director" />
+        <b>Direção: </b>
+        @for (crewItem of movieData.credits?.crew; track $index) {
+        @if (crewItem.job === 'Director') {
+        {{ crewItem.name }}
+        }
+        }
+    </p>
+
+    <!-- Roteiro -->
+    <p class="category info-writer">
+        <app-icon icon="writer" />
+        <b>Roteiro: </b>
+        @for (crewItem of movieData.credits?.crew; track $index) {
+        @if (crewItem.job === 'Screenplay') {
+        {{ crewItem.name }}
+        }
+        }
+    </p>
+
+    <!-- Língua original -->
+    <p class="category info-original-language">
+        <app-icon icon="language" />
+        <b>Lingua original: </b>
+        {{ movieData.original_language | uppercase }}
+    </p>
+
+    <!-- Paises de produção -->
+    <p class="category info-origin-country">
+        <app-icon icon="country" />
+        <b>País de origem: </b>
+        @for (country of movieData.origin_country; track country; let last = $last) {
+        {{ country }}{{ !last ? ', ' : '' }}
+        }
+    </p>
+
+    <!-- Orçamento -->
+    <p class="category info-budget">
+        <app-icon icon="budget" />
+        <b>Orçamento: </b>
+        {{ movieData.budget | currency:'USD' }}
+    </p>
+
+    <!-- Elenco -->
+    @if (movieData.credits?.cast?.length) {
+    <div class="info-cast">
+        <b> <app-icon icon="cast" />Elenco: </b>
+        <div class="cast-container">
+            @for (actor of movieData.credits?.cast?.slice(0, 6); track actor.id; let last = $last) {
+            <picture>
+                <img [src]="getImageUrl(actor.profile_path, 'w185')" alt="{{ actor.name }}">
+                <legend>
+                    {{ actor.name }}
+                    <span>{{ actor.character }}</span>
+                </legend>
+            </picture>
+            }
+
+            <button (click)="showFullCastModal.set(true)">
+                Ver todos
+            </button>
+        </div>
+    </div>
     }
+
 </main>
 
 @if (modalAddToCollection()) {
-  <app-coll-form 
-      [movieDetails]="movieData" 
-      (modalClose)="modalAddToCollection.set($event)" 
-      [(modalControl)]="modalAddToCollection">
-  </app-coll-form>
+<app-coll-form [movieDetails]="movieData" (modalClose)="modalAddToCollection.set($event)"
+    [(modalControl)]="modalAddToCollection">
+</app-coll-form>
 }
+
+<app-modal [modalControl]="showFullCastModal()" (modalClose)="showFullCastModal.set($event)" [btnConfirm]="false">
+    
+    <h4 class="modal-title">Elenco completo</h4>
+    <div class="modal-body cast-modal-container">
+        @for (person of movieData.credits?.cast; track $index) {
+        <tr>
+            <td class="cast-modal-profile"><img [src]="person.profile_path ? getImageUrl(person.profile_path, 'w92') : 'assets/default-profile.jpg'" alt="{{ person.name }}"></td>
+            <td class="cast-modal-info"><p>{{ person.name }}</p> <span>{{ person.character }}</span></td>
+        </tr>
+        }
+    </div>
+</app-modal>
 
 } @else if (loading()) {
 <div class="movie__loading">

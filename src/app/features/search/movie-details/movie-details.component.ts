@@ -9,11 +9,12 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CollFormComponent } from '../../../shared/components/coll-form/coll-form.component';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { TrackMoviesService } from '../../../core/services/track-movies.service';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
 
 @Component({
   selector: 'app-movie-details',
   standalone: true,
-  imports: [NgStyle, CommonModule, ReactiveFormsModule, NgxMaskDirective, IconComponent, CollFormComponent],
+  imports: [NgStyle, CommonModule, ReactiveFormsModule, NgxMaskDirective, IconComponent, CollFormComponent, ModalComponent],
   templateUrl: './movie-details.component.html',
   styleUrl: './movie-details.component.scss'
 })
@@ -30,32 +31,36 @@ export class MovieDetailsComponent implements OnInit {
   protected inWishlist = signal<boolean>(false);
   protected movie = signal<ITMDBMovieDetail | null>(null);
 
+  protected plotExtended = signal<boolean>(false);
+  protected showFullCastModal = signal<boolean>(false);
   public modalAddToCollection = signal<boolean>(false);
 
   ngOnInit(): void {
     this.onGetMovieDetails();
   }
 
-onGetMovieDetails(): void {
-  this.activatedRoute.params.subscribe(params => {
-    const movieId = params['id'];
-    if (movieId) {
-      this.loading.set(true);
-      this.moviesService.getMovie(movieId).subscribe({
-        next: (movie) => {
-          this.movie.set(movie);
-          this.loading.set(false);
-          const idToVerify = movie.imdb_id || movie.id.toString();
-          this.verificarWishlist(idToVerify);
-        },
-        error: (err) => {
-          console.error('Erro ao carregar detalhes do filme:', err);
-          this.loading.set(false);
-        }
-      });
-    }
-  });
-}
+  onGetMovieDetails(): void {
+    this.activatedRoute.params.subscribe(params => {
+      const movieId = params['id'];
+      if (movieId) {
+        this.loading.set(true);
+        this.moviesService.getMovie(movieId).subscribe({
+          next: (movie) => {
+            this.movie.set(movie);
+            this.loading.set(false);
+            const idToVerify = movie.imdb_id || movie.id.toString();
+            this.verificarWishlist(idToVerify);
+            console.log('Movie Details:', movie);
+
+          },
+          error: (err) => {
+            console.error('Erro ao carregar detalhes do filme:', err);
+            this.loading.set(false);
+          }
+        });
+      }
+    });
+  }
 
   verificarWishlist(id: string): void {
     const uid = localStorage.getItem('UID');
@@ -109,6 +114,10 @@ onGetMovieDetails(): void {
         }
       });
     }
+  }
+
+  getImageUrl(path: string | null, size: 'w92' | 'w154' | 'w185' | 'w500' | 'original' = 'w500'): string {
+    return this.moviesService.getImageUrl(path, size);
   }
 
   addCount(movie: ITMDBMovieDetail | null): void {
