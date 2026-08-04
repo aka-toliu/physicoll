@@ -12,6 +12,7 @@ export interface IList {
   id?: string;
   title: string;
   isPrivated?: boolean;
+  isRanked?: boolean;
   createdAt: string | Date;
   icon: string;
   items: IItemList[];

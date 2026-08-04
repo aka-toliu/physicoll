@@ -8,28 +8,32 @@ import { IconComponent } from '../../../shared/components/icon/icon.component';
 import { CardMovieListComponent } from '../../../shared/components/card-movie-list/card-movie-list.component';
 import { NgClass } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ModalComponent } from '../../../shared/components/modal/modal.component';
 
 @Component({
   selector: 'app-list-details',
   standalone: true,
-  imports: [IconComponent, CardMovieListComponent, DragDropModule, NgClass, ReactiveFormsModule],
+  imports: [IconComponent, CardMovieListComponent, DragDropModule, NgClass, ReactiveFormsModule, ModalComponent],
   templateUrl: './list-details.component.html',
   styleUrl: './list-details.component.scss'
 })
 export class ListDetailsComponent {
 
   private listsService = inject(ListsService);
+  private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private formBuilder = inject(FormBuilder);
 
   protected formItem: FormGroup = this.formBuilder.group({
     title: [''],
     isPrivated: [false],
+    isRanked: [false],
     icon: ['list']
   });
 
   protected list = signal<IList | null>(null);
   public editMode = signal<boolean>(false);
+  protected modalDeleteList = signal<boolean>(false);
 
   ngOnInit(): void {
     this.getListDetails();
@@ -48,6 +52,7 @@ export class ListDetailsComponent {
           this.formItem.patchValue({
             title: list.title || '',
             isPrivated: list.isPrivated || false,
+            isRanked: list.isRanked || false,
             icon: list.icon || 'list'
           });
         }
@@ -80,6 +85,7 @@ export class ListDetailsComponent {
         title: this.formItem.get('title')?.value || currentList.title,
         items: currentList.items,
         isPrivated: this.formItem.get('isPrivated')?.value ?? currentList.isPrivated,
+        isRanked: this.formItem.get('isRanked')?.value ?? currentList.isRanked,
         icon: currentList.icon
       };
 
@@ -101,7 +107,23 @@ cancelEdit(): void {
       this.formItem.patchValue({
         title: this.list()?.title,
         isPrivated: this.list()?.isPrivated,
+        isRanked: this.list()?.isRanked,
         icon: this.list()?.icon
+      });
+    }
+  }
+
+  deleteList(): void {
+    const currentList = this.list();
+    if (currentList?.id) {
+      this.listsService.deleteList(currentList.id).subscribe({
+        next: () => {
+          this.router.navigate(['/lists']);
+          console.log('Lista deletada com sucesso!');
+        },
+        error: (err) => {
+          console.error('Erro ao deletar a lista:', err);
+        }
       });
     }
   }

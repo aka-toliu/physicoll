@@ -6,7 +6,7 @@
     <button (click)="modalNovaLista.set(true)"> Nova lista</button>
     @for (list of lists(); track $index) {
     <app-card-list [list]="list" />
-}
+    }
 </div>
 
 <app-modal [modalControl]="modalNovaLista()" (modalClose)="modalNovaLista.set($event)" (confirmModal)="addNewList()">
@@ -18,6 +18,10 @@
         <label>
             <span>Lista privada</span>
             <input type="checkbox" formControlName="isPrivated" />
+        </label>
+        <label>
+            <span>Lista ranqueada</span>
+            <input type="checkbox" formControlName="isRanked" />
         </label>
     </form>
 </app-modal>

@@ -22,6 +22,8 @@ export class CardMovieListComponent {
   public item = input<IMovieList>();
   public edit = input<boolean>(false);
   public listID = input<string>('');
+  public ranked = input<boolean>(false);
+  public order = input<number>(0);
 
   protected showDeleteModal = signal(false);
 

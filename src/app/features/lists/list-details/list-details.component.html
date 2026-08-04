@@ -4,10 +4,18 @@
     <div class="info-list__container">
         @if (editMode()) {
         <input type="text" formControlName="title" />
-        <!-- <label>
-            Privado
-            <input type="checkbox" formControlName="isPrivated"/>
-        </label> -->
+        <div class="config-container">
+            <label>
+                <app-icon icon="lock"></app-icon>
+                <span>Privado</span>
+                <input type="checkbox" formControlName="isPrivated" />
+            </label>
+            <label>
+                <app-icon icon="trophy"></app-icon>
+                <span>Rankeado</span>
+                <input type="checkbox" formControlName="isRanked" />
+            </label>
+        </div>
         }@else {
         <h3>{{ list()?.title }}</h3>
         }
@@ -15,10 +23,13 @@
 
     <div class="actions-container">
         @if (editMode()) {
-        <button class="btn-edit" type="smooth" (click)="cancelEdit()">
+        <button class="btn-delete" type="smooth" (click)="modalDeleteList.set(true)">
+            Excluir lista
+        </button>
+        <button class="btn-cancel" type="smooth" (click)="cancelEdit()">
             Cancelar
         </button>
-        <button class="btn-edit" type="smooth" (click)="saveNewOrder()">
+        <button class="btn-save" type="smooth" (click)="saveNewOrder()">
             Salvar
         </button>
         }@else {
@@ -27,14 +38,22 @@
         </button>
         }
     </div>
+
 </header>
 <div class="items-container" [ngClass]="editMode() ? 'edit-mode' : ''" cdkDropList
     [cdkDropListData]="list()?.items || []" (cdkDropListDropped)="drop($event)">
 
     @for (item of list()?.items; track $index) {
     <app-card-movie-list cdkDrag [cdkDragDisabled]="!editMode()" [item]="item" [edit]="editMode()"
-        [listID]="list()?.id!" />
+        [listID]="list()?.id!" [ranked]="list()?.isRanked!" [order]="$index" />
     } @empty {
     Nenhum item adicionado.
     }
 </div>
+
+<app-modal [modalControl]="modalDeleteList()" (modalClose)="modalDeleteList.set($event)" (confirmModal)="deleteList()">
+    <h3 class="modal-title">Excluir lista</h3>
+    <div class="modal-body">
+        <p>Tem certeza que deseja excluir a lista "{{ list()?.title }}"? Esta ação não pode ser desfeita.</p>
+    </div>
+</app-modal>

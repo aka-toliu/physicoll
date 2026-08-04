@@ -1,10 +1,17 @@
 <div class="card-item" [ngClass]="edit() ? 'edit-mode' : ''">
+    @if (ranked()) {
+    <div class="card-item__order">
+        {{ order() + 1 }}
+    </div>
+    }
     <img [src]="item()?.poster" alt="{{ item()?.title }}" />
 
     @if (edit()) {
+    <h4>{{ item()?.title }}</h4>
     <button class="btn-delete" (click)="showDeleteModal.set(true)">
         <app-icon [icon]="'delete'" />
     </button>
+    <app-icon class="icon-drag" icon="drag" />
     }
 </div>
 

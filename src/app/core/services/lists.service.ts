@@ -97,6 +97,7 @@ updateListItems(listID: string, updatedItems: IItemList[]): Observable<void> {
     const payload: Partial<IList> = {
       title: updatedList.title,
       isPrivated: updatedList.isPrivated ?? false,
+      isRanked: updatedList.isRanked ?? false,
       icon: updatedList.icon ?? 'list',
       items: updatedList.items ?? []
     };

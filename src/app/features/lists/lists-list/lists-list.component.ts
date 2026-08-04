@@ -32,7 +32,8 @@ export class ListsListComponent {
       title: [''],
       isPrivated: [false],
       items: [[]],
-      icon: ['list']
+      icon: ['list'],
+      isRanked: [false]
     });
   }
 

@@ -5,9 +5,24 @@
     display: flex;
     border: 1px solid var(--gray-20);
     border-radius: 0.5rem;
-    overflow: hidden;
+    // overflow: hidden;
     box-shadow: var(--shadow-bottom);
     position: relative;
+    gap: 0.5rem;
+
+    &__order {
+        position: absolute;
+        width: 2rem;
+        height: 2rem;
+        top: -0.75rem;
+        left: -0.75rem;
+        background-color: var(--brand-color-1);
+        color: var(--white);
+        font-weight: bold;
+        border-radius: 99rem;
+        text-align: center;
+        line-height: 2rem;
+    }
 
 
 
@@ -42,20 +57,40 @@
     }
 
     &.edit-mode {
-    width: 100%;
-    height: 100px;
-    padding: 0.5rem;
-    display: flex;
+        width: 100%;
+        height: 100px;
+        padding: 0.5rem;
+        display: flex;
+
+        .icon-drag {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            
+            ::ng-deep {
+                i{
+                    color: var(--gray-30);
+                }
+            }
+
+        }
+
+        .card-item__order {
+            width: 1.75rem;
+            height: 1.75rem;
+            line-height: 1.75rem;
+            top: -0.25rem;
+            left: -0.25rem;
+        }
 
 
-    >img {
-        width: fit-content;
-        height: 100%;
-        aspect-ratio: 2 / 3;
-        object-fit: scale-down;
-        border-radius: 0.25rem;
+        >img {
+            width: fit-content;
+            height: 100%;
+            aspect-ratio: 2 / 3;
+            object-fit: scale-down;
+            border-radius: 0.25rem;
+        }
+
     }
-
 }
-}
-
