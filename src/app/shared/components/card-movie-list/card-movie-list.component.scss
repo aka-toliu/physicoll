@@ -29,6 +29,7 @@
     >img {
         width: 100%;
         object-fit: cover;
+        border-radius: 0.5rem;
     }
 
     >h3,
@@ -66,9 +67,9 @@
             position: absolute;
             bottom: 0.5rem;
             right: 0.5rem;
-            
+
             ::ng-deep {
-                i{
+                i {
                     color: var(--gray-30);
                 }
             }

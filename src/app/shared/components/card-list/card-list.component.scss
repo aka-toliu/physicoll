@@ -18,21 +18,6 @@ h3 {
 .list {
     &__info {
         position: relative;
-
-        .btn-options {
-            position: absolute;
-            right: 0rem;
-            top: 0rem;
-            background: none;
-            width: 30px;
-            height: 30px;
-
-            ::ng-deep {
-                app-icon>i {
-                    color: var(--gray-50);
-                }
-            }
-        }
     }
 
     &__title {
@@ -42,9 +27,8 @@ h3 {
 
         ::ng-deep {
             app-icon>i {
-                width: 24px;
-                height: 24px;
-                // color: var(--gray-50);
+                --size-icon: 24px;
+                --color-icon: var(--brand-color-4);
             }
         }
     }

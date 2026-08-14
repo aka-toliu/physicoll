@@ -27,7 +27,7 @@
 <main class="profile__container">
 
     <div class="cards-container">
-        <div class="card card__collection" (click)="navigateTo('coll')">
+        <div class="card card__collection" (click)="isMyself() ? navigateTo('/coll') : navigateTo('/coll/' + userData()?.username)">
             <app-icon icon="collections" />
             <p>Coleção</p>
             <b>@if(loadingCountColl()) {
@@ -37,7 +37,7 @@
             }
             </b>
         </div>
-        <div class="card card__lists" (click)="navigateTo('lists')">
+        <div class="card card__lists" (click)="isMyself() ? navigateTo('/lists') : navigateTo('/lists/' + userData()?.username)">
             <app-icon icon="list" />
             <p>Listas</p>
             <b>@if(loadingCountLists()) {
@@ -47,7 +47,7 @@
             }
             </b>
         </div>
-        <div class="card card__wishlist" (click)="navigateTo('wishlist')">
+        <div class="card card__wishlist" (click)="isMyself() ? navigateTo('/wishlist') : navigateTo('/wishlist/' + userData()?.username)">
             <app-icon icon="bookmark-on" />
             <p>Salvos</p>
             <b>@if(loadingCountWishlist()) {

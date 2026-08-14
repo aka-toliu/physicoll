@@ -18,20 +18,26 @@ import { ListDetailsComponent } from './features/lists/list-details/list-details
 export const routes: Routes = [
 
     { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: 'login', title: 'Login', component: LoginComponent, data: {footer: false} },
-    { path: 'search', title: "Search", component: SearchComponent},
-    { path: 'movie/:id', title: 'Movie Details', component: MovieDetailsComponent},
-    { path: 'profile', title: "Profile", component: ProfileComponent},
-    { path: 'profile/:userId', title: "Profile", component: ProfileComponent},
-    { path: 'wishlist', title: "Wishlist", component: WishlistComponent},
-    { path: 'coll', title: 'Collections', component: CollectionComponent, children: [ 
-        { path: '', component: CollListComponent },
-        { path: ':itemID', component: ItemDetailsComponent },
-    ]},
-    { path: 'lists', title: 'Lists', component: ListsComponent, children: [
-        { path: '', component: ListsListComponent },
-        { path: ':listID', component: ListDetailsComponent },
-    ]},
-    { path: 'not-found', title: 'Not Found', component: NotFoundComponent},
+    { path: 'login', title: 'Login', component: LoginComponent, data: { footer: false } },
+    { path: 'search', title: "Search", component: SearchComponent },
+    { path: 'movie/:id', title: 'Movie Details', component: MovieDetailsComponent },
+    { path: 'profile', title: "My Profile", component: ProfileComponent },
+    { path: 'profile/:userId', title: "Profile", component: ProfileComponent },
+    { path: 'wishlist', title: "Wishlist", component: WishlistComponent },
+    {
+        path: 'coll', title: 'Collections', component: CollectionComponent, children: [
+            { path: '', component: CollListComponent },
+            { path: 'item/:itemID', component: ItemDetailsComponent }, // Rota do seu próprio item
+            { path: ':userId', component: CollListComponent },       // Rota da coleção do amigo
+            { path: ':userId/item/:itemID', component: ItemDetailsComponent }, // Item dentro da coleção do amigo
+        ]
+    },
+    {
+        path: 'lists', title: 'Lists', component: ListsComponent, children: [
+            { path: '', component: ListsListComponent },
+            { path: ':listID', component: ListDetailsComponent },
+        ]
+    },
+    { path: 'not-found', title: 'Not Found', component: NotFoundComponent },
     { path: '**', redirectTo: 'not-found' },
 ];

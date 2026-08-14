@@ -21,11 +21,22 @@ export class CardCollComponent {
 
   item = input.required<ICollectionItem | null>();
   viewMode = input<'grid' | 'list'>('list');
+  username = input<string | null>(null);
 
   private route = inject(Router);
 
-  navigateTo(id: string) {
-    this.route.navigate(['coll/', id]);
-  }
+navigateTo(id: string) {
+    if (!id) return;
 
+    const friend = this.username();
+
+    if (friend) {
+      // Abre o item dentro da coleção do amigo: /coll/username/item/123
+      this.route.navigate(['/coll', friend, 'item', id]);
+
+    } else {
+      // Abre o item da sua própria coleção: /coll/item/123
+      this.route.navigate(['/coll', 'item', id]);
+    }
+  }
 }

@@ -1,6 +1,6 @@
 <header class="item-details__header"
     [ngStyle]="{color: item()?.format ? 'var(--' + item()?.format?.toLowerCase() + '-color)' : 'var(--gray-30)'}">
-    <button class="btn-back" (click)="navigateTo('/coll')">
+    <button class="btn-back" (click)="onBack()">
         <app-icon icon="arrow-left" />
     </button>
 

@@ -8,6 +8,11 @@ import { EBluRayCase, ECaseState, EDiscState, EDVDCase, ETapeState, EVHSCase } f
 import { ɵInternalFormsSharedModule } from "@angular/forms";
 import { ELanguages } from '../../../shared/models/ELanguages';
 import { trigger, transition, query, style, stagger, animate } from '@angular/animations';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { ProfileService } from '../../../core/services/profile.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { IProfile } from '../../../shared/models/IProfile';
 
 
 @Component({
@@ -34,7 +39,15 @@ export class CollListComponent implements OnInit {
 
 
   private collectionService = inject(CollectionService);
+  private authService = inject(AuthService);
+  private profileService = inject(ProfileService);
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
   private uid = signal(localStorage.getItem('UID'));
+  public userData = signal<IProfile | null | undefined>(undefined);
+  protected isMyself = signal(true);
+
+  private routeSubscription!: Subscription;
 
   protected showFilters = signal(false);
   protected showSort = signal(false);
@@ -297,11 +310,12 @@ export class CollListComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.getCollection();
+    // this.getCollection(this.uid());
+    this.onCheckProfile();
   }
 
-  getCollection(): void {
-    const userUid = this.uid();
+  getCollection(id: string): void {
+    const userUid = id;
     if (!userUid) return;
 
     this.collectionService.getCollection(userUid).subscribe({
@@ -405,6 +419,48 @@ export class CollListComponent implements OnInit {
   changeViewMode(mode: 'grid' | 'list'): void {
     this.viewMode.set(mode);
     localStorage.setItem('viewMode', mode);
+  }
+
+  onCheckProfile(): void {
+    this.routeSubscription = this.activatedRoute.params.subscribe({
+      next: (params) => {
+        const uid = params['userId'];
+        if (uid) {
+          this.onGetProfileByUsername(uid);
+          console.log(uid);
+        } else {
+          this.getCollection(this.uid()!);
+        }
+      }
+    })
+
+  }
+
+  onGetProfileByUsername(username: string): void {
+    this.profileService.getProfileByUsername(username).subscribe({
+      next: (profile) => {
+        this.userData.set(profile);
+        console.log('profile', profile);
+        this.checkIsMyself(this.authService.userData().uid, profile.uid);
+      },
+      error: (err) => {
+        console.error(err);
+        this.router.navigate(['/not-found']);
+      }
+    })
+  }
+
+  checkIsMyself(uid1: string, uid2: string) {
+    if (uid1 === uid2) {
+      this.isMyself.set(true);
+      this.getCollection(this.userData()!.uid);
+      console.log('Sou eu mesmo');
+      
+    } else {
+      this.isMyself.set(false);
+      this.getCollection(this.userData()!.uid);
+      console.log('Não sou eu');
+    }
   }
 
 }

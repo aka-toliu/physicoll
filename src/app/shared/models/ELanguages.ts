@@ -12,7 +12,6 @@ export enum ELanguages {
     bn = 'Bengali',
     cs = 'Tcheco',
     da = 'Dinamarquês',
-    
     el = 'Grego',
     fa = 'Persa',
     fi = 'Finlandês',

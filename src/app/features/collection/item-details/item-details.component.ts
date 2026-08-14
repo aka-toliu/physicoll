@@ -11,6 +11,9 @@ import { ModalComponent } from '../../../shared/components/modal/modal.component
 import { ProfileService } from '../../../core/services/profile.service';
 import { ListsService } from '../../../core/services/lists.service';
 import { IList } from '../../../shared/models/ILists';
+import { AuthService } from '../../../core/services/auth.service';
+import { IProfile } from '../../../shared/models/IProfile';
+import { Subscription } from 'rxjs';
 
 
 
@@ -30,6 +33,12 @@ export class ItemDetailsComponent {
   private listsService = inject(ListsService);
   private profileService = inject(ProfileService);
   private uid = signal(localStorage.getItem('UID'));
+  private authService = inject(AuthService);
+  public userData = signal<IProfile | null | undefined>(undefined);
+  protected isMyself = signal(true);
+  private routeSubscription!: Subscription;
+
+
 
   public languageOptions = Object.keys(ELanguages) as Array<keyof typeof ELanguages>;
   public ELanguages = ELanguages;
@@ -46,45 +55,109 @@ export class ItemDetailsComponent {
   protected showOptions = signal(false);
   protected lists = signal<IList[]>([]);
   protected listSelected = signal<string | null>(null);
-  
+
   protected showDeleteModal = signal(false);
   protected modalEditCollection = signal(false);
   protected showModalAddToList = signal(false);
 
-  
+
 
   ngOnInit(): void {
-    this.getItem();
+    // this.getItem();
+    this.onCheckProfile();
   }
 
-  getItem() {
-    const uid = localStorage.getItem('UID');
-    const itemId = this.activatedRoute.snapshot.params['itemID'];
+  ngOnDestroy(): void {
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
+  }
 
-    this.collectionService.getCollectionItem(uid, itemId).subscribe({
-      next: (item) => {
-        this.stars = Array(item?.personalRating || 0).fill(1).concat(Array(5 - (item?.personalRating || 0)).fill(0));
-        this.item.set(item);
-        console.log(item);
+  onCheckProfile(): void {
+    this.routeSubscription = this.activatedRoute.params.subscribe({
+      next: (params) => {
+        const username = params['userId'];
+        const itemId = params['itemID'];
 
+        if (username) {
+          this.onGetProfileByUsername(username, itemId);
+        } else {
+          this.isMyself.set(true);
+          this.getItem(this.uid()!, itemId);
+        }
+      }
+    });
+  }
+
+
+  onGetProfileByUsername(username: string, itemId: string): void {
+    this.profileService.getProfileByUsername(username).subscribe({
+      next: (profile) => {
+
+        if (!profile) {
+          this.router.navigate(['/not-found']);
+          return;
+        }
+
+        this.userData.set(profile);
+
+        const myLoggedUid = this.authService.userData()?.uid || this.uid();
+
+        this.checkIsMyself(myLoggedUid!, profile.uid, itemId);
       },
       error: (err) => {
-        console.error('Error ao buscar detalhes do item:', err);
+        console.error('Erro ao buscar perfil:', err);
+        this.router.navigate(['/not-found']);
       }
-    })
-
+    });
   }
 
-  deleteItem(){
+
+  checkIsMyself(uid1: string, uid2: string, itemId: string) {
+    if (uid1 === uid2) {
+      this.isMyself.set(true);
+      this.getItem(this.userData()!.uid, itemId);
+    } else {
+      this.isMyself.set(false);
+      this.getItem(this.userData()!.uid, itemId);
+    }
+  }
+
+
+getItem(uid?: string, itemId?: string) {
+  // Pega o uid do perfil carregado ou o seu próprio
+  const targetUid = uid || this.userData()?.uid || this.uid();
+  // Pega o itemId do item atual ou da rota
+  const targetItemId = itemId || this.item()?.id || this.activatedRoute.snapshot.params['itemID'];
+
+  if (!targetUid || !targetItemId) return;
+
+  this.collectionService.getCollectionItem(targetUid, targetItemId).subscribe({
+    next: (item) => {
+      if (item) {
+        this.stars = Array(item.personalRating || 0).fill(1).concat(Array(5 - (item.personalRating || 0)).fill(0));
+        this.item.set(item);
+      }
+    },
+    error: (err) => {
+      console.error('Erro ao buscar detalhes do item:', err);
+    }
+  });
+}
+
+  deleteItem() {
+    if (!this.isMyself()) return;
     const uid = localStorage.getItem('UID');
     const itemId = this.item()?.id;
-    this.collectionService.deleteCollectionItem(uid, itemId!).subscribe({
+
+    if (!uid || !itemId) return;
+    this.collectionService.deleteCollectionItem(uid, itemId).subscribe({
       next: () => {
         console.log('Item deletado com sucesso');
         this.router.navigate(['/coll']);
       },
       error: (err) => {
-        console.error('Error ao deletar item:', err);
+        console.error('Erro ao deletar item:', err);
       }
     });
   }
@@ -97,12 +170,16 @@ export class ItemDetailsComponent {
     this.router.navigate([route]);
   }
 
+  onBack(){
+    window.history.back();
+  }
+
   toggleOptions(event: Event) {
     event.stopPropagation();
     this.showOptions.set(!this.showOptions());
   }
 
-  getLists(): void{
+  getLists(): void {
     this.listsService.getUserLists().subscribe({
       next: (lists) => {
         console.log('Listas do usuário:', lists);

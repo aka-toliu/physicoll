@@ -1,5 +1,9 @@
 <header class="coll__header">
-    <h1>Minha coleção</h1>
+    @if (isMyself()) {
+        <h1>Minha coleção</h1>
+    }@else {
+        <h1>Coleção de {{ userData()?.username }}</h1>
+    }
     <div class="search-container">
         <label>
             <input type="text" placeholder="Buscar por título..." (input)="updateValueFilter($event, 'search-query')"
@@ -264,7 +268,7 @@
     <div @coll-list style="display: contents;">
       
       @for (item of filteredCollection(); track item.imdbID) {
-        <app-card-coll [item]="item" [viewMode]="viewMode()"></app-card-coll>
+        <app-card-coll [item]="item" [viewMode]="viewMode()" [username]="(!isMyself() ? userData()?.username : null) ?? null"></app-card-coll>
       }
       
     </div>
