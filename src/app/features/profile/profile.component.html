@@ -6,17 +6,17 @@
         <p class="profile__username">{{ userData()?.username }}</p>
         <div class="profile__social">
             <div class="profile__social-info">
-                <div class="profile__followers">
-                    <h2>{{ userData()?.followers?.length || 0 }}</h2>
-                    <p>Seguidores</p>
+                <div class="profile__followers" (click)="openModalFollowers.set(true)">
+                    <h2>{{ followers()?.length || 0 }}</h2>
+                    <p>Seguidor{{ followers()?.length === 1 ? '' : 'es' }}</p>
                 </div>
-                <div class="profile__following">
-                    <h2>{{ userData()?.following?.length || 0 }}</h2>
+                <div class="profile__following" (click)="openModalFollowing.set(true)">
+                    <h2>{{ following()?.length || 0 }}</h2>
                     <p>Seguindo</p>
                 </div>
             </div>
             @if (!isMyself()) {
-            <button type="smooth">Seguir</button>
+            <button type="smooth" (click)="isFollowing() ? unfollowUser() : followUser()">{{ isFollowing() ? 'Seguindo' : 'Seguir' }}</button>
             }
         </div>
     </div>
@@ -62,3 +62,25 @@
     <button type="smooth" (click)="onLogout()">Sair</button>
 
 </main>
+
+<app-modal [modalControl]="openModalFollowers()" (modalClose)="openModalFollowers.set(false)" >
+    <h3 class="modal-title">Seguidores</h3>
+    <div class="modal-body">
+        @for (user of followers(); track $index) {
+            <p>{{ user.UID }}</p>
+        }@empty {
+            Ainda não há pessoas seguindo.
+        }
+    </div>
+</app-modal>
+
+<app-modal [modalControl]="openModalFollowing()" (modalClose)="openModalFollowing.set(false)" >
+    <h3 class="modal-title">Seguindo</h3>
+    <div class="modal-body">
+        @for (user of following(); track $index) {
+            <p>{{ user.UID }}</p>
+        }@empty {
+            O usuário ainda não segue ninguém.
+        }
+    </div>
+</app-modal>
