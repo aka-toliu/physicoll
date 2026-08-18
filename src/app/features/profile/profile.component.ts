@@ -1,4 +1,5 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { CardUserComponent } from '../../shared/components/card-user/card-user.component';
 import { SocialService } from '../../core/services/social.service';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -13,7 +14,7 @@ import { IFriendUser } from '../../shared/models/ISocial';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, IconComponent, ModalComponent],
+  imports: [CommonModule, IconComponent, ModalComponent, CardUserComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
@@ -74,6 +75,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.onGetProfile(myUid);
           this.setupRealtimeSocialData(myUid);
         }
+        this.openModalFollowers.set(false);
+        this.openModalFollowing.set(false);
       }
     });
   }

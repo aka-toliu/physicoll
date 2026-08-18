@@ -1,0 +1,7 @@
+<div class="card-profile__picture">
+    <img [src]="userData()?.photoURL" alt="Profile Picture" class="card-profile__picture-img">
+</div>
+<div class="card-profile__info">
+    <h4>{{ userData()?.username }}</h4>
+    <p>{{ userData()?.displayName }}</p>
+</div>

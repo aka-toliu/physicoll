@@ -63,22 +63,22 @@
 
 </main>
 
-<app-modal [modalControl]="openModalFollowers()" (modalClose)="openModalFollowers.set(false)" >
+<app-modal [modalControl]="openModalFollowers()" (modalClose)="openModalFollowers.set(false)" [btnConfirm]="false">
     <h3 class="modal-title">Seguidores</h3>
     <div class="modal-body">
         @for (user of followers(); track $index) {
-            <p>{{ user.UID }}</p>
+            <app-card-user [uid]="user.UID"></app-card-user>
         }@empty {
             Ainda não há pessoas seguindo.
         }
     </div>
 </app-modal>
 
-<app-modal [modalControl]="openModalFollowing()" (modalClose)="openModalFollowing.set(false)" >
+<app-modal [modalControl]="openModalFollowing()" (modalClose)="openModalFollowing.set(false)" [btnConfirm]="false">
     <h3 class="modal-title">Seguindo</h3>
     <div class="modal-body">
         @for (user of following(); track $index) {
-            <p>{{ user.UID }}</p>
+            <app-card-user [uid]="user.UID"></app-card-user>
         }@empty {
             O usuário ainda não segue ninguém.
         }
