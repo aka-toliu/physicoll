@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { SocialService } from '../../../core/services/social.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurrencyPipe, DatePipe, NgClass, NgStyle } from '@angular/common';
 import { IconComponent } from '../../../shared/components/icon/icon.component';
@@ -32,11 +33,15 @@ export class ItemDetailsComponent {
   private collectionService = inject(CollectionService);
   private listsService = inject(ListsService);
   private profileService = inject(ProfileService);
+  private socialService = inject(SocialService);
   private uid = signal(localStorage.getItem('UID'));
   private authService = inject(AuthService);
   public userData = signal<IProfile | null | undefined>(undefined);
   protected isMyself = signal(true);
   private routeSubscription!: Subscription;
+
+  protected liked = signal(false);
+  protected likesCount = signal(0);
 
 
 
@@ -125,9 +130,7 @@ export class ItemDetailsComponent {
 
 
 getItem(uid?: string, itemId?: string) {
-  // Pega o uid do perfil carregado ou o seu próprio
   const targetUid = uid || this.userData()?.uid || this.uid();
-  // Pega o itemId do item atual ou da rota
   const targetItemId = itemId || this.item()?.id || this.activatedRoute.snapshot.params['itemID'];
 
   if (!targetUid || !targetItemId) return;
@@ -137,6 +140,11 @@ getItem(uid?: string, itemId?: string) {
       if (item) {
         this.stars = Array(item.personalRating || 0).fill(1).concat(Array(5 - (item.personalRating || 0)).fill(0));
         this.item.set(item);
+
+        // 🟢 Agora sim! O item e o UID do dono existem com certeza:
+        this.checkLikesCount(targetUid, targetItemId);
+        this.checkIfLiked(targetUid, targetItemId);
+        this.getLists();
       }
     },
     error: (err) => {
@@ -209,5 +217,62 @@ getItem(uid?: string, itemId?: string) {
       }
     });
   }
+
+ checkLikesCount(ownerUid: string, itemID: string): void {
+  this.socialService.checkLikesCount(ownerUid, itemID).subscribe({
+    next: (count) => {
+      console.log('Número de curtidas:', count);
+      this.likesCount.set(count);
+    },
+    error: (err) => {
+      console.error('Erro ao verificar número de curtidas:', err);
+    }
+  });
+}
+
+checkIfLiked(ownerUid: string, itemID: string): void {
+  this.socialService.checkIfLiked(ownerUid, itemID).subscribe({
+    next: (isLiked) => {
+      this.liked.set(isLiked);
+      console.log('Esta curtido?', isLiked);
+      this.checkLikesCount(ownerUid, itemID);
+    },
+    error: (err) => {
+      console.error('Erro ao verificar se o item foi curtido:', err);
+    }
+  });
+}
+
+addLike(): void {
+  const ownerUid = this.userData()?.uid || this.uid()!;
+  const itemID = this.item()?.id!;
+
+  this.socialService.addLike(ownerUid, itemID).subscribe({
+    next: () => {
+      console.log('Item curtido com sucesso');
+      this.liked.set(true);
+      this.checkLikesCount(ownerUid, itemID);
+    },
+    error: (err) => {
+      console.error('Erro ao curtir item:', err);
+    }
+  });
+}
+
+removeLike(): void {
+  const ownerUid = this.userData()?.uid || this.uid()!;
+  const itemID = this.item()?.id!;
+
+  this.socialService.removeLike(ownerUid, itemID).subscribe({
+    next: () => {
+      console.log('Item descurtido com sucesso');
+      this.liked.set(false);
+      this.checkLikesCount(ownerUid, itemID);
+    },
+    error: (err) => {
+      console.error('Erro ao descurtir item:', err);
+    }
+  });
+}
 
 }

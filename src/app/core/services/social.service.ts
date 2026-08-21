@@ -1,16 +1,16 @@
 import { inject, Injectable } from '@angular/core';
-import { 
-  Firestore, 
-  doc, 
-  docData, 
-  updateDoc, 
-  arrayUnion, 
-  arrayRemove, 
+import {
+  Firestore,
+  doc,
+  docData,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
   getDoc,
-  setDoc 
+  setDoc
 } from '@angular/fire/firestore';
-import { Observable, from, map } from 'rxjs';
-import { IFriendUser, IFriendsDoc } from '../../shared/models/ISocial';
+import { Observable, from, map, take } from 'rxjs';
+import { IFriendUser, IFriendsDoc, ILike } from '../../shared/models/ISocial';
 
 @Injectable({
   providedIn: 'root'
@@ -33,9 +33,10 @@ export class SocialService {
     return doc(this.firestore, `users/${userId}/social/friends`);
   }
 
-  /**
-   * 1. Ver lista de seguidores (Followers) de um usuário
-   */
+  private getLikesDocRef(userId: string) {
+    return doc(this.firestore, `users/${userId}/social/likes`);
+  }
+
   getFollowers(userId: string = this.currentUserId): Observable<IFriendUser[]> {
     const docRef = this.getFriendsDocRef(userId);
     return docData(docRef).pipe(
@@ -43,9 +44,6 @@ export class SocialService {
     );
   }
 
-  /**
-   * 2. Ver lista de quem o usuário está seguindo (Following)
-   */
   getFollowing(userId: string = this.currentUserId): Observable<IFriendUser[]> {
     const docRef = this.getFriendsDocRef(userId);
     return docData(docRef).pipe(
@@ -53,67 +51,51 @@ export class SocialService {
     );
   }
 
-  /**
-   * 3. Checar se você segue determinado usuário
-   */
   isFollowing(targetUserId: string): Observable<boolean> {
     return this.getFollowing(this.currentUserId).pipe(
       map((followingList) => followingList.some(user => user.UID === targetUserId))
     );
   }
 
-  /**
-   * 4. Seguir um usuário
-   * Adiciona o targetUserId na sua lista de `following` 
-   * e adiciona o seu UID na lista de `followers` do targetUserId.
-   */
   followUser(targetUserId: string): Observable<void> {
-  const myUid = this.currentUserId;
-  if (!myUid || myUid === targetUserId) throw new Error('Operação inválida.');
+    const myUid = this.currentUserId;
+    if (!myUid || myUid === targetUserId) throw new Error('Operação inválida.');
 
-  const now = new Date().toISOString();
+    const now = new Date().toISOString();
 
-  const myDocRef = this.getFriendsDocRef(myUid);
-  const targetDocRef = this.getFriendsDocRef(targetUserId);
+    const myDocRef = this.getFriendsDocRef(myUid);
+    const targetDocRef = this.getFriendsDocRef(targetUserId);
 
-  const promise = (async () => {
-    // 1. Verifica se EU já sigo esse usuário lendo o meu documento
-    const mySnap = await getDoc(myDocRef);
-    if (mySnap.exists()) {
-      const myData = mySnap.data() as IFriendsDoc;
-      const alreadyFollowing = myData.following?.some(item => item.UID === targetUserId);
-      
-      // Se já segue, cancela a operação para não duplicar
-      if (alreadyFollowing) return;
-    }
+    const promise = (async () => {
 
-    const myFollowingData: IFriendUser = { UID: targetUserId, followedAt: now };
-    const targetFollowerData: IFriendUser = { UID: myUid, followedAt: now };
+      const mySnap = await getDoc(myDocRef);
+      if (mySnap.exists()) {
+        const myData = mySnap.data() as IFriendsDoc;
+        const alreadyFollowing = myData.following?.some(item => item.UID === targetUserId);
+        if (alreadyFollowing) return;
+      }
 
-    // 2. Se não segue, realiza a gravação em ambos os documentos
-    await Promise.all([
-      updateDoc(myDocRef, {
-        following: arrayUnion(myFollowingData)
-      }).catch(async () => {
-        await setDoc(myDocRef, { followers: [], following: [myFollowingData] }, { merge: true });
-      }),
+      const myFollowingData: IFriendUser = { UID: targetUserId, followedAt: now };
+      const targetFollowerData: IFriendUser = { UID: myUid, followedAt: now };
 
-      updateDoc(targetDocRef, {
-        followers: arrayUnion(targetFollowerData)
-      }).catch(async () => {
-        await setDoc(targetDocRef, { followers: [targetFollowerData], following: [] }, { merge: true });
-      })
-    ]);
-  })();
+      await Promise.all([
+        updateDoc(myDocRef, {
+          following: arrayUnion(myFollowingData)
+        }).catch(async () => {
+          await setDoc(myDocRef, { followers: [], following: [myFollowingData] }, { merge: true });
+        }),
 
-  return from(promise);
-}
+        updateDoc(targetDocRef, {
+          followers: arrayUnion(targetFollowerData)
+        }).catch(async () => {
+          await setDoc(targetDocRef, { followers: [targetFollowerData], following: [] }, { merge: true });
+        })
+      ]);
+    })();
 
-  /**
-   * 5. Deixar de seguir / Remover seguidor
-   * Como o Firestore `arrayRemove` exige o objeto exato para remoção em arrays,
-   * lemos o documento antes para extrair o item correto com seu `followedAt`.
-   */
+    return from(promise);
+  }
+
   unfollowUser(targetUserId: string): Observable<void> {
     const myUid = this.currentUserId;
     if (!myUid) throw new Error('Usuário não autenticado.');
@@ -122,7 +104,6 @@ export class SocialService {
     const targetDocRef = this.getFriendsDocRef(targetUserId);
 
     const promise = (async () => {
-      // Pega meus dados atuais
       const mySnap = await getDoc(myDocRef);
       if (mySnap.exists()) {
         const myData = mySnap.data() as IFriendsDoc;
@@ -134,7 +115,6 @@ export class SocialService {
         }
       }
 
-      // Pega os dados do usuário alvo para remover-me da lista de seguidores dele
       const targetSnap = await getDoc(targetDocRef);
       if (targetSnap.exists()) {
         const targetData = targetSnap.data() as IFriendsDoc;
@@ -150,9 +130,6 @@ export class SocialService {
     return from(promise);
   }
 
-  /**
-   * 6. Remover um seguidor (Remover da SUA lista de `followers`)
-   */
   removeFollower(followerUserId: string): Observable<void> {
     const myUid = this.currentUserId;
     if (!myUid) throw new Error('Usuário não autenticado.');
@@ -161,7 +138,6 @@ export class SocialService {
     const targetDocRef = this.getFriendsDocRef(followerUserId);
 
     const promise = (async () => {
-      // Remove ele da minha lista de seguidores
       const mySnap = await getDoc(myDocRef);
       if (mySnap.exists()) {
         const myData = mySnap.data() as IFriendsDoc;
@@ -173,7 +149,6 @@ export class SocialService {
         }
       }
 
-      // Remove eu da lista 'following' dele
       const targetSnap = await getDoc(targetDocRef);
       if (targetSnap.exists()) {
         const targetData = targetSnap.data() as IFriendsDoc;
@@ -188,4 +163,67 @@ export class SocialService {
 
     return from(promise);
   }
+
+  addLike(ownerUid: string, itemID: string): Observable<void> {
+  const docRef = this.getLikesDocRef(ownerUid);
+  const like: ILike = {
+    likedAt: new Date().toISOString(),
+    uid: this.currentUserId
+  };
+
+  const promise = setDoc(docRef, {
+    [itemID]: {
+      itemID: itemID,
+      likes: arrayUnion(like)
+    }
+  }, { merge: true });
+  return from(promise);
 }
+
+removeLike(ownerUid: string, itemID: string): Observable<void> {
+  const docRef = this.getLikesDocRef(ownerUid);
+  const myUid = this.currentUserId;
+
+  const promise = (async () => {
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      const likesArray: ILike[] = data?.[itemID]?.likes || [];
+      const likeToRemove = likesArray.find(like => like.uid === myUid);
+      if (likeToRemove) {
+        await updateDoc(docRef, {
+          [itemID]: {
+            likes: arrayRemove(likeToRemove)
+          }
+        });
+      }
+    }
+  })();
+  return from(promise);
+}
+
+checkIfLiked(ownerUid: string, itemID: string): Observable<boolean> {
+  const docRef = this.getLikesDocRef(ownerUid);
+  const myUid = this.currentUserId;
+
+  return docData(docRef).pipe(
+    take(1),
+    map((data) => {
+      const likesArray: ILike[] = data?.[itemID]?.likes || [];
+      return likesArray.some(like => like.uid === myUid);
+    })
+  );
+}
+
+checkLikesCount(ownerUid: string, itemID: string): Observable<number> {
+  const docRef = this.getLikesDocRef(ownerUid);
+  return docData(docRef).pipe(
+    take(1),
+    map((data) => {
+      const likesArray: ILike[] = data?.[itemID]?.likes || [];
+      return likesArray.length;
+    })
+  );
+}
+
+  }

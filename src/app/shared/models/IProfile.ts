@@ -12,9 +12,4 @@ export interface IProfile {
         showWishlist: boolean;
         privateProfile: boolean;
     };
-    followers: string[];
-    following: string[];
-    countCollection: number;
-    countLists: number;
-    countWishlist: number;
 }

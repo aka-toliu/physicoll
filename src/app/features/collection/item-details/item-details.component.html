@@ -8,9 +8,9 @@
         <button class="btn-options" (click)="toggleOptions($event)">
             <app-icon icon="options" />
         </button>
-        <button class="btn-like">
-            <app-icon icon="like-off" />
-            <p>0</p>
+        <button class="btn-like" (click)="liked() ? removeLike() : addLike()">
+            <app-icon [icon]="liked() ? 'like-on' : 'like-off'" />
+            <p>{{ likesCount() }}</p>
         </button>
     </div>
     <div class="item-details__poster">
