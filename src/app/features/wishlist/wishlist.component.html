@@ -1,10 +1,13 @@
 <header class="wishlist__header">
-    <h2>Salvos na lista de desejos</h2>
+    <h2>Salvos na @if (isMyself()) {sua } lista de desejos</h2>
+    @if (!isMyself()) {
+        <p>de {{ userData()?.username }}</p>
+    }
 </header>
 
 
 <main class="wishlist__container">
     @for(item of wishlist(); track $index) {
-        <app-card-wishlist [wishlistItem]="item" (deleteWishlistItem)="getWishlist()" />
+        <app-card-wishlist [wishlistItem]="item"  />
     }
 </main>

@@ -6,6 +6,8 @@
         box-shadow: var(--shadow-bottom);
         justify-content: center;
         display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     &__container {

@@ -19,6 +19,10 @@
         }@else {
         <h3>{{ list()?.title }}</h3>
         }
+        @if (!isMyself()) {
+        <p>de {{ userData()?.username }}</p>
+        }
+
     </div>
 
     <div class="actions-container">
@@ -33,9 +37,11 @@
             Salvar
         </button>
         }@else {
+        @if (isMyself()) {
         <button class="btn-edit" type="smooth" (click)="editMode.set(true)">
             Editar
         </button>
+        }
         }
     </div>
 

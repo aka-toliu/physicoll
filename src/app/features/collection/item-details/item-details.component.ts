@@ -180,7 +180,7 @@ getItem(uid?: string, itemId?: string) {
   }
 
   getLists(): void {
-    this.listsService.getUserLists().subscribe({
+    this.listsService.getUserLists(this.userData()?.uid || '').subscribe({
       next: (lists) => {
         console.log('Listas do usuário:', lists);
         this.lists.set(lists);
@@ -190,7 +190,6 @@ getItem(uid?: string, itemId?: string) {
       }
     });
   }
-
 
   addToList(): void {
     const movieToAdd = {

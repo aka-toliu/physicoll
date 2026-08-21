@@ -24,18 +24,21 @@ export const routes: Routes = [
     { path: 'profile', title: "My Profile", component: ProfileComponent },
     { path: 'profile/:userId', title: "Profile", component: ProfileComponent },
     { path: 'wishlist', title: "Wishlist", component: WishlistComponent },
+    { path: 'wishlist/:userId', title: "Wishlist", component: WishlistComponent },
     {
         path: 'coll', title: 'Collections', component: CollectionComponent, children: [
             { path: '', component: CollListComponent },
-            { path: 'item/:itemID', component: ItemDetailsComponent }, // Rota do seu próprio item
-            { path: ':userId', component: CollListComponent },       // Rota da coleção do amigo
-            { path: ':userId/item/:itemID', component: ItemDetailsComponent }, // Item dentro da coleção do amigo
+            { path: 'item/:itemID', component: ItemDetailsComponent },
+            { path: ':userId', component: CollListComponent },
+            { path: ':userId/item/:itemID', component: ItemDetailsComponent },
         ]
     },
     {
         path: 'lists', title: 'Lists', component: ListsComponent, children: [
             { path: '', component: ListsListComponent },
-            { path: ':listID', component: ListDetailsComponent },
+            { path: 'item/:listID', component: ListDetailsComponent },
+            { path: ':userId', component: ListsListComponent },
+            { path: ':userId/item/:listID', component: ListDetailsComponent }
         ]
     },
     { path: 'not-found', title: 'Not Found', component: NotFoundComponent },

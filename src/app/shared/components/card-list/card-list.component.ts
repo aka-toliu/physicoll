@@ -10,12 +10,13 @@ import { Router } from '@angular/router';
   templateUrl: './card-list.component.html',
   styleUrl: './card-list.component.scss',
   host: {
-    '(click)': 'navigateToListDetails(list()?.id)'
+    '(click)': 'navigateTo(list()?.id)'
   }
 })
 export class CardListComponent {
 
   public list = input<IList | null>(null);
+  public username = input<string | null>(null);
 
   protected router = inject(Router);
 
@@ -24,9 +25,20 @@ export class CardListComponent {
     return this.list()?.items.slice(0, 5);
   });
 
-  navigateToListDetails(listId: string | undefined): void {
-    if (!listId) return;
-    this.router.navigate(['/lists', listId]);
+navigateTo(id?: string) {
+    if (!id) return;
+
+    const friend = this.username();
+
+    if (friend) {
+      console.log('/lists', friend, 'item', id);
+      
+      this.router.navigate(['/lists', friend, 'item', id]);
+
+    } else {
+      console.log('/lists', 'item', id);
+      this.router.navigate(['/lists', 'item', id]);
+    }
   }
 
 

@@ -5,6 +5,11 @@ import { CardListComponent } from '../../../shared/components/card-list/card-lis
 import { ModalComponent } from '../../../shared/components/modal/modal.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
+import { ProfileService } from '../../../core/services/profile.service';
+import { IProfile } from '../../../shared/models/IProfile';
 
 @Component({
   selector: 'app-lists-list',
@@ -16,18 +21,89 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class ListsListComponent {
 
   private listsService = inject(ListsService);
-
-  // protected lists = signal<IList[] | null>(null);
-  protected lists = toSignal(this.listsService.getUserLists(), { initialValue: [] });
-  protected modalNovaLista = signal<boolean>(false);
-
-  protected formList!: FormGroup;
+  private authService = inject(AuthService);
+  private profileService = inject(ProfileService);
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
   private formBuilder = inject(FormBuilder);
 
-  ngOnInit(): void {
+  private uid = signal(localStorage.getItem('UID'));
+  public userData = signal<IProfile | null | undefined>(undefined);
+  protected isMyself = signal(true);
 
-    // this.getLists();
-    
+  private routeSubscription!: Subscription;
+
+  protected lists = signal<IList[]>([]); // 🟢 Mudou de toSignal para signal normal
+  protected modalNovaLista = signal<boolean>(false);
+  protected formList!: FormGroup;
+
+  ngOnInit(): void {
+    this.buildForm();
+    this.onCheckProfile();
+    console.log('ngOnInit chamado');
+  }
+
+  ngOnDestroy(): void {
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
+  }
+
+  getLists(uid: string): void {
+    this.listsService.getUserLists(uid).subscribe({
+      next: (lists) => {
+        this.lists.set(lists);
+        console.log('Listas:', lists);
+      },
+      error: (err) => {
+        console.error('Erro ao buscar listas:', err);
+      }
+    });
+  }
+
+  onCheckProfile(): void {
+    console.log('onCheckProfile called');
+    this.routeSubscription = this.activatedRoute.params.subscribe({
+      next: (params) => {
+        const uid = params['userId'];
+        if (uid) {
+          this.onGetProfileByUsername(uid);
+          console.log(uid);
+        } else {
+          this.isMyself.set(true);
+          this.getLists(this.uid()!);
+        }
+      }
+    });
+  }
+
+  onGetProfileByUsername(username: string): void {
+    this.profileService.getProfileByUsername(username).subscribe({
+      next: (profile) => {
+        this.userData.set(profile);
+        console.log('profile', profile);
+        this.checkIsMyself(this.authService.userData().uid, profile.uid);
+      },
+      error: (err) => {
+        console.error(err);
+        this.router.navigate(['/not-found']);
+      }
+    });
+  }
+
+  checkIsMyself(uid1: string, uid2: string) {
+    if (uid1 === uid2) {
+      this.isMyself.set(true);
+      this.getLists(this.userData()!.uid);
+      console.log('Sou eu mesmo');
+    } else {
+      this.isMyself.set(false);
+      this.getLists(this.userData()!.uid);
+      console.log('Não sou eu');
+    }
+  }
+
+  buildForm(): void {
     this.formList = this.formBuilder.group({
       title: [''],
       isPrivated: [false],
@@ -36,15 +112,6 @@ export class ListsListComponent {
       isRanked: [false]
     });
   }
-
-  // getLists(): void {
-  //   this.listsService.getUserLists().subscribe({
-  //     next: (lists) => {
-  //       this.lists.set(lists);
-  //       console.log('Listas do usuário:', lists);
-  //     }
-  //   });
-  // }
 
   addNewList(): void {
     this.listsService.createList(this.formList.value).subscribe({
@@ -58,5 +125,4 @@ export class ListsListComponent {
       }
     });
   }
-
 }

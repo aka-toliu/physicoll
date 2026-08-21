@@ -37,13 +37,13 @@ export class ListsService {
     return from(deleteDoc(docRef));
   }
 
-  getUserLists(): Observable<IList[]> {
-    const colRef = collection(this.firestore, `users/${this.userID}/lists`);
+  getUserLists(uid: string): Observable<IList[]> {
+    const colRef = collection(this.firestore, `users/${uid}/lists`);
     return collectionData(colRef, { idField: 'id' }).pipe() as Observable<IList[]>;
   }
 
-  getListById(listID: string): Observable<IList | undefined> {
-    const docRef = doc(this.firestore, `users/${this.userID}/lists/${listID}`);
+  getListById(listID: string, uid: string): Observable<IList | undefined> {
+    const docRef = doc(this.firestore, `users/${uid}/lists/${listID}`);
     return docData(docRef, { idField: 'id' }) as Observable<IList | undefined>;
   }
 

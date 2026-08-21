@@ -5,7 +5,7 @@
 <div class="lists-container">
     <button (click)="modalNovaLista.set(true)"> Nova lista</button>
     @for (list of lists(); track $index) {
-    <app-card-list [list]="list" />
+    <app-card-list [list]="list" [username]="(!isMyself() ? userData()?.username : null) ?? null"/>
     }
 </div>
 
