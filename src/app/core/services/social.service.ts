@@ -186,19 +186,18 @@ removeLike(ownerUid: string, itemID: string): Observable<void> {
 
   const promise = (async () => {
     const docSnap = await getDoc(docRef);
+    
     if (docSnap.exists()) {
       const data = docSnap.data();
-      const likesArray: ILike[] = data?.[itemID]?.likes || [];
-      const likeToRemove = likesArray.find(like => like.uid === myUid);
-      if (likeToRemove) {
-        await updateDoc(docRef, {
-          [itemID]: {
-            likes: arrayRemove(likeToRemove)
-          }
-        });
-      }
+      const currentLikes: ILike[] = data?.[itemID]?.likes || [];
+      const updatedLikes = currentLikes.filter(like => like.uid !== myUid);
+
+      await updateDoc(docRef, {
+        [`${itemID}.likes`]: updatedLikes
+      });
     }
   })();
+
   return from(promise);
 }
 
