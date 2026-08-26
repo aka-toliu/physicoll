@@ -7,10 +7,15 @@ import {
   arrayUnion,
   arrayRemove,
   getDoc,
-  setDoc
+  setDoc,
+  collection,
+  collectionData,
+  where,
+  query
 } from '@angular/fire/firestore';
 import { Observable, from, map, take } from 'rxjs';
 import { IFriendUser, IFriendsDoc, ILike } from '../../shared/models/ISocial';
+import { IUser } from '../../shared/models/IProfile';
 
 @Injectable({
   providedIn: 'root'
@@ -225,4 +230,24 @@ checkLikesCount(ownerUid: string, itemID: string): Observable<number> {
   );
 }
 
-  }
+searchUsers(searchTerm: string): Observable<Partial<IUser>[]> {
+  const usersCollection = collection(this.firestore, 'users');
+  const usersQuery = query(
+    usersCollection, 
+    where('username', '>=', searchTerm),
+    where('username', '<=', searchTerm + '\uf8ff')
+  );
+
+  return collectionData(usersQuery).pipe(
+    take(1),
+    map((users: Partial<IUser>[]) => 
+      users.map(user => ({
+        username: user.username,
+        displayName: user.displayName,
+        photoURL: user.photoURL
+      }))
+    )
+  );
+}
+
+}

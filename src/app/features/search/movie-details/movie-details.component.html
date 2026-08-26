@@ -129,11 +129,11 @@
 
 </main>
 
-@if (modalAddToCollection()) {
+
 <app-coll-form [movieDetails]="movieData" (modalClose)="modalAddToCollection.set($event)"
     [(modalControl)]="modalAddToCollection">
 </app-coll-form>
-}
+
 
 <app-modal [modalControl]="showFullCastModal()" (modalClose)="showFullCastModal.set($event)" [btnConfirm]="false">
     

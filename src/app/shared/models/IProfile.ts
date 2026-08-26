@@ -13,3 +13,10 @@ export interface IProfile {
         privateProfile: boolean;
     };
 }
+
+export interface IUser {
+    uid: string;
+    username: string;
+    displayName: string;
+    photoURL: string;
+}

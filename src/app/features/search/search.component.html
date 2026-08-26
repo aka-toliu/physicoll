@@ -1,28 +1,35 @@
-<header class="search-movie__header">
+<header class="search__header">
     <h2>Procurar</h2>
-    <label class="search-movie__form">
-        <input class="search-movie__input" #searchBox type="search" name="search" placeholder="Pesquisar filme"
-            (input)="searchMovies(searchBox.value)" />
-    </label>
+    <div class="search__container">
+        <label class="search__form">
+            <input class="search__input" #searchBox type="search" name="search"
+                [placeholder]="searchType() === 'movies' ? 'Pesquisar filme' : 'Pesquisar usuário'"
+                (input)="searchMovies(searchBox.value)" />
+        </label>
+        <select class="search__select" name="searchType" (change)="setSearchType($any($event.target).value)">
+            <option value="movies" [selected]="searchType() === 'movies'">Filmes</option>
+            <option value="users" [selected]="searchType() === 'users'">Usuários</option>
+        </select>
+    </div>
 </header>
 
 @if (!searchTerm().trim()) {
 <div class="search__trends">
-    <h5 class="trends-title"><app-icon icon="trend"/>Mais procurados </h5>
+    <h5 class="trends-title"><app-icon icon="trend" />Mais procurados</h5>
     <div class="most-searched__container">
         @for (movie of mostSearched(); track movie.tmdbID || movie.imdbID || $index) {
         <app-card-movie [movie]="movie" [ranking]="$index + 1"></app-card-movie>
         }
     </div>
-    
-    <h5 class="trends-title"><app-icon icon="trend"/>Mais adicionados em coleções</h5>
+
+    <h5 class="trends-title"><app-icon icon="trend" />Mais adicionados em coleções</h5>
     <div class="most-collected__container">
         @for (movie of mostCollected(); track movie.tmdbID || movie.imdbID || $index) {
         <app-card-movie [movie]="movie" [count]="movie.collectedCount" type="collected"></app-card-movie>
         }
     </div>
 
-    <h5 class="trends-title"><app-icon icon="trend"/>Mais salvos na lista de desejos</h5>
+    <h5 class="trends-title"><app-icon icon="trend" />Mais salvos na lista de desejos</h5>
     <div class="most-wished__container">
         @for (movie of mostWished(); track movie.tmdbID || movie.imdbID || $index) {
         <app-card-movie [movie]="movie" [count]="movie.wishedCount" type="wished"></app-card-movie>
@@ -30,32 +37,51 @@
     </div>
 </div>
 } @else {
-<main class="search-movie__result">
-    <ul class="search-movie__list">
-
+<main class="search__result">
+    <ul class="search__list">
         @if (isSearchLoading()) {
-            <p>Carregando...</p>
+        <p>Carregando...</p>
         } @else {
-            @if (results() && results()!.total_results > 0) {
-                <p>{{ results()?.total_results }} resultados encontrados</p>
+        <!-- BUSCA DE USUÁRIOS -->
+        @if (searchType() === 'users') {
+        @if (userResults().length > 0) {
+        <p>{{ userResults().length }} usuário(s) encontrado(s)</p>
 
-                @for (movie of results()?.results; track movie.id) {
-                <li class="search-movie__item" (click)="selectMovie(movie)">
-                    <img class="search-movie__poster"
-                        [src]="moviesService.getImageUrl(movie.poster_path, 'w500')" 
-                        alt="{{ movie.title }}"
-                        #poster (error)="poster.src = 'assets/images/no-poster.png'">
-                    <h3 class="search-movie__title">{{ movie.title }}</h3>
-                    <p class="search-movie__year">
-                        {{ movie.release_date ? movie.release_date.split('-')[0] : 'N/A' }}
-                    </p>
-                </li>
-                }
-            } @else {
-                <p>Nenhum resultado encontrado.</p>
-            }
+        @for (user of userResults(); track user.uid || $index) {
+        <li class="search__item user-item" (click)="selectUser(user)">
+            <img class="search__user-avatar" [src]="user.photoURL || 'assets/default-profile.jpg'"
+                alt="{{ user.displayName || user.username }}" #avatar
+                (error)="avatar.onerror = null; avatar.src = 'assets/default-profile.jpg'" />
+            <h3 class="search__title">{{ user.displayName || user.username }}</h3>
+            <p class="search__year">&#64;{{ user.username }}</p>
+        </li>
+        }
+        } @else {
+        <p>Nenhum usuário encontrado.</p>
+        }
         }
 
+        <!-- BUSCA DE FILMES -->
+        @if (searchType() === 'movies') {
+        @if (results() && results()!.total_results > 0) {
+        <p>{{ results()?.total_results }} resultados encontrados</p>
+
+        @for (movie of results()?.results; track movie.id) {
+        <li class="search__item" (click)="selectMovie(movie)">
+            <img class="search__poster" [src]="moviesService.getImageUrl(movie.poster_path, 'w500')"
+                alt="{{ movie.title }}" #poster
+                (error)="poster.onerror = null; poster.src = 'assets/default-poster.png'" />
+            <h3 class="search__title">{{ movie.title }}</h3>
+            <p class="search__year">
+                {{ movie.release_date ? movie.release_date.split('-')[0] : 'N/A' }}
+            </p>
+        </li>
+        }
+        } @else {
+        <p>Nenhum filme encontrado.</p>
+        }
+        }
+        }
     </ul>
 </main>
 }
